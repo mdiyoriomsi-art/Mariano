@@ -700,13 +700,38 @@ function spawnFloater(x, y, amount){
   setTimeout(()=> f.remove(), 900);
 }
 
-document.getElementById('orbWrap').addEventListener('click', (e)=>{
-  const clickValue = 1 * multiplier();
-  addAura(clickValue);
-  const rect = e.currentTarget.getBoundingClientRect();
-  spawnFloater(e.clientX - rect.left, e.clientY - rect.top, clickValue);
-  render();
-});
+// Función para calcular los multiplicadores actuales de forma segura
+function getMultiplier() {
+  let mult = 1;
+  // Multiplicador por Ascensión (+10% por nivel)
+  if (state.ascensions) {
+    mult += state.ascensions * 0.1;
+  }
+  // Multiplicador x2 si el Impulso está activo
+  if (state.adBoostUntil && Date.now() < state.adBoostUntil) {
+    mult *= 2;
+  }
+  return mult;
+}
+
+// Evento de clic en la bola/orbe principal para sumar Aura
+const orbWrapEl = document.getElementById('orbWrap');
+if (orbWrapEl) {
+  orbWrapEl.addEventListener('click', (e) => {
+    const clickValue = Math.max(1, Math.round(1 * getMultiplier()));
+    addAura(clickValue);
+    
+    // Generar el número flotante (+1, +2, etc.) en la posición del clic
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    spawnFloater(x, y, clickValue);
+    
+    // Actualizar pantalla y guardar
+    render();
+    queueSave();
+  });
+}
 
 document.getElementById('ascendBtn').addEventListener('click', ()=>{
   const threshold = 100000 * Math.pow(3, state.ascensions);
