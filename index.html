@@ -30,7 +30,7 @@
     .tab-btn { background: var(--panel); border: 1px solid #333; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
     .tab-btn.active { background: var(--accent); color: #000; font-weight: bold; border-color: var(--accent); }
     
-    .orb-container { position: relative; width: 100px; height: 100px; margin: 15px auto; cursor: pointer; }
+    .orb-container { position: relative; width: 90px; height: 90px; margin: 15px auto; cursor: pointer; }
     .orb { width: 100%; height: 100%; border-radius: 50%; background: radial-gradient(circle, var(--accent) 0%, #000 80%); box-shadow: 0 0 25px var(--accent); transition: transform 0.05s; }
     .orb:active { transform: scale(0.9); }
     
@@ -52,7 +52,7 @@
     .battle-box { background: var(--panel); border: 1px solid var(--accent); border-radius: 10px; padding: 20px; max-width: 550px; margin: 20px auto; text-align: left; }
     .emotes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0; }
     .emote-card { background: #000; border: 1px solid #333; padding: 8px; border-radius: 6px; font-size: 0.85rem; cursor: pointer; position: relative; }
-    .emote-card.selected { border-color: var(--accent); background: rgba(0,255,204,0.1); }
+    .emote-card.selected { border-color: var(--accent); background: rgba(0,255,204,0.15); }
     .emote-card.vip { border-color: var(--gold); }
     .emote-card.cooldown { opacity: 0.5; cursor: not-allowed; }
 
@@ -61,21 +61,45 @@
     .ranking-table { width: 100%; max-width: 600px; margin: 0 auto; border-collapse: collapse; background: var(--panel); border-radius: 8px; overflow: hidden; }
     .ranking-table th, .ranking-table td { padding: 10px; text-align: left; border-bottom: 1px solid #222; }
     .ranking-table th { background: #1b1f2e; color: var(--accent); }
+
+    /* CELEBRACIÓN SIX SEVEN (POP-UP Y ANIMACIÓN) */
+    .sixseven-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    .sixseven-box { background: radial-gradient(circle, #2a085c 0%, #000 100%); border: 3px solid var(--gold); padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 0 50px var(--gold); animation: pulse 1s infinite alternate; }
+    .sixseven-emoji { font-size: 6rem; display: inline-block; animation: danceSixSeven 0.6s infinite alternate ease-in-out; }
+    
+    @keyframes danceSixSeven {
+      0% { transform: rotate(-15deg) scale(1) translateY(0); }
+      100% { transform: rotate(15deg) scale(1.2) translateY(-10px); }
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 20px var(--gold); }
+      100% { box-shadow: 0 0 60px var(--accent); }
+    }
   </style>
 </head>
 <body>
 
-  <!-- MODAL DE LOGIN / REGISTRO -->
+  <!-- MODAL SIX SEVEN POPUP -->
+  <div id="sixSevenModal" class="sixseven-overlay" style="display:none;">
+    <div class="sixseven-box">
+      <div class="sixseven-emoji">🤙🏽🕺🏽🤙🏽</div>
+      <h1 style="color:var(--gold); font-size: 2.2rem; margin: 10px 0;">¡¡GANASTE USANDO SIX SEVEN!!</h1>
+      <p style="font-size:1.2rem; color:#fff;" id="sixSevenAuraText">+0 AURA</p>
+      <button onclick="closeSixSevenModal()" style="background:var(--accent); border:none; padding:10px 30px; font-size:1.2rem; border-radius:8px; font-weight:bold; cursor:pointer; margin-top:15px;">¡VAMOS! 🔥</button>
+    </div>
+  </div>
+
+  <!-- MODAL DE LOGIN -->
   <div id="loginModal" class="login-overlay" style="display:none;">
     <div class="login-box">
       <h2 style="margin-top:0; color:var(--accent); text-align:center;">🔥 AURA FARMEAR</h2>
-      <p style="font-size:0.85rem; color:#ccc;">Creá tu cuenta para sincronizar tu Poder Defensivo y disputar la Arena PvP.</p>
+      <p style="font-size:0.85rem; color:#ccc;">Ingresá tus datos para entrar a combatir en la Arena PvP.</p>
       
       <label style="font-size:0.85rem; font-weight:bold;">Correo Electrónico:</label>
       <input type="email" id="loginEmail" placeholder="tu@email.com">
 
       <label style="font-size:0.85rem; font-weight:bold;">Nombre de Jugador:</label>
-      <input type="text" id="loginUsername" placeholder="Ej: ElGauchoLeyenda_99">
+      <input type="text" id="loginUsername" placeholder="Ej: ElGaucho_99">
 
       <button onclick="handleLogin()">ENTRAR A PELEAR ⚔️</button>
     </div>
@@ -88,7 +112,7 @@
     </div>
 
     <h1 style="margin:0; font-size: 1.5rem; color: var(--accent);">🔥 AURA FARMEAR 🔥</h1>
-    <div id="premiumTag" style="display:none; color: var(--gold); font-size: 0.8rem; font-weight: bold;">⚡ MODO PREMIUM ACTIVO (AURA EN BATALLA x2 + ACCESO A PERSONAJES MÍTICOS Y EMOTES VIP)</div>
+    <div id="premiumTag" style="display:none; color: var(--gold); font-size: 0.8rem; font-weight: bold;">⚡ MODO PREMIUM ACTIVO (AURA EN BATALLA x2 + MÍTICOS Y EMOTES VIP)</div>
     
     <div class="stats-bar" style="margin-top: 10px;">
       <div>✨ <span id="auraCount">0</span> Aura</div>
@@ -98,17 +122,17 @@
   </div>
 
   <div class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab('farm', event)">💪 Entrenar Personajes (20)</button>
+    <button class="tab-btn active" onclick="switchTab('farm', event)">💪 Luchadores (20)</button>
     <button class="tab-btn" onclick="switchTab('battle', event)">⚔️ Arena PvP & Emotes</button>
     <button class="tab-btn" onclick="switchTab('chests', event)">🎁 Cofre Criollo</button>
     <button class="tab-btn" onclick="switchTab('ranking', event)">🏆 Ranking General</button>
-    <button class="tab-btn" onclick="switchTab('album', event)">🖼️ Álbum (20)</button>
+    <button class="tab-btn" onclick="switchTab('album', event)">🖼️ Álbum Misterioso</button>
   </div>
 
-  <!-- VISTA ENTRENAMIENTO (PERSONAJES AUMENTAN PODER, NO DAN AURA PASIVA) -->
+  <!-- VISTA LUCHADORES PROPIOS -->
   <div id="viewFarm">
     <p style="font-size: 0.9rem; color: #aaa; max-width: 600px; margin: 10px auto;">
-      Reclutá y entrená personajes para aumentar tu <b>Poder de Pelea Total</b>. El Aura se consigue <u>únicamente luchando en la arena</u> o tocando el Orbe.
+      Reclutá y entrena a tus <b>Luchadores Propios</b> para elevar tu Poder de Pelea.
     </p>
     <div class="orb-container" id="orbBtn">
       <div class="orb"></div>
@@ -116,16 +140,15 @@
     <div class="grid" id="charGrid"></div>
   </div>
 
-  <!-- VISTA ARENA DE BATALLAS (PVP Y COOLDOWNS) -->
+  <!-- VISTA ARENA DE BATALLAS -->
   <div id="viewBattle" style="display:none;">
     <div class="battle-box">
       <h2 style="text-align:center; margin-top:0; color: var(--accent);">⚔️ Arena PvP Asincrónica</h2>
-      <p style="font-size: 0.85rem; color: #aaa;">Desafía a otros jugadores reales o bots. Ganar te da bolsas masivas de Aura y te permite robar Trofeos.</p>
       
       <label style="font-weight:bold;">1. Seleccioná a tu Rival:</label>
-      <select id="rivalSelect" style="width:100%; padding: 8px; background: #000; color: #fff; border: 1px solid var(--accent); border-radius: 4px; margin: 5px 0 15px 0;"></select>
+      <select id="rivalSelect" style="width:100%; padding: 10px; background: #000; color: #fff; border: 1px solid var(--accent); border-radius: 4px; margin: 5px 0 15px 0; font-size: 1rem;"></select>
 
-      <label style="font-weight:bold;">2. Seleccioná tu Emote Táctico (Tienen Cooldown):</label>
+      <label style="font-weight:bold;">2. Seleccioná tu Emote Táctico:</label>
       <div class="emotes-grid" id="emotesBox"></div>
 
       <button onclick="startBattle()" style="width:100%; background: #ef4444; color: white; border: none; padding: 12px; font-size: 1.1rem; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px;">
@@ -140,7 +163,7 @@
   <div id="viewChests" style="display:none;">
     <div class="chest-box">
       <h2 style="color:var(--gold); margin-top:0;">📦 Cofre Criollo de Trofeos</h2>
-      <p style="font-size:0.9rem; color:#ccc;">Juntá <b>20 Trofeos</b> en la arena para abrir el cofre. Contiene bolsas gigantes de Aura, bonus de Poder y figuritas.</p>
+      <p style="font-size:0.9rem; color:#ccc;">Juntá <b>20 Trofeos</b> en la arena para abrirlo. Otorga bolsas masivas de Aura.</p>
       <div style="font-size:3rem; margin:10px 0;">🎁</div>
       <p style="font-size: 1.1rem;">Trofeos Actuales: <b id="chestTrofeosCount" style="color:var(--gold);">0</b> / 20</p>
       <button id="openChestBtn" onclick="openChest()" style="background:var(--gold); color:#000; border:none; padding:12px 25px; border-radius:6px; font-weight:bold; font-size:1rem; cursor:pointer;" disabled>
@@ -153,7 +176,6 @@
   <!-- VISTA RANKING -->
   <div id="viewRanking" style="display:none; padding: 15px;">
     <h2>🏆 Tabla General de Posiciones</h2>
-    <p style="font-size:0.85rem; color:#aaa;">Sincronización en tiempo real de tu Poder Defensivo y Trofeos.</p>
     <table class="ranking-table">
       <thead>
         <tr><th>#</th><th>Jugador</th><th>Poder Defensivo</th><th>Trofeos</th></tr>
@@ -162,10 +184,10 @@
     </table>
   </div>
 
-  <!-- VISTA ÁLBUM -->
+  <!-- VISTA ÁLBUM OCULTO -->
   <div id="viewAlbum" style="display:none;">
-    <h2>🖼️ Colección de Figuritas Autóctonas</h2>
-    <p>Conseguí figuritas al acumular Trofeos o abriendo Cofres Criollos.</p>
+    <h2>🖼️ Colección Misteriosa</h2>
+    <p style="font-size:0.85rem; color:#aaa;">Las figuritas permanecen ocultas hasta que alcanzas los Trofeos requeridos para desbloquearlas.</p>
     <div class="grid" id="albumGrid"></div>
   </div>
 
@@ -175,71 +197,71 @@
     <p style="font-size: 0.85rem; margin: 5px 0; color: #ccc;">
       • Acceso a <b>3 Personajes Míticos</b> (+250M de Poder).<br>
       • Multiplicador de <b>Aura x2</b> en CADA victoria de Arena.<br>
-      • Acceso exclusivo a <b>Emotes Míticos VIP</b> (Multiplicadores de x6.5 a x10.0).
+      • Acceso a <b>Emotes Míticos VIP</b> (Multiplicadores x6.5 y x10.0).
     </p>
     <a href="https://mpago.la/2woDnHg" target="_blank" class="mp-btn">Obtener por $6.500 ARS 💳</a>
   </div>
 
   <script>
-    // DETECCIÓN DE PAGO PREMIUM
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('pago') === 'exitoso' || urlParams.get('premium') === 'activado') {
       localStorage.setItem('aura_premium', 'true');
-      alert('¡Pago confirmado! Pase Premium activado: Boost x2 en Batalla + Míticos + Emotes VIP. 🔥');
+      alert('¡Pase Premium activado exitosamente! 🔥');
       window.history.replaceState({}, document.title, window.location.pathname);
     }
     const isPremium = localStorage.getItem('aura_premium') === 'true';
 
-    // 20 PERSONAJES (AHORA OTORGAN PODER DE PELEA, NO AURA PASIVA)
+    // 20 PERSONAJES PROPIOS DEL JUEGO
     const CHARACTERS = [
-      { id: 1, name: 'La Vecina Chusma', rarity: 'comun', baseCost: 15, power: 10 },
-      { id: 2, name: 'El Nene del Triciclo', rarity: 'comun', baseCost: 100, power: 50 },
-      { id: 3, name: 'Perro Callejero', rarity: 'comun', baseCost: 500, power: 250 },
-      { id: 4, name: 'Trapito de Esquina', rarity: 'comun', baseCost: 1500, power: 800 },
-      { id: 5, name: 'Vendedor de Chipá', rarity: 'raro', baseCost: 5000, power: 2500 },
-      { id: 6, name: 'Chofer de Colectivo', rarity: 'raro', baseCost: 15000, power: 7500 },
-      { id: 7, name: 'Remisero Filósofo', rarity: 'raro', baseCost: 40000, power: 20000 },
-      { id: 8, name: 'Cuidacoches VIP', rarity: 'raro', baseCost: 100000, power: 50000 },
-      { id: 9, name: 'El Pibe de los Mandados', rarity: 'epico', baseCost: 250000, power: 120000 },
-      { id: 10, name: 'Asador Designado', rarity: 'epico', baseCost: 600000, power: 300000 },
-      { id: 11, name: 'Profesor de Gimnasia', rarity: 'epico', baseCost: 1500000, power: 750000 },
-      { id: 12, name: 'Mates con Montañita', rarity: 'epico', baseCost: 4000000, power: 2000000 },
-      { id: 13, name: 'Relator de Barrio', rarity: 'legendario', baseCost: 10000000, power: 5000000 },
-      { id: 14, name: 'El Barbero Urbano', rarity: 'legendario', baseCost: 25000000, power: 12000000 },
-      { id: 15, name: 'El Diez del Barrio', rarity: 'legendario', baseCost: 65000000, power: 30000000 },
-      { id: 16, name: 'Gauchito Protector', rarity: 'legendario', baseCost: 150000000, power: 75000000 },
+      { id: 1, name: 'Tomy "El Principiante"', rarity: 'comun', baseCost: 15, power: 10 },
+      { id: 2, name: 'Santi "El Rayo"', rarity: 'comun', baseCost: 100, power: 50 },
+      { id: 3, name: 'Lucho "El Dogo"', rarity: 'comun', baseCost: 500, power: 250 },
+      { id: 4, name: 'Mateo "El Muro"', rarity: 'comun', baseCost: 1500, power: 800 },
+      { id: 5, name: 'Nico "Puño Fuego"', rarity: 'raro', baseCost: 5000, power: 2500 },
+      { id: 6, name: 'Nahuel "El Fantasma"', rarity: 'raro', baseCost: 15000, power: 7500 },
+      { id: 7, name: 'Enzo "Patada Trueno"', rarity: 'raro', baseCost: 40000, power: 20000 },
+      { id: 8, name: 'Damián "El Titán"', rarity: 'raro', baseCost: 100000, power: 50000 },
+      { id: 9, name: 'Don Osvaldo del Asado', rarity: 'epico', baseCost: 250000, power: 120000 },
+      { id: 10, name: 'Maestro Yaguareté', rarity: 'epico', baseCost: 600000, power: 300000 },
+      { id: 11, name: 'El Guardián del Norte', rarity: 'epico', baseCost: 1500000, power: 750000 },
+      { id: 12, name: 'Cóndor Dorado', rarity: 'epico', baseCost: 4000000, power: 2000000 },
+      { id: 13, name: 'El As del Potrero', rarity: 'legendario', baseCost: 10000000, power: 5000000 },
+      { id: 14, name: 'Gaucho Cyberpunk', rarity: 'legendario', baseCost: 25000000, power: 12000000 },
+      { id: 15, name: 'Fuerza Pampeana', rarity: 'legendario', baseCost: 65000000, power: 30000000 },
+      { id: 16, name: 'Sombra Cuyo', rarity: 'legendario', baseCost: 150000000, power: 75000000 },
       { id: 17, name: 'Carpincho Alfa 👑', rarity: 'mitico', baseCost: 400000000, power: 40000000, premiumReq: true },
       { id: 18, name: 'Tango Cyborg 👑', rarity: 'mitico', baseCost: 1000000000, power: 100000000, premiumReq: true },
       { id: 19, name: 'El Comandante 👑', rarity: 'mitico', baseCost: 2500000000, power: 250000000, premiumReq: true },
       { id: 20, name: 'Aura Suprema Criolla', rarity: 'mitico', baseCost: 10000000000, power: 1000000000 }
     ];
 
-    // EMOTES TÁCTICOS CON COOLDOWNS (TIEMPOS EN SEGUNDOS)
+    // EMOTES CON COOLDOWNS
     const EMOTES = [
       { id: 'carnero', name: '🤸 Vuelta Carnero', cost: 0, mult: 1.0, cdSecs: 0, vip: false },
       { id: 'palma', name: '✋ Palma Fría', cost: 500, mult: 1.5, cdSecs: 15, vip: false },
       { id: 'mandibula', name: '🗿 Filo de Mandíbula', cost: 2500, mult: 2.2, cdSecs: 30, vip: false },
       { id: 'sixseven', name: '🤙 Six Seven', cost: 10000, mult: 3.5, cdSecs: 60, vip: false },
-      { id: 'combo', name: '🔥 Vuelta + Six Seven', cost: 50000, mult: 5.0, cdSecs: 120, vip: false },
+      { id: 'combo', name: '🔥 Combo Especial', cost: 50000, mult: 5.0, cdSecs: 120, vip: false },
       { id: 'look', name: '✨ Look de Modelo VIP', cost: 0, mult: 6.5, cdSecs: 45, vip: true },
       { id: 'doble_six', name: '⚡ Doble Six Seven VIP', cost: 0, mult: 10.0, cdSecs: 90, vip: true }
     ];
 
-    // 20 FIGURITAS PARA EL ÁLBUM
+    // FIGURITAS MISTERIOSAS (OCULTAS HASTA LOGRAR REQUISITO)
     const FIGURITAS = [
-      { id: 1, name: 'Sifón de Soda', req: 0, icon: '🥤' }, { id: 2, name: 'Mate de Madera', req: 5, icon: '🧉' },
-      { id: 3, name: 'Factura de Membrillo', req: 10, icon: '🥐' }, { id: 4, name: 'SUBE sin Saldo', req: 20, icon: '💳' },
-      { id: 5, name: 'Termo de Acero', req: 35, icon: '🍾' }, { id: 6, name: 'Parrilla al Paso', req: 50, icon: '🥩' },
-      { id: 7, name: 'Pelota de Trapo', req: 70, icon: '⚽' }, { id: 8, name: 'Camiseta 10 Retro', req: 90, icon: '👕' },
-      { id: 9, name: 'Perro Flecha', req: 120, icon: '🐕' }, { id: 10, name: 'Caramelo de Leche', req: 150, icon: '🍬' },
-      { id: 11, name: 'Obelisco', req: 200, icon: '🏙️' }, { id: 12, name: 'Bandera de Barrio', req: 250, icon: '🏁' },
-      { id: 13, name: 'Trofeo de Cristal', req: 300, icon: '🏆' }, { id: 14, name: 'Fuego de Asado', req: 400, icon: '🔥' },
-      { id: 15, name: 'Guitarra Criolla', req: 500, icon: '🎸' }, { id: 16, name: 'Mate Dorado', req: 650, icon: '✨' },
-      { id: 17, name: 'Copa Dorada 78', req: 800, icon: '🥇' }, { id: 18, name: 'Copa Dorada 86', req: 1000, icon: '🏆' },
-      { id: 19, name: 'Copa del Mundo 22', req: 1500, icon: '👑' }, { id: 20, name: 'Aura Legendaria', req: 2000, icon: '🌌' }
+      { id: 1, name: 'Insignia de Recluta', req: 0, icon: '🛡️' }, 
+      { id: 2, name: 'Mate Místico', req: 10, icon: '🧉' },
+      { id: 3, name: 'Guante de Bronce', req: 25, icon: '🥊' }, 
+      { id: 4, name: 'Anillo del Espacio', req: 50, icon: '💍' },
+      { id: 5, name: 'Corona del Potrero', req: 80, icon: '👑' }, 
+      { id: 6, name: 'Escudo del Viento', req: 120, icon: '🛡️' },
+      { id: 7, name: 'Copa Argentina 78', req: 200, icon: '🥇' }, 
+      { id: 8, name: 'Copa Argentina 86', req: 350, icon: '🏆' },
+      { id: 9, name: 'Sable Legendario', req: 500, icon: '⚔️' }, 
+      { id: 10, name: 'Copa Mundial 2022', req: 800, icon: '⭐' },
+      { id: 11, name: 'Islas Malvinas 🇦🇷', req: 1200, icon: '🇦🇷' }, 
+      { id: 12, name: 'Aura Cósmica', req: 2000, icon: '🌌' }
     ];
 
-    // BOT Y PLAYERS SIMULADOS EN LA ARENA
     const BOT_RIVALS = [
       { id: 'bot1', name: "Gonzalo_SanIsidro", basePower: 15, trofeos: 8 },
       { id: 'bot2', name: "Franco_Sarmiento", basePower: 120, trofeos: 15 },
@@ -247,16 +269,15 @@
       { id: 'bot4', name: "Matias_AuraKing 👑", basePower: 25000, trofeos: 75 }
     ];
 
-    // ESTADO GENERAL
     let userSession = JSON.parse(localStorage.getItem('aura_user')) || null;
 
     let state = {
-      aura: 100, // Aura inicial
+      aura: 100,
       trofeos: 0,
       owned: {},
       unlockedEmotes: ['carnero'],
       selectedEmote: 'carnero',
-      emoteCooldowns: {} // Guardo timestamps
+      emoteCooldowns: {}
     };
 
     const savedState = localStorage.getItem('aura_state');
@@ -279,7 +300,7 @@
       const username = document.getElementById('loginUsername').value.trim();
 
       if (!email || !username) {
-        alert("Por favor ingresá tu correo y nombre de jugador para continuar.");
+        alert("Ingresá un correo y nombre para continuar.");
         return;
       }
 
@@ -290,7 +311,7 @@
     }
 
     function handleLogout() {
-      if (confirm("¿Cerrar sesión? Tu progreso quedará guardado en este dispositivo.")) {
+      if (confirm("¿Cerrar sesión? Se mantendrá guardado en el navegador.")) {
         localStorage.removeItem('aura_user');
         userSession = null;
         checkAuth();
@@ -301,9 +322,8 @@
       localStorage.setItem('aura_state', JSON.stringify(state));
     }
 
-    // CÁLCULO DEL PODER TOTAL
     function getTotalPower() {
-      let power = 5; // Poder base de puños
+      let power = 5;
       CHARACTERS.forEach(c => {
         const count = state.owned[c.id] || 0;
         power += count * c.power;
@@ -320,25 +340,20 @@
       document.getElementById('trofeosCount').textContent = state.trofeos.toLocaleString('es-AR');
       document.getElementById('chestTrofeosCount').textContent = state.trofeos.toLocaleString('es-AR');
 
-      // Botón del Cofre
       const openChestBtn = document.getElementById('openChestBtn');
-      if (openChestBtn) {
-        openChestBtn.disabled = state.trofeos < 20;
-      }
+      if (openChestBtn) openChestBtn.disabled = state.trofeos < 20;
 
-      // Render Personajes (Entrenamiento de Poder)
+      // Render Luchadores
       const grid = document.getElementById('charGrid');
       grid.innerHTML = '';
 
       CHARACTERS.forEach(c => {
         const count = state.owned[c.id] || 0;
         const cost = Math.floor(c.baseCost * Math.pow(1.2, count));
-        
         const card = document.createElement('div');
         card.className = `card ${c.rarity}`;
         
         let buyBtnHtml = `<button class="buy-btn" ${state.aura < cost ? 'disabled' : ''} onclick="buyChar(${c.id})">Entrenar ($${cost.toLocaleString('es-AR')})</button>`;
-        
         if (c.premiumReq && !isPremium) {
           buyBtnHtml = `<button class="buy-btn" style="background:var(--gold); color:#000;" onclick="window.open('https://mpago.la/2woDnHg','_blank')">⭐ Requiere Pase Premium</button>`;
         }
@@ -353,18 +368,20 @@
         grid.appendChild(card);
       });
 
-      // Render Rivales en Arena
+      // Render Desplegable de Rivales (Preserva la opción seleccionada previamente)
       const rivalSelect = document.getElementById('rivalSelect');
+      const selectedRivalVal = rivalSelect.value;
       rivalSelect.innerHTML = '';
       
       BOT_RIVALS.forEach(r => {
         const opt = document.createElement('option');
         opt.value = r.id;
-        opt.textContent = `${r.name} - Poder Defensivo: ${r.basePower.toLocaleString('es-AR')} | 🏆 ${r.trofeos}`;
+        opt.textContent = `${r.name} - Poder: ${r.basePower.toLocaleString('es-AR')} | 🏆 ${r.trofeos}`;
         rivalSelect.appendChild(opt);
       });
+      if (selectedRivalVal) rivalSelect.value = selectedRivalVal;
 
-      // Render Emotes con Cooldowns
+      // Render Emotes
       const emotesBox = document.getElementById('emotesBox');
       emotesBox.innerHTML = '';
       const now = Date.now();
@@ -380,12 +397,12 @@
         div.className = `emote-card ${isSelected ? 'selected' : ''} ${e.vip ? 'vip' : ''} ${inCooldown ? 'cooldown' : ''}`;
         
         if (e.vip && !isPremium) {
-          div.innerHTML = `<b>${e.name}</b><br><small style="color:var(--gold);">⭐ Solo Premium (x${e.mult})</small>`;
-          div.onclick = () => alert("¡Este emote exclusivo requiere Pase Premium!");
+          div.innerHTML = `<b>${e.name}</b><br><small style="color:var(--gold);">⭐ Premium (x${e.mult})</small>`;
+          div.onclick = () => alert("¡Requiere Pase Premium!");
         } else if (inCooldown) {
-          div.innerHTML = `<b>${e.name}</b><br><small style="color:#ef4444;">⏳ En CD (${secondsLeft}s)</small>`;
+          div.innerHTML = `<b>${e.name}</b><br><small style="color:#ef4444;">⏳ Cooldown (${secondsLeft}s)</small>`;
         } else if (isUnlocked) {
-          div.innerHTML = `<b>${e.name}</b><br><small style="color:var(--accent);">Multiplicador x${e.mult}</small>`;
+          div.innerHTML = `<b>${e.name}</b><br><small style="color:var(--accent);">Mult. x${e.mult}</small>`;
           div.onclick = () => { state.selectedEmote = e.id; saveState(); render(); };
         } else {
           div.innerHTML = `<b>${e.name}</b><br><small style="color:var(--gold);">Desbloquear: $${e.cost.toLocaleString('es-AR')}</small>`;
@@ -394,20 +411,31 @@
         emotesBox.appendChild(div);
       });
 
-      // Render Álbum
+      // Render Álbum Misterioso (Totalmente Oculto si no lo desbloqueó)
       const albumGrid = document.getElementById('albumGrid');
       albumGrid.innerHTML = '';
       FIGURITAS.forEach(f => {
         const unlocked = state.trofeos >= f.req;
         const card = document.createElement('div');
         card.className = 'card';
-        card.style.opacity = unlocked ? '1' : '0.35';
         card.style.textAlign = 'center';
-        card.innerHTML = `
-          <div style="font-size: 2rem;">${f.icon}</div>
-          <b>${f.name}</b><br>
-          <small>${unlocked ? '✅ Conseguida' : `Requiere ${f.req} 🏆`}</small>
-        `;
+        
+        if (unlocked) {
+          card.style.borderColor = "var(--gold)";
+          card.innerHTML = `
+            <div style="font-size: 2.2rem;">${f.icon}</div>
+            <b style="color:var(--gold);">${f.name}</b><br>
+            <small style="color:var(--accent);">✅ DESBLOQUEADA</small>
+          `;
+        } else {
+          card.style.background = "#050608";
+          card.style.borderColor = "#222";
+          card.innerHTML = `
+            <div style="font-size: 2.2rem; filter: blur(4px);">❓</div>
+            <b style="color:#555;">???</b><br>
+            <small style="color:#aaa;">Requiere ${f.req} 🏆</small>
+          `;
+        }
         albumGrid.appendChild(card);
       });
 
@@ -451,30 +479,29 @@
         saveState();
         render();
       } else {
-        alert("¡No tenés suficiente Aura para desbloquear este Emote!");
+        alert("¡No tienes suficiente Aura!");
       }
     }
 
-    // Orbe Click (Gana un poco de Aura para arrancar)
     document.getElementById('orbBtn').addEventListener('click', () => {
       state.aura += (1 * (isPremium ? 2 : 1));
       saveState();
       render();
     });
 
-    // BATALLAS Y COMBATE ACTIVO
+    // SISTEMA DE BATALLAS CON RIVAL DINÁMICO Y CELEBRACIÓN SIX SEVEN
     function startBattle() {
-      const rivalId = document.getElementById('rivalSelect').value;
-      const rival = BOT_RIVALS.find(r => r.id === rivalId);
+      const rivalSelectElem = document.getElementById('rivalSelect');
+      const selectedRivalId = rivalSelectElem.value;
+      const rival = BOT_RIVALS.find(r => r.id === selectedRivalId);
       const emoteObj = EMOTES.find(e => e.id === state.selectedEmote);
       const now = Date.now();
 
-      if (!emoteObj) return;
+      if (!rival || !emoteObj) return;
 
-      // Verificar Cooldown del Emote
       const cdUntil = state.emoteCooldowns[emoteObj.id] || 0;
       if (now < cdUntil) {
-        alert("¡Ese emote está en Cooldown! Seleccioná otro o esperá unos segundos.");
+        alert("¡Ese emote está en Cooldown! Elige otro mientras descansa.");
         return;
       }
 
@@ -483,18 +510,15 @@
       res.style.color = "#ffd700";
       res.textContent = `⚔️ Peleando contra ${rival.name} usando ${emoteObj.name}...`;
 
-      // Aplicar Cooldown si el emote tiene
       if (emoteObj.cdSecs > 0) {
         state.emoteCooldowns[emoteObj.id] = now + (emoteObj.cdSecs * 1000);
       }
 
       setTimeout(() => {
-        // Cálculo de Probabilidad según Poder
         const ratio = playerPower / (playerPower + rival.basePower);
         const win = Math.random() < Math.max(0.2, Math.min(0.9, ratio));
 
         if (win) {
-          // Fórmula de Recompensa de Aura
           const baseGain = Math.max(50, Math.floor(rival.basePower * 1.5));
           const auraGained = Math.floor(baseGain * emoteObj.mult * (isPremium ? 2 : 1));
           const trofeosGained = Math.floor(3 * emoteObj.mult);
@@ -503,19 +527,29 @@
           state.trofeos += trofeosGained;
           
           res.style.color = "#00ffcc";
-          res.textContent = `🎉 ¡VICTORIA! Le ganaste a ${rival.name}. Ganaste +$${auraGained.toLocaleString('es-AR')} Aura y +${trofeosGained} Trofeos 🏆`;
+          res.textContent = `🎉 ¡VICTORIA! Le ganaste a ${rival.name}. +$${auraGained.toLocaleString('es-AR')} Aura y +${trofeosGained} 🏆`;
+
+          // SI GANÓ CON SIX SEVEN O DOBLE SIX SEVEN -> MOSTRAR POP-UP ESPECIAL
+          if (emoteObj.id === 'sixseven' || emoteObj.id === 'doble_six') {
+            document.getElementById('sixSevenAuraText').textContent = `+$${auraGained.toLocaleString('es-AR')} AURA OBTENIDA`;
+            document.getElementById('sixSevenModal').style.display = 'flex';
+          }
+
         } else {
           state.trofeos = Math.max(0, state.trofeos - 1);
           res.style.color = "#ef4444";
-          res.textContent = `❌ DERROTA. Tu rival te superó en poder. Perdiste 1 Trofeo. ¡Aumentá tu Poder de Pelea en el menú!`;
+          res.textContent = `❌ DERROTA contra ${rival.name}. ¡Aumentá tu Poder para vencerlo!`;
         }
 
         saveState();
         render();
-      }, 800);
+      }, 700);
     }
 
-    // ABRIR COFRE CRIOLLO
+    function closeSixSevenModal() {
+      document.getElementById('sixSevenModal').style.display = 'none';
+    }
+
     function openChest() {
       if (state.trofeos < 20) return;
 
@@ -525,7 +559,7 @@
 
       const res = document.getElementById('chestResult');
       res.style.color = "#ffd700";
-      res.textContent = `🎉 ¡ABRISTE EL COFRE CRIOLLO! Recibiste +$${auraBonus.toLocaleString('es-AR')} de Aura y desbloqueaste nuevas oportunidades en la arena.`;
+      res.textContent = `🎉 ¡ABRISTE EL COFRE! Recibiste +$${auraBonus.toLocaleString('es-AR')} de Aura.`;
 
       saveState();
       render();
@@ -542,14 +576,12 @@
       if (event) event.target.classList.add('active');
     }
 
-    // Refresco continuo para Cooldowns visuales
-    setInterval(() => {
-      render();
-    }, 1000);
+    setInterval(() => { render(); }, 1000);
 
-    // Inicio
     checkAuth();
     render();
   </script>
+</body>
+</html>
 </body>
 </html>
