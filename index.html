@@ -61,10 +61,11 @@
     }
 
     /* MODAL DE LOGIN */
-    .login-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5,7,15,0.95); z-index: 2000; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
-    .login-box { background: var(--panel-bg); border: 2px solid var(--neon-cyan); padding: 35px; border-radius: 16px; width: 90%; max-width: 400px; text-align: left; box-shadow: 0 0 30px rgba(0,210,255,0.25); }
-    .login-box input { width: 100%; padding: 12px; margin: 10px 0 20px 0; background: #000; border: 1px solid var(--panel-border); border-radius: 8px; color: #fff; box-sizing: border-box; }
+    .login-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5,7,15,0.96); z-index: 2000; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(12px); }
+    .login-box { background: var(--panel-bg); border: 2px solid var(--neon-cyan); padding: 35px; border-radius: 16px; width: 90%; max-width: 400px; text-align: left; box-shadow: 0 0 35px rgba(0,210,255,0.25); }
+    .login-box input { width: 100%; padding: 12px; margin: 8px 0 16px 0; background: #000; border: 1px solid var(--panel-border); border-radius: 8px; color: #fff; box-sizing: border-box; }
     .login-box button { width: 100%; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); color: #fff; border: none; padding: 14px; font-weight: 700; border-radius: 8px; cursor: pointer; font-size: 1rem; }
+    .error-msg { color: var(--neon-pink); font-size: 0.8rem; margin-bottom: 12px; display: none; }
 
     /* HEADER */
     .header { padding: 20px; background: rgba(13,17,29,0.9); border-bottom: 1px solid var(--panel-border); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); }
@@ -80,7 +81,7 @@
     .tab-btn { background: var(--panel-bg); border: 1px solid var(--panel-border); color: var(--text-muted); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; }
     .tab-btn.active { background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); color: #fff; border-color: transparent; box-shadow: 0 0 15px rgba(0,210,255,0.3); }
 
-    /* ARENA COMBATE 1v1 MEJORADA */
+    /* ARENA COMBATE 1v1 */
     .arena-card { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 16px; padding: 25px; max-width: 650px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
     .vs-stage { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; position: relative; }
     .fighter-box { background: #080b14; border: 2px solid var(--panel-border); border-radius: 12px; padding: 20px; transition: all 0.3s; }
@@ -90,8 +91,8 @@
     
     .action-display { background: #000; border: 1px solid var(--panel-border); border-radius: 10px; padding: 12px; font-weight: 600; min-height: 48px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; color: var(--neon-cyan); font-size: 0.95rem; }
 
-    .actions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-    .action-btn { background: rgba(255,255,255,0.03); border: 1px solid var(--panel-border); color: #fff; padding: 14px 8px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.85rem; font-family: 'Syne', sans-serif; transition: all 0.2s; }
+    .actions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+    .action-btn { background: rgba(255,255,255,0.03); border: 1px solid var(--panel-border); color: #fff; padding: 12px 6px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.8rem; font-family: 'Syne', sans-serif; transition: all 0.2s; }
     .action-btn:hover { border-color: var(--neon-pink); background: rgba(255,0,127,0.1); transform: translateY(-2px); }
 
     /* TARJETAS Y GRILLAS */
@@ -112,17 +113,19 @@
 </head>
 <body id="app-body">
 
-  <!-- MODAL DE LOGIN -->
+  <!-- MODAL DE LOGIN CON VALIDACIÓN ESTRICTA -->
   <div id="loginModal" class="login-overlay" style="display:none;">
     <div class="login-box">
       <h2 style="color:var(--neon-cyan); text-align:center; margin-bottom: 5px;">AURA FARMEAR</h2>
-      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom: 15px;">Ingresá con tu usuario para guardar tus progresos en la Arena.</p>
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom: 15px;">Ingresá con tu usuario y correo válido para vincular tus progresos y compras.</p>
       
       <label style="font-size:0.8rem; font-weight:bold;">Correo Electrónico:</label>
-      <input type="email" id="loginEmail" placeholder="tu@email.com">
+      <input type="email" id="loginEmail" placeholder="ejemplo@dominio.com">
 
       <label style="font-size:0.8rem; font-weight:bold;">Nombre de Jugador:</label>
-      <input type="text" id="loginUsername" placeholder="Ej: GamerAura">
+      <input type="text" id="loginUsername" placeholder="Tu nick de combate">
+
+      <div id="loginError" class="error-msg"></div>
 
       <button onclick="handleLogin()">ENTRAR A COMBATIR</button>
     </div>
@@ -203,21 +206,22 @@
         ¡Es tu turno! Elegí tu acción de Aura.
       </div>
 
-      <!-- BOTONES DE ACCIÓN DE AURA -->
+      <!-- BOTONES DE ACCIÓN DE AURA ACTUALIZADOS -->
       <div class="actions-grid">
-        <button class="action-btn" onclick="playTurn('SIX SEVEN')">SIX SEVEN</button>
-        <button class="action-btn" onclick="playTurn('MEWING')">MEWING</button>
-        <button class="action-btn" onclick="playTurn('CORTA CUELLO')">CORTA CUELLO</button>
-        <button class="action-btn" onclick="playTurn('VUELTA CARNERO')">VUELTA CARNERO</button>
-        <button class="action-btn" onclick="playTurn('LOOKSMAXING')">LOOKSMAXING</button>
-        <button class="action-btn" onclick="playTurn('NO LOOK')">NO LOOK</button>
+        <button class="action-btn" onclick="playTurn('SIX SEVEN')">SIX SEVEN 🤙🏽</button>
+        <button class="action-btn" onclick="playTurn('MEWING')">MEWING 🤫</button>
+        <button class="action-btn" onclick="playTurn('CORTA CUELLO')">CORTA CUELLO ⚔️</button>
+        <button class="action-btn" onclick="playTurn('VUELTA CARNERO')">VUELTA CARNERO 🤸</button>
+        <button class="action-btn" onclick="playTurn('LOOKSMAXING')">LOOKSMAXING 🗿</button>
+        <button class="action-btn" onclick="playTurn('NO LOOK')">NO LOOK 🙈</button>
+        <button class="action-btn" onclick="playTurn('POSTURA DEL GUERRERO')">POSTURA DEL GUERRERO 🧘‍♂️🙏</button>
       </div>
     </div>
   </div>
 
   <!-- VISTA PERSONAJES (25) -->
   <div id="viewFarm" style="display:none;">
-    <p style="color:var(--text-muted); margin-bottom: 15px;">Desbloqueá y entrená personajes para aumentar tu poder total de pelea.</p>
+    <p style="color:var(--text-muted); margin-bottom: 15px;">Desbloqueá y mejorá personajes para multiplicar tu poder de batalla.</p>
     <div class="grid" id="charGrid"></div>
   </div>
 
@@ -249,6 +253,7 @@
     <div style="background: var(--panel-bg); border:1px solid var(--panel-border); padding:30px; border-radius:16px; max-width:500px; margin:20px auto; text-align:left;">
       <h3 style="color:var(--neon-cyan); margin-bottom:15px;">Contacto & Redes</h3>
       <p style="margin-bottom:10px;"><b>Instagram:</b> <a href=https://www.instagram.com/mariandiyo target="_blank" style="color:var(--neon-cyan);">@mariandiyo</a></p>
+      <p style="margin-bottom:10px;"><b>TikTok:</b> <a href="https://tiktok.com/@aurafarmear.com.ar" target="_blank" style="color:var(--neon-cyan);">@aurafarmear.com.ar</a></p>
       <p style="margin-bottom:10px;"><b>Email Comercial:</b> contactoaurafarmear@gmail.com</p>
     </div>
   </div>
@@ -269,31 +274,31 @@
   <script>
     const isPremium = localStorage.getItem('aura_premium') === 'true';
 
-    // 25 PERSONAJES
+    // 25 PERSONAJES CON LOS 10 REEMPLAZOS INTEGRADOS
     const CHARACTERS = [
       { id: 1, name: 'Rosaura', baseCost: 15, power: 10, avatar: '🌹' },
-      { id: 2, name: 'Santi "Rayo"', baseCost: 100, power: 50, avatar: '⚡' },
-      { id: 3, name: 'Lucho Dogo', baseCost: 500, power: 250, avatar: '🐕' },
-      { id: 4, name: 'Mateo El Muro', baseCost: 1500, power: 800, avatar: '🧱' },
-      { id: 5, name: 'Nico Fuego', baseCost: 5000, power: 2500, avatar: '🔥' },
+      { id: 2, name: 'Robaura', baseCost: 100, power: 50, avatar: '🥷' },
+      { id: 3, name: 'Ricaura', baseCost: 500, power: 250, avatar: '💎' },
+      { id: 4, name: 'Aurexis', baseCost: 1500, power: 800, avatar: '🔮' },
+      { id: 5, name: 'Aurora', baseCost: 5000, power: 2500, avatar: '🌌' },
       { id: 6, name: 'Auranio 235', baseCost: 12000, power: 6000, avatar: '⚛️' },
-      { id: 7, name: 'Enzo Trueno', baseCost: 30000, power: 15000, avatar: '🦶' },
+      { id: 7, name: 'Auren Caído', baseCost: 30000, power: 15000, avatar: '🪽' },
       { id: 8, name: 'Don Aura', baseCost: 75000, power: 35000, avatar: '🎩' },
       { id: 9, name: 'Master Osvaldo', baseCost: 180000, power: 90000, avatar: '🥩' },
-      { id: 10, name: 'Yaguareté', baseCost: 450000, power: 220000, avatar: '🐆' },
-      { id: 11, name: 'Gaucho Sigma', baseCost: 1000000, power: 500000, avatar: '🤠' },
+      { id: 10, name: 'Ventauro', baseCost: 450000, power: 220000, avatar: '🌪️' },
+      { id: 11, name: 'Morvantis', baseCost: 1000000, power: 500000, avatar: '🛡️' },
       { id: 12, name: 'Mewing King', baseCost: 2500000, power: 1200000, avatar: '🤫' },
       { id: 13, name: 'As del Potrero', baseCost: 6000000, power: 3000000, avatar: '⚽' },
-      { id: 14, name: 'Gaucho Cyber', baseCost: 15000000, power: 7500000, avatar: '🤖' },
+      { id: 14, name: 'Auroth', baseCost: 15000000, power: 7500000, avatar: '🐉' },
       { id: 15, name: 'Cebador Pro', baseCost: 40000000, power: 20000000, avatar: '🧉' },
       { id: 16, name: 'Sombra Ninja', baseCost: 100000000, power: 50000000, avatar: '👤' },
       { id: 17, name: 'Carpincho Alfa', baseCost: 250000000, power: 120000000, avatar: '🦫' },
       { id: 18, name: 'Scaloni God', baseCost: 600000000, power: 300000000, avatar: '👔' },
       { id: 19, name: 'El Comandante', baseCost: 1500000000, power: 750000000, avatar: '🍫' },
-      { id: 20, name: 'Aura Suprema', baseCost: 4000000000, power: 2000000000, avatar: '🌌' },
+      { id: 20, name: 'Aura Suprema', baseCost: 4000000000, power: 2000000000, avatar: '🪐' },
       { id: 21, name: 'Aura-Mecano', baseCost: 8000000000, power: 4000000000, avatar: '🦾' },
-      { id: 22, name: 'Caniche Ultra', baseCost: 15000000000, power: 8000000000, avatar: '🐩' },
-      { id: 23, name: 'Milanesa God', baseCost: 30000000000, power: 15000000000, avatar: '🍽️' },
+      { id: 22, name: 'Canela Pink Nose', baseCost: 15000000000, power: 8000000000, avatar: '🐶' },
+      { id: 23, name: 'Umbraen', baseCost: 30000000000, power: 15000000000, avatar: '🌑' },
       { id: 24, name: 'La Scaloneta', baseCost: 75000000000, power: 40000000000, avatar: '🏆' },
       { id: 25, name: 'Aura Celestial', baseCost: 200000000000, power: 100000000000, avatar: '✨' }
     ];
@@ -321,8 +326,13 @@
     let currentCpu = BOT_RIVALS[0];
     let isPlayerTurn = true;
 
+    function validateEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      return re.test(String(email).toLowerCase());
+    }
+
     function checkAuth() {
-      if (!userSession) {
+      if (!userSession || !userSession.email || !userSession.username || !validateEmail(userSession.email)) {
         document.getElementById('loginModal').style.display = 'flex';
       } else {
         document.getElementById('loginModal').style.display = 'none';
@@ -331,12 +341,27 @@
     }
 
     function handleLogin() {
-      const email = document.getElementById('loginEmail').value.trim();
-      const username = document.getElementById('loginUsername').value.trim();
-      if (!email || !username) return alert("Ingresá tus datos.");
-      userSession = { email, username };
+      const emailInput = document.getElementById('loginEmail').value.trim();
+      const usernameInput = document.getElementById('loginUsername').value.trim();
+      const errorBox = document.getElementById('loginError');
+
+      if (!usernameInput || usernameInput.length < 3) {
+        errorBox.textContent = "El nombre de usuario debe tener al menos 3 caracteres.";
+        errorBox.style.display = 'block';
+        return;
+      }
+
+      if (!validateEmail(emailInput)) {
+        errorBox.textContent = "Ingresá un correo electrónico válido (ej: nombre@gmail.com).";
+        errorBox.style.display = 'block';
+        return;
+      }
+
+      errorBox.style.display = 'none';
+      userSession = { email: emailInput, username: usernameInput };
       localStorage.setItem('aura_user', JSON.stringify(userSession));
       checkAuth();
+      initBattleStage();
       render();
     }
 
@@ -397,15 +422,21 @@
       if (cringe) {
         playerCurrentAura = Math.max(0, playerCurrentAura - 1500);
         triggerCringeFx();
-        document.getElementById('actionStatus').innerText = `¡CRINGE! Fallaste el ${actionName}. Restaste 1.500 de Aura.`;
+        document.getElementById('actionStatus').innerText = `¡CRINGE! Fallaste ${actionName}. Perdiste 1.500 de Aura.`;
       } else {
         let dmg = playerMaxAura * 0.3;
         if (actionName === 'SIX SEVEN') dmg = playerMaxAura * 0.45;
         if (actionName === 'CORTA CUELLO') dmg = playerMaxAura * 0.4;
+        if (actionName === 'POSTURA DEL GUERRERO') {
+          dmg = playerMaxAura * 0.35;
+          playerCurrentAura = Math.min(playerMaxAura, playerCurrentAura + (playerMaxAura * 0.15));
+        }
         
         cpuCurrentAura = Math.max(0, cpuCurrentAura - dmg);
         triggerHitFx();
-        document.getElementById('actionStatus').innerText = `Lanzaste ${actionName}. Le restaste ${Math.floor(dmg).toLocaleString()} de Aura a tu rival.`;
+        document.getElementById('actionStatus').innerText = actionName === 'POSTURA DEL GUERRERO' 
+          ? `Usaste Postura del Guerrero 🧘‍♂️🙏. Infligiste ${Math.floor(dmg).toLocaleString()} de daño y recuperaste Aura.`
+          : `Lanzaste ${actionName}. Le restaste ${Math.floor(dmg).toLocaleString()} de Aura a tu rival.`;
       }
 
       updateBattleUI();
@@ -431,7 +462,7 @@
 
     function cpuTurn() {
       if (cpuCurrentAura <= 0) return;
-      const cpuActions = ['SIX SEVEN', 'MEWING', 'CORTA CUELLO', 'LOOKSMAXING'];
+      const cpuActions = ['SIX SEVEN 🤙🏽', 'MEWING 🤫', 'CORTA CUELLO ⚔️', 'POSTURA DEL GUERRERO 🧘‍♂️🙏'];
       const chosen = cpuActions[Math.floor(Math.random() * cpuActions.length)];
       const dmg = cpuMaxAura * 0.22;
 
@@ -456,7 +487,6 @@
       b.classList.add('flash-cringe', 'screen-shake');
       setTimeout(() => b.classList.remove('flash-cringe', 'screen-shake'), 400);
 
-      // EMOJIS DE RISA FLOTANTES POR CRINGE
       const emojis = ['😂', '🤣', '💀', '🤡'];
       for (let i = 0; i < 5; i++) {
         const div = document.createElement('div');
