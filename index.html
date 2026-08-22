@@ -47,6 +47,9 @@
     .flash-hit { animation: flashCyan 0.3s ease-out; }
     @keyframes flashCyan { 0% { background-color: rgba(0, 210, 255, 0.3); } 100% { background-color: transparent; } }
 
+    .flash-crit { animation: flashGold 0.45s ease-out; }
+    @keyframes flashGold { 0% { background-color: rgba(255, 190, 11, 0.45); } 100% { background-color: transparent; } }
+
     .cringe-emoji {
       position: fixed;
       font-size: 3rem;
@@ -60,6 +63,18 @@
       100% { opacity: 0; transform: translateY(-160px) scale(1.5) rotate(15deg); }
     }
 
+    /* TOAST DE BIENVENIDA */
+    .welcome-toast {
+      position: fixed; top: -60px; left: 50%; transform: translateX(-50%);
+      background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+      color: #fff; padding: 14px 28px; border-radius: 12px; font-weight: 700;
+      font-size: 0.9rem; z-index: 5000; box-shadow: 0 0 25px rgba(0,210,255,0.5);
+      animation: toastIn 0.4s ease-out forwards, toastOut 0.4s ease-in 3.4s forwards;
+      white-space: nowrap;
+    }
+    @keyframes toastIn { from { opacity: 0; top: -60px; } to { opacity: 1; top: 20px; } }
+    @keyframes toastOut { from { opacity: 1; } to { opacity: 0; top: -60px; } }
+
     /* MODAL DE LOGIN */
     .login-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5,7,15,0.96); z-index: 2000; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(12px); }
     .login-box { background: var(--panel-bg); border: 2px solid var(--neon-cyan); padding: 35px; border-radius: 16px; width: 90%; max-width: 400px; text-align: left; box-shadow: 0 0 35px rgba(0,210,255,0.25); }
@@ -71,9 +86,17 @@
     .header { padding: 20px; background: rgba(13,17,29,0.9); border-bottom: 1px solid var(--panel-border); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); }
     .brand-title { font-size: 2.2rem; font-weight: 800; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1px; }
     .brand-subtitle { font-style: italic; color: var(--text-muted); font-size: 0.95rem; margin-top: 2px; }
-    
+
+    /* INSIGNIA DE RANGO — elemento distintivo que sube de nivel con el jugador */
+    .rank-badge {
+      display: inline-block; margin-top: 10px; padding: 5px 18px; border-radius: 20px;
+      font-weight: 700; font-size: 0.78rem; letter-spacing: 0.4px;
+      border: 1px solid currentColor; animation: badgeGlow 2.6s ease-in-out infinite;
+    }
+    @keyframes badgeGlow { 0%, 100% { box-shadow: 0 0 6px currentColor; } 50% { box-shadow: 0 0 16px currentColor; } }
+
     .user-bar { display: flex; justify-content: space-between; max-width: 800px; margin: 0 auto 10px auto; font-size: 0.85rem; color: var(--text-muted); }
-    .stats-container { display: flex; justify-content: center; gap: 20px; margin-top: 15px; font-weight: 700; font-size: 1.05rem; }
+    .stats-container { display: flex; justify-content: center; gap: 20px; margin-top: 15px; font-weight: 700; font-size: 1.05rem; flex-wrap: wrap; }
     .stat-pill { background: rgba(255,255,255,0.05); padding: 8px 16px; border-radius: 20px; border: 1px solid var(--panel-border); }
 
     /* NAVEGACIÓN */
@@ -81,19 +104,33 @@
     .tab-btn { background: var(--panel-bg); border: 1px solid var(--panel-border); color: var(--text-muted); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; }
     .tab-btn.active { background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); color: #fff; border-color: transparent; box-shadow: 0 0 15px rgba(0,210,255,0.3); }
 
-    /* ARENA COMBATE 1v1 */
-    .arena-card { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 16px; padding: 25px; max-width: 650px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-    .vs-stage { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; position: relative; }
-    .fighter-box { background: #080b14; border: 2px solid var(--panel-border); border-radius: 12px; padding: 20px; transition: all 0.3s; }
+    /* ARENA COMBATE 1v1 — achicada para que entre completa en pantalla, victoria/derrota incluida */
+    .arena-card { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 14px; padding: 16px; max-width: 480px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .vs-stage { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; position: relative; }
+    .fighter-box { background: #080b14; border: 2px solid var(--panel-border); border-radius: 10px; padding: 12px; transition: all 0.3s; }
     .fighter-box.active-turn { border-color: var(--neon-cyan); box-shadow: 0 0 20px rgba(0,210,255,0.3); }
-    .aura-bar-container { background: #1a233a; height: 12px; border-radius: 6px; overflow: hidden; margin-top: 10px; }
-    .aura-bar-fill { background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink)); height: 100%; width: 100%; transition: width 0.3s ease; }
-    
-    .action-display { background: #000; border: 1px solid var(--panel-border); border-radius: 10px; padding: 12px; font-weight: 600; min-height: 48px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; color: var(--neon-cyan); font-size: 0.95rem; }
+    .fighter-box h4 { font-size: 0.9rem; }
+    .fighter-box #p-avatar, .fighter-box #c-avatar { font-size: 1.8rem !important; margin: 6px 0 !important; }
+    .aura-bar-container { background: #1a233a; height: 9px; border-radius: 6px; overflow: hidden; margin-top: 8px; }
+    .aura-bar-fill { background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink)); height: 100%; width: 100%; transition: width 0.6s ease; }
 
-    .actions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
-    .action-btn { background: rgba(255,255,255,0.03); border: 1px solid var(--panel-border); color: #fff; padding: 12px 6px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.8rem; font-family: 'Syne', sans-serif; transition: all 0.2s; }
+    .action-display { background: #000; border: 1px solid var(--panel-border); border-radius: 10px; padding: 9px; font-weight: 600; min-height: 38px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; color: var(--neon-cyan); font-size: 0.82rem; }
+
+    .actions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(105px, 1fr)); gap: 7px; }
+    .action-btn { background: rgba(255,255,255,0.03); border: 1px solid var(--panel-border); color: #fff; padding: 9px 4px; border-radius: 9px; font-weight: 700; cursor: pointer; font-size: 0.7rem; font-family: 'Syne', sans-serif; transition: all 0.2s; }
     .action-btn:hover { border-color: var(--neon-pink); background: rgba(255,0,127,0.1); transform: translateY(-2px); }
+
+    /* PANEL DE FIN DE BATALLA — corrige el bug de "no se puede jugar de nuevo" */
+    .battle-end-panel { background: #080b14; border: 1px solid var(--panel-border); border-radius: 12px; padding: 14px; margin-top: 12px; text-align: center; animation: panelIn 0.35s ease-out; }
+    @keyframes panelIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .battle-end-panel h3 { font-size: 1.25rem; margin-bottom: 4px; }
+    .battle-end-panel p { color: var(--text-muted); font-size: 0.82rem; }
+    .end-panel-actions { display: flex; gap: 10px; margin-top: 12px; }
+    .end-panel-actions button { flex: 1; border: none; padding: 10px; border-radius: 8px; font-weight: 700; cursor: pointer; font-family: 'Syne', sans-serif; font-size: 0.78rem; }
+    .btn-revancha { background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); color: #fff; }
+    .btn-cambiar { background: rgba(255,255,255,0.06); color: #fff; border: 1px solid var(--panel-border) !important; }
+    .premium-tease { display: none; margin-top: 12px; padding: 10px; border: 1px dashed var(--neon-gold); border-radius: 10px; font-size: 0.78rem; color: var(--neon-gold); text-align: left; }
+    .premium-tease a { color: var(--neon-gold); font-weight: 700; }
 
     /* TARJETAS Y GRILLAS */
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; padding: 15px; max-width: 1000px; margin: 0 auto; }
@@ -118,7 +155,7 @@
     <div class="login-box">
       <h2 style="color:var(--neon-cyan); text-align:center; margin-bottom: 5px;">AURA FARMEAR</h2>
       <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom: 15px;">Ingresá con tu usuario y correo válido para vincular tus progresos y compras.</p>
-      
+
       <label style="font-size:0.8rem; font-weight:bold;">Correo Electrónico:</label>
       <input type="email" id="loginEmail" placeholder="ejemplo@dominio.com">
 
@@ -127,7 +164,7 @@
 
       <div id="loginError" class="error-msg"></div>
 
-      <button onclick="handleLogin()">ENTRAR A COMBATIR</button>
+      <button onclick="handleLogin()">ENTRAR A FARMEAR AURA</button>
     </div>
   </div>
 
@@ -150,11 +187,13 @@
 
     <div class="brand-title">AURA FARMEAR</div>
     <div class="brand-subtitle">¿Cuánto Aura podés conseguir?</div>
+    <div class="rank-badge" id="rankBadge">--</div>
 
     <div class="stats-container">
       <div class="stat-pill">Aura: <span id="auraCount" style="color:var(--neon-cyan);">0</span></div>
       <div class="stat-pill">Poder: <span id="powerCount" style="color:var(--neon-purple);">0</span></div>
       <div class="stat-pill">Trofeos: <span id="trofeosCount" style="color:var(--neon-gold);">0</span></div>
+      <div class="stat-pill">🔥 Racha: <span id="rachaCount" style="color:var(--neon-pink);">0</span></div>
     </div>
   </div>
 
@@ -172,7 +211,7 @@
   <div id="viewBattle">
     <div class="arena-card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
-        <h3 style="color:var(--text-main);">Combate por Turnos 1v1</h3>
+        <h3 style="color:var(--text-main);">Batalla de Aura por Turnos 1v1</h3>
         <select id="ai-difficulty" onchange="initBattleStage()" style="background:#000; color:#fff; border:1px solid var(--panel-border); padding:6px 10px; border-radius:6px;">
           <option value="bronce">Dificultad: Novato</option>
           <option value="plata">Dificultad: Avanzado</option>
@@ -191,7 +230,7 @@
           <div class="aura-bar-container"><div id="p-bar" class="aura-bar-fill"></div></div>
         </div>
 
-        <!-- OPONENTE -->
+        <!-- OPONENTE GENERADO PARA CADA JUGADOR -->
         <div class="fighter-box" id="c-card">
           <small style="color:var(--neon-pink); font-weight:700;">RIVAL</small>
           <h4 id="c-name" style="margin:5px 0;">--</h4>
@@ -206,8 +245,8 @@
         ¡Es tu turno! Elegí tu acción de Aura.
       </div>
 
-      <!-- BOTONES DE ACCIÓN DE AURA ACTUALIZADOS -->
-      <div class="actions-grid">
+      <!-- BOTONES DE ACCIÓN DE AURA -->
+      <div class="actions-grid" id="actionsGrid">
         <button class="action-btn" onclick="playTurn('SIX SEVEN')">SIX SEVEN 🤙🏽</button>
         <button class="action-btn" onclick="playTurn('MEWING')">MEWING 🤫</button>
         <button class="action-btn" onclick="playTurn('CORTA CUELLO')">CORTA CUELLO ⚔️</button>
@@ -216,12 +255,23 @@
         <button class="action-btn" onclick="playTurn('NO LOOK')">NO LOOK 🙈</button>
         <button class="action-btn" onclick="playTurn('POSTURA DEL GUERRERO')">POSTURA DEL GUERRERO 🧘‍♂️🙏</button>
       </div>
+
+      <!-- PANEL DE FIN DE BATALLA (fix: ahora siempre se puede jugar de nuevo) -->
+      <div class="battle-end-panel" id="battleEndPanel" style="display:none;">
+        <h3 id="battleEndTitle">--</h3>
+        <p id="battleEndSubtitle">--</p>
+        <div class="end-panel-actions">
+          <button class="btn-revancha" onclick="initBattleStage()">⚔️ REVANCHA</button>
+          <button class="btn-cambiar" onclick="switchTab('farm', null)">💪 MEJORAR PERSONAJES</button>
+        </div>
+        <div class="premium-tease" id="premiumTease"></div>
+      </div>
     </div>
   </div>
 
   <!-- VISTA PERSONAJES (25) -->
   <div id="viewFarm" style="display:none;">
-    <p style="color:var(--text-muted); margin-bottom: 15px;">Desbloqueá y mejorá personajes para multiplicar tu poder de batalla.</p>
+    <p style="color:var(--text-muted); margin-bottom: 15px;">Desbloqueá y mejorá personajes para multiplicar tu poder de batalla. Más Poder = rival más manejable en la arena.</p>
     <div class="grid" id="charGrid"></div>
   </div>
 
@@ -252,7 +302,7 @@
   <div id="viewContact" style="display:none;">
     <div style="background: var(--panel-bg); border:1px solid var(--panel-border); padding:30px; border-radius:16px; max-width:500px; margin:20px auto; text-align:left;">
       <h3 style="color:var(--neon-cyan); margin-bottom:15px;">Contacto & Redes</h3>
-      <p style="margin-bottom:10px;"><b>Instagram:</b> <a href=https://www.instagram.com/mariandiyo target="_blank" style="color:var(--neon-cyan);">@mariandiyo</a></p>
+      <p style="margin-bottom:10px;"><b>Instagram:</b> <a href="https://www.instagram.com/mariandiyo" target="_blank" style="color:var(--neon-cyan);">@mariandiyo</a></p>
       <p style="margin-bottom:10px;"><b>TikTok:</b> <a href="https://tiktok.com/@aurafarmear.com.ar" target="_blank" style="color:var(--neon-cyan);">@aurafarmear.com.ar</a></p>
       <p style="margin-bottom:10px;"><b>Email Comercial:</b> contactoaurafarmear@gmail.com</p>
     </div>
@@ -262,19 +312,32 @@
   <div class="premium-banner">
     <h3 style="color:var(--neon-purple);">FARMEAR PASE PREMIUM</h3>
     <p style="color:var(--text-muted); font-size:0.9rem; margin-top:5px;">
-      Multiplicador de Aura x2 constante + Acceso a personajes míticos.
+      Multiplicador de Aura x2 constante + Racha x2 + Acceso a personajes míticos.
     </p>
     <a href="https://mpago.la/2woDnHg" target="_blank" class="mp-btn">Obtener Pase Premium</a>
   </div>
 
   <footer>
-    <b>AURA FARMEAR</b> - Un juego interactivo de táctica por turnos.
+    <div style="max-width:700px; margin:0 auto; text-align:left;">
+      <b style="color:var(--neon-cyan); font-family:'Syne',sans-serif; font-size:1rem;">📖 AURA FARMEAR — Manual del Jugador</b>
+      <p style="margin-top:10px; line-height:1.7;">
+        Bienvenido, pibe. Acá no hay excusas: farmeás Aura peleando 1v1 contra un rival que se genera especialmente para vos,
+        desbloqueás y subís de nivel a tus 25 personajes, completás el Álbum Misterioso de 80 figuritas y subís de Rango
+        hasta romperla del todo en <b style="color:#fff;">Aura Argenta</b>, el nivel máximo. Cada victoria suma Racha,
+        cada Racha te hace pegar más fuerte la próxima. No te quedes en Cringe Aura — subí, farmeá, hacete Leyenda.
+      </p>
+      <p style="margin-top:10px; line-height:1.7;">
+        Este proyecto tiene muchísimas horas de laburo puestas atrás: cada personaje, cada figurita y cada mecánica de
+        batalla se pensó para que la experiencia enganche de verdad. Gracias por jugarlo y por bancar el proyecto. 🔥🇦🇷
+      </p>
+    </div>
+    <div style="margin-top:18px;"><b>AURA FARMEAR</b> - Un juego interactivo de táctica por turnos.</div>
   </footer>
 
   <script>
     const isPremium = localStorage.getItem('aura_premium') === 'true';
 
-    // 25 PERSONAJES CON LOS 10 REEMPLAZOS INTEGRADOS
+    // 25 PERSONAJES
     const CHARACTERS = [
       { id: 1, name: 'Rosaura', baseCost: 15, power: 10, avatar: '🌹' },
       { id: 2, name: 'Robaura', baseCost: 100, power: 50, avatar: '🥷' },
@@ -310,25 +373,86 @@
       icon: ['🧉','🥊','👑','🏆','⭐','🇦🇷','⚔️','🌌','🍫','🦫','👔','🗿'][i % 12]
     }));
 
-    const BOT_RIVALS = [
-      { name: "Gonzalo_SanIsidro", aura: 15000, cat: 'bronce', avatar: '🧢' },
-      { name: "Franco_Sarmiento", aura: 50000, cat: 'plata', avatar: '🕶️' },
-      { name: "Tomi_LaPlata", aura: 200000, cat: 'oro', avatar: '⚡' },
-      { name: "Matias_AuraKing", aura: 1000000, cat: 'leyenda', avatar: '👑' }
+    // INSIGNIAS DE RANGO — sube junto con el poder del jugador (gancho de progresión)
+    const RANKS = [
+      { min: 0, name: 'Cringe Aura 😬', color: '#64748b' },
+      { min: 5000, name: 'Claudia 💅', color: '#00d2ff' },
+      { min: 100000, name: 'Laura 🔥', color: '#ff007f' },
+      { min: 2000000, name: 'Aura Celestial ✨', color: '#ffbe0b' },
+      { min: 40000000, name: 'Aura Argenta 🇦🇷🏆', color: '#ffffff' }
     ];
+    function getRank(power) {
+      let r = RANKS[0];
+      for (const rank of RANKS) { if (power >= rank.min) r = rank; }
+      return r;
+    }
+
+    // GENERADOR DE RIVAL PERSONALIZADO — cada jugador enfrenta un rival "generado" a partir
+    // de su propio nombre, con un nivel de Aura relativo a SU poder actual, así siempre es
+    // un desafío justo (antes los rivales tenían valores fijos sin relación con el jugador).
+    const RIVAL_ADJETIVOS = ['Sigma', 'Alfa', 'Cringe', 'Turbo', 'Mega', 'Ultra', 'Fantasma', 'Explosivo', 'Legendario', 'Rankeado'];
+    const RIVAL_SUSTANTIVOS = ['Pibe', 'Crack', 'Capo', 'Rey', 'Duende', 'Fenómeno', 'Titán', 'Genio', 'Verdugo', 'Campeón'];
+    const RIVAL_AVATARES = ['🧢', '🕶️', '⚡', '👑', '🎭', '🦾', '🐺', '🔥', '🥷', '👹'];
+    const DIFFICULTY_MULT = { bronce: 0.65, plata: 0.9, oro: 1.1, leyenda: 1.5 };
+
+    function hashStr(s) {
+      let h = 0;
+      for (let i = 0; i < s.length; i++) { h = (h * 31 + s.charCodeAt(i)) >>> 0; }
+      return h;
+    }
+
+    function generateRival(username, cat) {
+      const seed = hashStr((username || 'invitado') + '-' + cat);
+      const adj = RIVAL_ADJETIVOS[seed % RIVAL_ADJETIVOS.length];
+      const noun = RIVAL_SUSTANTIVOS[Math.floor(seed / 7) % RIVAL_SUSTANTIVOS.length];
+      const avatar = RIVAL_AVATARES[Math.floor(seed / 13) % RIVAL_AVATARES.length];
+      const variance = 0.9 + ((seed % 21) / 100); // pequeña variación 0.90x - 1.10x para que cada rival se sienta único
+      return { name: `${adj} ${noun}`, avatar, cat, variance };
+    }
 
     let userSession = JSON.parse(localStorage.getItem('aura_user')) || null;
-    let state = { aura: 5000, trofeos: 0, owned: { 1: 1 } };
+    let state = { aura: 5000, trofeos: 0, owned: { 1: 1 }, racha: 0 };
 
     // COMBATE
     let playerMaxAura = 10000, playerCurrentAura = 10000;
     let cpuMaxAura = 10000, cpuCurrentAura = 10000;
-    let currentCpu = BOT_RIVALS[0];
+    let currentCpu = { name: 'Rival', avatar: '🤖', cat: 'oro', variance: 1 };
     let isPlayerTurn = true;
 
     function validateEmail(email) {
       const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
       return re.test(String(email).toLowerCase());
+    }
+
+    function stateKey() {
+      return 'aura_state_' + (userSession ? userSession.email.toLowerCase() : 'invitado');
+    }
+
+    function loadPlayerState() {
+      const saved = localStorage.getItem(stateKey());
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          state = Object.assign({ aura: 5000, trofeos: 0, owned: { 1: 1 }, racha: 0 }, parsed);
+        } catch (e) {
+          state = { aura: 5000, trofeos: 0, owned: { 1: 1 }, racha: 0 };
+        }
+      } else {
+        state = { aura: 5000, trofeos: 0, owned: { 1: 1 }, racha: 0 };
+        showWelcomeToast();
+      }
+    }
+
+    function savePlayerState() {
+      localStorage.setItem(stateKey(), JSON.stringify(state));
+    }
+
+    function showWelcomeToast() {
+      const div = document.createElement('div');
+      div.className = 'welcome-toast';
+      div.innerText = '🎁 ¡Bienvenido a Aura Farmear! Arrancás con 5.000 de Aura de regalo.';
+      document.body.appendChild(div);
+      setTimeout(() => div.remove(), 4000);
     }
 
     function checkAuth() {
@@ -361,6 +485,7 @@
       userSession = { email: emailInput, username: usernameInput };
       localStorage.setItem('aura_user', JSON.stringify(userSession));
       checkAuth();
+      loadPlayerState();
       initBattleStage();
       render();
     }
@@ -380,27 +505,34 @@
       return p;
     }
 
+    // Fix: se restablece TODO el estado de la batalla (incluído el panel de fin de batalla)
+    // así siempre se puede volver a jugar sin necesidad de cambiar la dificultad.
     function initBattleStage() {
       const cat = document.getElementById('ai-difficulty').value;
-      currentCpu = BOT_RIVALS.find(r => r.cat === cat) || BOT_RIVALS[0];
+      currentCpu = generateRival(userSession ? userSession.username : 'invitado', cat);
 
       playerMaxAura = Math.max(10000, getTotalPower() * 2);
       playerCurrentAura = playerMaxAura;
 
-      cpuMaxAura = currentCpu.aura;
+      cpuMaxAura = Math.round(playerMaxAura * DIFFICULTY_MULT[cat] * currentCpu.variance);
       cpuCurrentAura = cpuMaxAura;
+
+      isPlayerTurn = true;
 
       document.getElementById('p-name').innerText = userSession ? userSession.username : "TÚ";
       document.getElementById('c-name').innerText = currentCpu.name;
       document.getElementById('c-avatar').innerText = currentCpu.avatar;
 
+      document.getElementById('battleEndPanel').style.display = 'none';
+      document.getElementById('actionsGrid').style.display = 'grid';
+
       updateBattleUI();
-      document.getElementById('actionStatus').innerText = "¡Comienza la batalla! Seleccioná tu movimiento.";
+      document.getElementById('actionStatus').innerText = `¡Comienza la batalla contra ${currentCpu.name}! Seleccioná tu movimiento.`;
     }
 
     function updateBattleUI() {
-      document.getElementById('p-aura-val').innerText = Math.floor(playerCurrentAura).toLocaleString('es-AR');
-      document.getElementById('c-aura-val').innerText = Math.floor(cpuCurrentAura).toLocaleString('es-AR');
+      document.getElementById('p-aura-val').innerText = Math.floor(Math.max(0, playerCurrentAura)).toLocaleString('es-AR');
+      document.getElementById('c-aura-val').innerText = Math.floor(Math.max(0, cpuCurrentAura)).toLocaleString('es-AR');
 
       document.getElementById('p-bar').style.width = Math.max(0, (playerCurrentAura / playerMaxAura) * 100) + '%';
       document.getElementById('c-bar').style.width = Math.max(0, (cpuCurrentAura / cpuMaxAura) * 100) + '%';
@@ -414,10 +546,18 @@
       }
     }
 
+    // Ritmo de batalla más lento y teatral: cada golpe se "saborea" antes de pasar al
+    // siguiente paso, dando tiempo a que los efectos de pantalla completa (shake, flash,
+    // emojis flotantes) se luzcan bien antes de continuar.
+    const ACTION_DELAY = 1100;   // pausa tras cada golpe antes de seguir la secuencia
+    const CPU_THINK_DELAY = 1900; // el rival "piensa" su turno
+
     function playTurn(actionName) {
       if (!isPlayerTurn || playerCurrentAura <= 0 || cpuCurrentAura <= 0) return;
+      isPlayerTurn = false; // bloquea nuevos clics mientras dura la animación
 
       const cringe = Math.random() < 0.15; // 15% Cringe Check
+      const critico = !cringe && Math.random() < 0.12; // 12% Golpe Crítico - hace las batallas más didácticas y emocionantes
 
       if (cringe) {
         playerCurrentAura = Math.max(0, playerCurrentAura - 1500);
@@ -431,33 +571,31 @@
           dmg = playerMaxAura * 0.35;
           playerCurrentAura = Math.min(playerMaxAura, playerCurrentAura + (playerMaxAura * 0.15));
         }
-        
+        if (critico) dmg *= 1.8;
+
         cpuCurrentAura = Math.max(0, cpuCurrentAura - dmg);
-        triggerHitFx();
-        document.getElementById('actionStatus').innerText = actionName === 'POSTURA DEL GUERRERO' 
-          ? `Usaste Postura del Guerrero 🧘‍♂️🙏. Infligiste ${Math.floor(dmg).toLocaleString()} de daño y recuperaste Aura.`
-          : `Lanzaste ${actionName}. Le restaste ${Math.floor(dmg).toLocaleString()} de Aura a tu rival.`;
+        if (critico) { triggerCritFx(); } else { triggerHitFx(); }
+
+        let msg = actionName === 'POSTURA DEL GUERRERO'
+          ? `Usaste Postura del Guerrero 🧘‍♂️🙏. Infligiste ${Math.floor(dmg).toLocaleString('es-AR')} de daño y recuperaste Aura.`
+          : `Lanzaste ${actionName}. Le restaste ${Math.floor(dmg).toLocaleString('es-AR')} de Aura a tu rival.`;
+        if (critico) msg = `⚡ ¡GOLPE CRÍTICO! ` + msg;
+        document.getElementById('actionStatus').innerText = msg;
       }
 
       updateBattleUI();
 
-      if (cpuCurrentAura <= 0) {
-        const gain = Math.floor(cpuMaxAura * 0.6 * (isPremium ? 2 : 1));
-        state.aura += gain;
-        state.trofeos += 3;
-        document.getElementById('actionStatus').innerText = `¡VICTORIA! Ganaste +${gain.toLocaleString('es-AR')} Aura y 3 Trofeos.`;
-        
-        if (actionName === 'SIX SEVEN') {
-          document.getElementById('sixSevenAuraText').innerText = `+$${gain.toLocaleString('es-AR')} AURA OBTENIDA`;
-          document.getElementById('sixSevenModal').style.display = 'flex';
+      setTimeout(() => {
+        if (cpuCurrentAura <= 0) {
+          const gain = endBattle(true);
+          if (actionName === 'SIX SEVEN') {
+            document.getElementById('sixSevenAuraText').innerText = `+${gain.toLocaleString('es-AR')} AURA OBTENIDA`;
+            document.getElementById('sixSevenModal').style.display = 'flex';
+          }
+          return;
         }
-        render();
-        return;
-      }
-
-      isPlayerTurn = false;
-      updateBattleUI();
-      setTimeout(cpuTurn, 1000);
+        setTimeout(cpuTurn, CPU_THINK_DELAY);
+      }, ACTION_DELAY);
     }
 
     function cpuTurn() {
@@ -469,17 +607,61 @@
       playerCurrentAura = Math.max(0, playerCurrentAura - dmg);
       triggerCringeFx();
 
-      document.getElementById('actionStatus').innerText = `${currentCpu.name} usó ${chosen} y te quitó ${Math.floor(dmg).toLocaleString()} de Aura.`;
-      
+      document.getElementById('actionStatus').innerText = `${currentCpu.name} usó ${chosen} y te quitó ${Math.floor(dmg).toLocaleString('es-AR')} de Aura.`;
+
       updateBattleUI();
 
-      if (playerCurrentAura <= 0) {
-        document.getElementById('actionStatus').innerText = `DERROTA. Te quedaste sin Aura.`;
-        return;
+      setTimeout(() => {
+        if (playerCurrentAura <= 0) {
+          endBattle(false);
+          return;
+        }
+        isPlayerTurn = true;
+        updateBattleUI();
+      }, ACTION_DELAY);
+    }
+
+    // Fix principal: antes, al ganar o perder, isPlayerTurn/aura quedaban en 0 y
+    // playTurn() se cortaba siempre en el primer if — no había forma de re-habilitar
+    // la batalla salvo disparando el onchange de dificultad. Ahora se muestra un panel
+    // claro con un botón de Revancha que reinicia todo correctamente.
+    function endBattle(won) {
+      isPlayerTurn = false;
+      document.getElementById('actionsGrid').style.display = 'none';
+
+      const panel = document.getElementById('battleEndPanel');
+      const title = document.getElementById('battleEndTitle');
+      const subtitle = document.getElementById('battleEndSubtitle');
+      const tease = document.getElementById('premiumTease');
+      panel.style.display = 'block';
+      tease.style.display = 'none';
+
+      let gain = 0;
+
+      if (won) {
+        state.racha = (state.racha || 0) + 1;
+        const streakMult = 1 + Math.min(state.racha * 0.1, 1);
+        gain = Math.floor(cpuMaxAura * 0.6 * streakMult * (isPremium ? 2 : 1));
+        state.aura += gain;
+        state.trofeos += 3;
+
+        title.innerHTML = '🏆 ¡VICTORIA!';
+        title.style.color = 'var(--neon-cyan)';
+        subtitle.innerText = `+${gain.toLocaleString('es-AR')} Aura · +3 Trofeos · Racha x${state.racha}` + (!isPremium ? ' (con Premium, el doble)' : '');
+      } else {
+        state.racha = 0;
+        title.innerHTML = '💀 DERROTA';
+        title.style.color = 'var(--neon-pink)';
+        subtitle.innerText = 'Te quedaste sin Aura. Mejorá tus personajes en la sección Personajes y volvé a intentarlo.';
+
+        if (!isPremium) {
+          tease.style.display = 'block';
+          tease.innerHTML = '💜 Con el <b>Pase Premium</b> tu generación de Aura se duplica, así volvés a la arena mucho más fuerte y con Racha x2. <a href="https://mpago.la/2woDnHg" target="_blank">Ver Pase Premium →</a>';
+        }
       }
 
-      isPlayerTurn = true;
-      updateBattleUI();
+      render();
+      return gain;
     }
 
     function triggerCringeFx() {
@@ -505,12 +687,34 @@
       setTimeout(() => b.classList.remove('flash-hit'), 300);
     }
 
+    function triggerCritFx() {
+      const b = document.getElementById('app-body');
+      b.classList.add('flash-crit', 'screen-shake');
+      setTimeout(() => b.classList.remove('flash-crit', 'screen-shake'), 450);
+
+      for (let i = 0; i < 4; i++) {
+        const div = document.createElement('div');
+        div.className = 'cringe-emoji';
+        div.innerText = '⚡';
+        div.style.left = (window.innerWidth / 2 + (Math.random() * 200 - 100)) + 'px';
+        div.style.top = (window.innerHeight / 2 + (Math.random() * 100 - 50)) + 'px';
+        document.body.appendChild(div);
+        setTimeout(() => div.remove(), 1200);
+      }
+    }
+
     function render() {
       document.getElementById('auraCount').textContent = Math.floor(state.aura).toLocaleString('es-AR');
       document.getElementById('powerCount').textContent = getTotalPower().toLocaleString('es-AR');
       document.getElementById('trofeosCount').textContent = state.trofeos;
+      document.getElementById('rachaCount').textContent = state.racha || 0;
       document.getElementById('chestTrofeos').textContent = state.trofeos;
       document.getElementById('chestBtn').disabled = state.trofeos < 20;
+
+      const rank = getRank(getTotalPower());
+      const badge = document.getElementById('rankBadge');
+      badge.innerText = rank.name;
+      badge.style.color = rank.color;
 
       // PERSONAJES
       const charGrid = document.getElementById('charGrid');
@@ -556,6 +760,8 @@
           <span style="color:var(--neon-cyan);">${getTotalPower().toLocaleString('es-AR')} Poder</span>
         </div>
       `;
+
+      savePlayerState();
     }
 
     function buyChar(id) {
@@ -591,10 +797,17 @@
       document.getElementById('viewContact').style.display = tab === 'contact' ? 'block' : 'none';
 
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      if (event) event.target.classList.add('active');
+      if (event && event.target) {
+        event.target.classList.add('active');
+      } else {
+        const map = { battle: 0, farm: 1, album: 2, chests: 3, ranking: 4, contact: 5 };
+        const btns = document.querySelectorAll('.tab-btn');
+        if (btns[map[tab]]) btns[map[tab]].classList.add('active');
+      }
     }
 
     checkAuth();
+    if (userSession) { loadPlayerState(); }
     initBattleStage();
     render();
   </script>
