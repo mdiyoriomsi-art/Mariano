@@ -95,6 +95,11 @@
     .welcome-toast.streak-toast {
       background: linear-gradient(90deg, var(--neon-gold), var(--neon-pink));
     }
+    .welcome-toast.achievement-toast {
+      background: linear-gradient(90deg, #1a1030, #2a0845);
+      border: 1px solid var(--neon-gold);
+      color: var(--neon-gold);
+    }
     @keyframes toastIn { from { opacity: 0; top: -60px; } to { opacity: 1; top: 20px; } }
     @keyframes toastOut { from { opacity: 1; } to { opacity: 0; top: -60px; } }
 
@@ -106,10 +111,41 @@
     .login-close { position: absolute; top: 12px; right: 16px; background: transparent; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; width: auto; padding: 0; }
     .error-msg { color: var(--neon-pink); font-size: 0.8rem; margin-bottom: 12px; display: none; }
 
+    /* FONDO AMBIENTAL — glow que respira lentamente detrás de todo, como si la
+       "aura" del propio juego estuviera viva. Es sutil a propósito. */
+    #ambientGlow {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+    }
+    #ambientGlow span {
+      position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.16;
+      animation: driftGlow 16s ease-in-out infinite;
+    }
+    #ambientGlow span:nth-child(1) { width: 320px; height: 320px; background: var(--neon-cyan); top: -80px; left: -60px; animation-duration: 18s; }
+    #ambientGlow span:nth-child(2) { width: 280px; height: 280px; background: var(--neon-purple); top: 40%; right: -80px; animation-duration: 22s; animation-delay: -6s; }
+    #ambientGlow span:nth-child(3) { width: 260px; height: 260px; background: var(--neon-pink); bottom: -60px; left: 30%; animation-duration: 20s; animation-delay: -11s; }
+    @keyframes driftGlow {
+      0%, 100% { transform: translate(0,0) scale(1); }
+      50% { transform: translate(30px,-25px) scale(1.15); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #ambientGlow span { animation: none; }
+    }
+    .header, .nav-tabs, #viewBattle, #viewFarm, #viewAlbum, #viewChests, #viewRanking, #viewContact, #viewAchievements, #premiumBannerWrap, footer {
+      position: relative; z-index: 1;
+    }
+
     /* HEADER */
     .header { padding: 20px; background: rgba(13,17,29,0.9); border-bottom: 1px solid var(--panel-border); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); }
+    .brand-title-row { display: flex; align-items: center; justify-content: center; gap: 10px; }
     .brand-title { font-size: 2.2rem; font-weight: 800; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1px; }
     .brand-subtitle { font-style: italic; color: var(--text-muted); font-size: 0.95rem; margin-top: 2px; }
+
+    .sound-toggle {
+      background: rgba(255,255,255,0.05); border: 1px solid var(--panel-border); color: var(--text-muted);
+      width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 0.95rem;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .sound-toggle.on { border-color: var(--neon-cyan); color: var(--neon-cyan); }
 
     /* INSIGNIA DE RANGO — elemento distintivo que sube de nivel con el jugador */
     .rank-badge {
@@ -129,22 +165,78 @@
     .nav-tabs { display: flex; justify-content: center; gap: 10px; margin: 20px 0; flex-wrap: wrap; }
     .tab-btn { background: var(--panel-bg); border: 1px solid var(--panel-border); color: var(--text-muted); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; }
     .tab-btn.active { background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); color: #fff; border-color: transparent; box-shadow: 0 0 15px rgba(0,210,255,0.3); }
+    .tab-btn.has-badge { position: relative; }
+    .tab-btn.has-badge::after {
+      content: attr(data-badge); position: absolute; top: -7px; right: -7px; background: var(--neon-gold);
+      color: #000; font-size: 0.62rem; font-weight: 800; border-radius: 10px; padding: 1px 6px; line-height: 1.4;
+    }
 
     /* ARENA COMBATE 1v1 */
-    .arena-card { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 14px; padding: 16px; max-width: 480px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .arena-card { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 14px; padding: 16px; max-width: 480px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: box-shadow 0.4s; }
+    .arena-card.boss-mode { border-color: var(--neon-gold); box-shadow: 0 0 30px rgba(255,190,11,0.35), 0 10px 30px rgba(0,0,0,0.5); }
+    .boss-banner {
+      display: none; background: linear-gradient(90deg, #3a2600, #1a0f00); border: 1px solid var(--neon-gold);
+      color: var(--neon-gold); font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.85rem;
+      padding: 8px; border-radius: 8px; margin-bottom: 12px; letter-spacing: 0.5px;
+      animation: badgeGlow 1.8s ease-in-out infinite;
+    }
     .vs-stage { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; position: relative; }
     .fighter-box { background: #080b14; border: 2px solid var(--panel-border); border-radius: 10px; padding: 12px; transition: all 0.3s; }
     .fighter-box.active-turn { border-color: var(--neon-cyan); box-shadow: 0 0 20px rgba(0,210,255,0.3); }
     .fighter-box h4 { font-size: 0.9rem; }
-    .fighter-box #p-avatar, .fighter-box #c-avatar { font-size: 1.8rem !important; margin: 6px 0 !important; }
-    .aura-bar-container { background: #1a233a; height: 9px; border-radius: 6px; overflow: hidden; margin-top: 8px; }
-    .aura-bar-fill { background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink)); height: 100%; width: 100%; transition: width 0.6s ease; }
 
-    .action-display { background: #000; border: 1px solid var(--panel-border); border-radius: 10px; padding: 9px; font-weight: 600; min-height: 38px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; color: var(--neon-cyan); font-size: 0.82rem; }
+    /* ANILLO DE AURA — el elemento firma del juego: un aro de energía alrededor de
+       cada personaje que respira, se acelera y cambia de color según su Aura
+       (HP) restante, y estalla al usar un golpe crítico o la Aura Suprema. */
+    .avatar-aura-wrap { position: relative; width: 64px; height: 64px; margin: 8px auto; display: flex; align-items: center; justify-content: center; }
+    .avatar-aura-ring {
+      position: absolute; inset: -6px; border-radius: 50%;
+      border: 3px solid var(--neon-cyan);
+      box-shadow: 0 0 14px 2px var(--neon-cyan);
+      animation: auraPulse 2.4s ease-in-out infinite;
+      transition: border-color 0.5s, box-shadow 0.5s;
+    }
+    @keyframes auraPulse {
+      0%, 100% { transform: scale(0.94); opacity: 0.7; }
+      50% { transform: scale(1.08); opacity: 1; }
+    }
+    .avatar-aura-ring.aura-low { animation-duration: 0.9s; }
+    .avatar-aura-ring.aura-burst { animation: auraBurst 0.5s ease-out; }
+    @keyframes auraBurst {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(1.9); opacity: 0; }
+    }
+    .fighter-box #p-avatar, .fighter-box #c-avatar { font-size: 1.8rem !important; margin: 0 !important; position: relative; z-index: 2; }
+    .aura-bar-container { background: #1a233a; height: 9px; border-radius: 6px; overflow: hidden; margin-top: 8px; }
+    .aura-bar-fill { background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink)); height: 100%; width: 100%; transition: width 0.6s ease, background 0.6s ease; }
+
+    /* MEDIDOR DE AURA SUPREMA — se llena golpe a golpe y habilita el finisher */
+    .ultimate-wrap { margin-bottom: 10px; text-align: left; }
+    .ultimate-label { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text-muted); font-weight: 700; margin-bottom: 3px; letter-spacing: 0.4px; }
+    .ultimate-bar-container { background: #1a1428; height: 10px; border-radius: 6px; overflow: hidden; border: 1px solid #33254d; }
+    .ultimate-bar-fill { background: linear-gradient(90deg, var(--neon-purple), var(--neon-gold)); height: 100%; width: 0%; transition: width 0.4s ease; box-shadow: 0 0 8px var(--neon-purple); }
+    .ultimate-btn {
+      width: 100%; margin-top: 8px; background: linear-gradient(90deg, var(--neon-gold), var(--neon-pink));
+      color: #000; border: none; padding: 10px; border-radius: 9px; font-weight: 800; font-family: 'Syne', sans-serif;
+      font-size: 0.78rem; cursor: pointer; letter-spacing: 0.4px; display: none;
+      animation: ultimateReady 1.1s ease-in-out infinite;
+    }
+    @keyframes ultimateReady { 0%,100% { box-shadow: 0 0 10px var(--neon-gold); } 50% { box-shadow: 0 0 22px var(--neon-pink); } }
+    .ultimate-btn:disabled { animation: none; opacity: 0.4; cursor: default; }
+
+    /* LOG DE COMBATE — feed de las últimas acciones en vez de una sola línea fija,
+       para que la batalla se sienta como que va acumulando historia. */
+    .combat-log { background: #000; border: 1px solid var(--panel-border); border-radius: 10px; padding: 8px 10px; min-height: 74px; max-height: 74px; overflow: hidden; margin-bottom: 12px; text-align: left; display: flex; flex-direction: column-reverse; gap: 3px; }
+    .combat-log-line { font-size: 0.72rem; color: var(--text-muted); line-height: 1.35; animation: logIn 0.3s ease-out; }
+    .combat-log-line.latest { color: var(--neon-cyan); font-weight: 700; }
+    .combat-log-line.crit-line { color: var(--neon-gold); font-weight: 700; }
+    .combat-log-line.cringe-line { color: var(--neon-pink); font-weight: 700; }
+    @keyframes logIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
     .actions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(105px, 1fr)); gap: 7px; }
     .action-btn { background: rgba(255,255,255,0.03); border: 1px solid var(--panel-border); color: #fff; padding: 9px 4px; border-radius: 9px; font-weight: 700; cursor: pointer; font-size: 0.7rem; font-family: 'Syne', sans-serif; transition: all 0.2s; }
     .action-btn:hover { border-color: var(--neon-pink); background: rgba(255,0,127,0.1); transform: translateY(-2px); }
+    .action-btn:active { transform: translateY(0) scale(0.96); }
     .action-btn:disabled { opacity: 0.35; cursor: default; transform: none; }
 
     /* PANEL DE FIN DE BATALLA */
@@ -161,12 +253,46 @@
     .save-progress-tease { margin-top: 12px; padding: 10px; border: 1px dashed var(--neon-cyan); border-radius: 10px; font-size: 0.78rem; color: var(--neon-cyan); text-align: left; }
     .save-progress-tease button { background: none; border: none; color: var(--neon-cyan); font-weight: 700; text-decoration: underline; cursor: pointer; padding: 0; font-size: 0.78rem; width: auto; }
 
+    /* CONFETI DE VICTORIA */
+    .confetti-piece {
+      position: fixed; top: -20px; width: 8px; height: 14px; z-index: 9997; pointer-events: none;
+      animation: confettiFall linear forwards;
+    }
+    @keyframes confettiFall {
+      to { transform: translateY(105vh) rotate(540deg); opacity: 0.9; }
+    }
+
     /* TARJETAS Y GRILLAS */
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; padding: 15px; max-width: 1000px; margin: 0 auto; }
-    .card { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; padding: 15px; text-align: left; }
+    .card { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; padding: 15px; text-align: left; position: relative; }
     .card button { width: 100%; background: var(--neon-cyan); color: #000; border: none; padding: 8px; border-radius: 6px; font-weight: 700; margin-top: 10px; cursor: pointer; }
 
-    /* BANNER PASE PREMIUM — ahora solo aparece después de la primera batalla, para no
+    /* NIVELES DE RAREZA — dan una capa de meta-juego tipo "gacha" a la colección */
+    .rarity-tag {
+      display: inline-block; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.5px;
+      padding: 2px 8px; border-radius: 10px; margin-bottom: 6px; border: 1px solid currentColor;
+    }
+    .card.rarity-comun { border-top: 3px solid #8a97ab; }
+    .card.rarity-raro { border-top: 3px solid var(--neon-cyan); }
+    .card.rarity-epico { border-top: 3px solid var(--neon-purple); }
+    .card.rarity-legendario { border-top: 3px solid var(--neon-gold); }
+    .card.rarity-mitico { border-top: 3px solid var(--neon-pink); box-shadow: 0 0 16px rgba(255,0,127,0.18); }
+
+    /* LOGROS */
+    .achievement-card { display: flex; gap: 12px; align-items: center; text-align: left; }
+    .achievement-card.locked { opacity: 0.4; }
+    .achievement-icon { font-size: 1.8rem; flex-shrink: 0; width: 40px; text-align: center; }
+    .achievement-progress { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; }
+
+    /* MISIONES DIARIAS */
+    .mission-card { display: flex; justify-content: space-between; align-items: center; gap: 10px; text-align: left; }
+    .mission-card .mission-info { flex: 1; }
+    .mission-bar-container { background: #1a233a; height: 6px; border-radius: 4px; overflow: hidden; margin-top: 6px; }
+    .mission-bar-fill { background: var(--neon-cyan); height: 100%; transition: width 0.4s ease; }
+    .mission-claim-btn { background: var(--neon-gold); color: #000; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 0.72rem; flex-shrink: 0; }
+    .mission-claim-btn:disabled { background: #2a3040; color: var(--text-muted); cursor: default; }
+
+    /* PASE PREMIUM BANNER — ahora solo aparece después de la primera batalla, para no
        empujar la compra antes de que el jugador haya probado el juego. */
     #premiumBannerWrap { display: none; }
     .premium-banner { background: linear-gradient(135deg, #18002e, #05070f); border: 1px solid var(--neon-purple); border-radius: 16px; padding: 20px; max-width: 650px; margin: 30px auto; animation: panelIn 0.4s ease-out; }
@@ -180,6 +306,8 @@
   </style>
 </head>
 <body id="app-body">
+
+  <div id="ambientGlow"><span></span><span></span><span></span></div>
 
   <!-- MODAL DE LOGIN — ahora es OPCIONAL: se abre solo si el jugador quiere vincular
        su cuenta (para no perder el progreso y en un futuro poder confirmar compras).
@@ -220,7 +348,10 @@
       <button id="logoutBtn" class="logout-btn" onclick="handleLogout()" style="display:none;">Cerrar Sesión</button>
     </div>
 
-    <div class="brand-title">AURA FARMEAR</div>
+    <div class="brand-title-row">
+      <div class="brand-title">AURA FARMEAR</div>
+      <button class="sound-toggle" id="soundToggleBtn" onclick="toggleSound()" title="Sonido">🔇</button>
+    </div>
     <div class="brand-subtitle">¿Cuánto Aura podés conseguir?</div>
     <div class="rank-badge" id="rankBadge">--</div>
 
@@ -234,18 +365,21 @@
   </div>
 
   <!-- NAVEGACIÓN -->
-  <div class="nav-tabs">
+  <div class="nav-tabs" id="navTabs">
     <button class="tab-btn active" onclick="switchTab('battle', event)">⚔️ Arena de Batalla</button>
     <button class="tab-btn" onclick="switchTab('farm', event)">👥 Personajes (25)</button>
     <button class="tab-btn" onclick="switchTab('album', event)">🖼️ Álbum Misterioso (80)</button>
     <button class="tab-btn" onclick="switchTab('chests', event)">🎁 Cofre Aura</button>
+    <button class="tab-btn" id="missionsTabBtn" onclick="switchTab('missions', event)">📋 Misiones</button>
+    <button class="tab-btn" id="achievementsTabBtn" onclick="switchTab('achievements', event)">🏅 Logros</button>
     <button class="tab-btn" onclick="switchTab('ranking', event)">🏆 Ranking</button>
     <button class="tab-btn" onclick="switchTab('contact', event)">📩 Contacto</button>
   </div>
 
   <!-- ARENA DE BATALLA POR TURNOS -->
   <div id="viewBattle">
-    <div class="arena-card">
+    <div class="arena-card" id="arenaCard">
+      <div class="boss-banner" id="bossBanner">👑 BATALLA DE JEFE — recompensas mayores en juego</div>
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
         <h3 style="color:var(--text-main);">Batalla de Aura por Turnos 1v1</h3>
         <select id="ai-difficulty" onchange="initBattleStage()" style="background:#000; color:#fff; border:1px solid var(--panel-border); padding:6px 10px; border-radius:6px;">
@@ -261,7 +395,10 @@
         <div class="fighter-box" id="p-card">
           <small style="color:var(--neon-cyan); font-weight:700;">TÚ</small>
           <h4 id="p-name" style="margin:5px 0;">--</h4>
-          <div style="font-size:2.5rem; margin:10px 0;" id="p-avatar">😎</div>
+          <div class="avatar-aura-wrap">
+            <div class="avatar-aura-ring" id="p-ring"></div>
+            <div style="font-size:2.5rem;" id="p-avatar">😎</div>
+          </div>
           <div id="p-aura-val" style="font-weight:700; color:var(--neon-cyan);">0</div>
           <div class="aura-bar-container"><div id="p-bar" class="aura-bar-fill"></div></div>
         </div>
@@ -270,15 +407,25 @@
         <div class="fighter-box" id="c-card">
           <small style="color:var(--neon-pink); font-weight:700;">RIVAL</small>
           <h4 id="c-name" style="margin:5px 0;">--</h4>
-          <div style="font-size:2.5rem; margin:10px 0;" id="c-avatar">🤖</div>
+          <div class="avatar-aura-wrap">
+            <div class="avatar-aura-ring" id="c-ring"></div>
+            <div style="font-size:2.5rem;" id="c-avatar">🤖</div>
+          </div>
           <div id="c-aura-val" style="font-weight:700; color:var(--neon-pink);">0</div>
           <div class="aura-bar-container"><div id="c-bar" class="aura-bar-fill"></div></div>
         </div>
       </div>
 
-      <!-- PANTALLA DE ACCIÓN DE COMBATE -->
-      <div class="action-display" id="actionStatus">
-        ¡Es tu turno! Elegí tu acción de Aura.
+      <!-- MEDIDOR DE AURA SUPREMA -->
+      <div class="ultimate-wrap">
+        <div class="ultimate-label"><span>🌟 AURA SUPREMA</span><span id="ultimateLabelPct">0%</span></div>
+        <div class="ultimate-bar-container"><div class="ultimate-bar-fill" id="ultimateBar"></div></div>
+        <button class="ultimate-btn" id="ultimateBtn" onclick="playUltimate()" disabled>USAR AURA SUPREMA 🌟</button>
+      </div>
+
+      <!-- LOG DE COMBATE -->
+      <div class="combat-log" id="combatLog">
+        <div class="combat-log-line latest">¡Es tu turno! Elegí tu acción de Aura.</div>
       </div>
 
       <!-- BOTONES DE ACCIÓN DE AURA -->
@@ -331,6 +478,18 @@
     </div>
   </div>
 
+  <!-- MISIONES DIARIAS -->
+  <div id="viewMissions" style="display:none;">
+    <p style="color:var(--text-muted); margin-bottom: 15px;">Se renuevan todos los días. Cumplilas para ganar Aura extra sin depender solo de la racha.</p>
+    <div class="grid" id="missionsGrid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));"></div>
+  </div>
+
+  <!-- LOGROS -->
+  <div id="viewAchievements" style="display:none;">
+    <p style="color:var(--text-muted); margin-bottom: 15px;">Metas de largo plazo para los que se toman en serio el farmeo.</p>
+    <div class="grid" id="achievementsGrid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));"></div>
+  </div>
+
   <!-- RANKING -->
   <div id="viewRanking" style="display:none;">
     <h3>Ranking Global</h3>
@@ -368,6 +527,11 @@
         desbloqueás y subís de nivel a tus 25 personajes, completás el Álbum Misterioso de 80 figuritas y subís de Rango
         hasta romperla del todo en <b style="color:#fff;">Aura Argenta</b>, el nivel máximo. Cada victoria suma Racha,
         cada Racha te hace pegar más fuerte la próxima. No te quedes en Cringe Aura — subí, farmeá, hacete Leyenda.
+      </p>
+      <p style="margin-top:10px; line-height:1.7;">
+        Cada 5 victorias te espera un <b style="color:var(--neon-gold);">Jefe</b> con recompensas más grandes, y golpeando
+        sin fallar cargás la barra de <b style="color:var(--neon-purple);">Aura Suprema</b> para soltar un finisher.
+        Sumá misiones diarias y logros para no depender solo de la suerte del cofre.
       </p>
       <p style="margin-top:10px; line-height:1.7;">
         Este proyecto tiene muchísimas horas de laburo puestas atrás: cada personaje, cada figurita y cada mecánica de
@@ -409,6 +573,15 @@
       { id: 25, name: 'Aura Celestial', baseCost: 200000000000, power: 100000000000, avatar: '✨' }
     ];
 
+    // RAREZA — capa de meta-juego tipo gacha derivada del costo base del personaje
+    function getRarity(baseCost) {
+      if (baseCost >= 15000000000) return { key: 'mitico', label: 'MÍTICO', color: 'var(--neon-pink)' };
+      if (baseCost >= 450000000) return { key: 'legendario', label: 'LEGENDARIO', color: 'var(--neon-gold)' };
+      if (baseCost >= 12000) return { key: 'epico', label: 'ÉPICO', color: 'var(--neon-purple)' };
+      if (baseCost >= 100) return { key: 'raro', label: 'RARO', color: 'var(--neon-cyan)' };
+      return { key: 'comun', label: 'COMÚN', color: '#8a97ab' };
+    }
+
     // 80 FIGURITAS
     const FIGURITAS = Array.from({ length: 80 }, (_, i) => ({
       id: i + 1,
@@ -430,10 +603,37 @@
       return r;
     }
 
+    // LOGROS — metas de largo plazo, se evalúan tras cada cambio relevante de estado
+    const ACHIEVEMENTS = [
+      { id: 'first_win', icon: '🥇', name: 'Primera Sangre', desc: 'Ganá tu primera batalla.', check: s => (s.totalWins || 0) >= 1 },
+      { id: 'streak5', icon: '🔥', name: 'En Llamas', desc: 'Alcanzá una Racha de 5 victorias seguidas.', check: s => (s.bestRacha || 0) >= 5 },
+      { id: 'streak10', icon: '🌪️', name: 'Imparable', desc: 'Alcanzá una Racha de 10 victorias seguidas.', check: s => (s.bestRacha || 0) >= 10 },
+      { id: 'boss1', icon: '👑', name: 'Cazador de Jefes', desc: 'Derrotá a tu primer Jefe.', check: s => (s.bossesDefeated || 0) >= 1 },
+      { id: 'boss5', icon: '🏰', name: 'Verdugo de Jefes', desc: 'Derrotá a 5 Jefes.', check: s => (s.bossesDefeated || 0) >= 5 },
+      { id: 'ultimate1', icon: '🌟', name: 'Aura al Máximo', desc: 'Usá tu primera Aura Suprema.', check: s => (s.ultimatesUsed || 0) >= 1 },
+      { id: 'collector10', icon: '👥', name: 'Reclutador', desc: 'Tené 10 personajes distintos desbloqueados.', check: s => Object.keys(s.owned || {}).length >= 10 },
+      { id: 'collector25', icon: '🎖️', name: 'Plantel Completo', desc: 'Desbloqueá los 25 personajes.', check: s => Object.keys(s.owned || {}).length >= 25 },
+      { id: 'power1m', icon: '💪', name: 'Poder de Millones', desc: 'Alcanzá 1.000.000 de Poder total.', check: s => getTotalPower() >= 1000000 },
+      { id: 'trofeos100', icon: '🏆', name: 'Coleccionista de Trofeos', desc: 'Acumulá 100 Trofeos en total.', check: s => (s.totalTrofeos || 0) >= 100 },
+      { id: 'diaracha7', icon: '📅', name: 'Semana Completa', desc: 'Llegá a una Racha Diaria de 7 días.', check: s => (s.diaRacha || 0) >= 7 },
+      { id: 'rankArgenta', icon: '🇦🇷', name: 'Aura Argenta', desc: 'Alcanzá el rango máximo del juego.', check: s => getRank(getTotalPower()).name.includes('Argenta') }
+    ];
+
+    // MISIONES DIARIAS — se regeneran cada día para dar objetivos cortos y variados
+    const MISSION_POOL = [
+      { id: 'win3', icon: '⚔️', label: 'Ganá 3 batallas', target: 3, reward: 1500, track: 'winsToday' },
+      { id: 'crit2', icon: '⚡', label: 'Conectá 2 golpes críticos', target: 2, reward: 1200, track: 'critsToday' },
+      { id: 'buy1', icon: '💪', label: 'Mejorá 1 personaje', target: 1, reward: 800, track: 'buysToday' },
+      { id: 'ultimate1d', icon: '🌟', label: 'Usá la Aura Suprema 1 vez', target: 1, reward: 1000, track: 'ultimatesToday' },
+      { id: 'win1noloss', icon: '🎯', label: 'Ganá una batalla sin perder Aura por Cringe', target: 1, reward: 1300, track: 'cleanWinsToday' }
+    ];
+
     // GENERADOR DE RIVAL PERSONALIZADO
     const RIVAL_ADJETIVOS = ['Sigma', 'Alfa', 'Cringe', 'Turbo', 'Mega', 'Ultra', 'Fantasma', 'Explosivo', 'Legendario', 'Rankeado'];
     const RIVAL_SUSTANTIVOS = ['Pibe', 'Crack', 'Capo', 'Rey', 'Duende', 'Fenómeno', 'Titán', 'Genio', 'Verdugo', 'Campeón'];
     const RIVAL_AVATARES = ['🧢', '🕶️', '⚡', '👑', '🎭', '🦾', '🐺', '🔥', '🥷', '👹'];
+    const BOSS_ADJETIVOS = ['Supremo', 'Eterno', 'Imperial', 'Devastador', 'Colosal'];
+    const BOSS_SUSTANTIVOS = ['Jefe Final', 'Señor del Aura', 'Emperador Cringe', 'Guardián Legendario', 'Amo del Rango'];
     const DIFFICULTY_MULT = { bronce: 0.65, plata: 0.9, oro: 1.1, leyenda: 1.5 };
 
     function hashStr(s) {
@@ -442,8 +642,8 @@
       return h;
     }
 
-    function generateRival(username, cat) {
-      const seed = hashStr((username || 'invitado') + '-' + cat);
+    function generateRival(username, cat, seedSalt) {
+      const seed = hashStr((username || 'invitado') + '-' + cat + '-' + (seedSalt || ''));
       const adj = RIVAL_ADJETIVOS[seed % RIVAL_ADJETIVOS.length];
       const noun = RIVAL_SUSTANTIVOS[Math.floor(seed / 7) % RIVAL_SUSTANTIVOS.length];
       const avatar = RIVAL_AVATARES[Math.floor(seed / 13) % RIVAL_AVATARES.length];
@@ -451,10 +651,21 @@
       return { name: `${adj} ${noun}`, avatar, cat, variance };
     }
 
+    function generateBoss(username, cat) {
+      const seed = hashStr((username || 'invitado') + '-boss-' + cat + '-' + Date.now());
+      const adj = BOSS_ADJETIVOS[seed % BOSS_ADJETIVOS.length];
+      const noun = BOSS_SUSTANTIVOS[Math.floor(seed / 7) % BOSS_SUSTANTIVOS.length];
+      return { name: `${adj} ${noun}`, avatar: '👑', cat, variance: 1.4 };
+    }
+
     // SESIÓN — ahora es opcional. userSession null significa "invitado", y se puede
     // jugar y guardar progreso perfectamente bien en ese estado.
     let userSession = JSON.parse(localStorage.getItem('aura_user')) || null;
-    const DEFAULT_STATE = { aura: 5000, trofeos: 0, owned: { 1: 1 }, racha: 0, battlesPlayed: 0, diaRacha: 0, lastLoginDate: null };
+    const DEFAULT_STATE = {
+      aura: 5000, trofeos: 0, owned: { 1: 1 }, racha: 0, battlesPlayed: 0, diaRacha: 0, lastLoginDate: null,
+      totalWins: 0, bestRacha: 0, bossesDefeated: 0, ultimatesUsed: 0, totalTrofeos: 0,
+      unlockedAchievements: [], lastMissionDate: null, missionProgress: {}, claimedMissions: [], activeMissions: []
+    };
     let state = Object.assign({}, DEFAULT_STATE);
 
     // COMBATE
@@ -462,6 +673,56 @@
     let cpuMaxAura = 10000, cpuCurrentAura = 10000;
     let currentCpu = { name: 'Rival', avatar: '🤖', cat: 'oro', variance: 1 };
     let isPlayerTurn = true;
+    let isBossBattle = false;
+    let ultimateCharge = 0;
+    const ULTIMATE_MAX = 100;
+
+    // SONIDO — efectos simples generados con Web Audio, sin depender de archivos
+    // externos, más un interruptor para no imponer sonido a quien no lo quiere.
+    let soundEnabled = localStorage.getItem('aura_sound') === 'true';
+    let audioCtx = null;
+    function getAudioCtx() {
+      if (!audioCtx) {
+        try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; }
+      }
+      return audioCtx;
+    }
+    function beep(freq, duration, type, gainVal) {
+      if (!soundEnabled) return;
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      try {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type || 'square';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(gainVal || 0.06, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (e) { /* silencioso si el navegador bloquea audio */ }
+    }
+    function sfxHit() { beep(320, 0.12, 'square', 0.05); }
+    function sfxCrit() { beep(180, 0.05, 'square', 0.07); setTimeout(() => beep(520, 0.15, 'square', 0.06), 60); }
+    function sfxCringe() { beep(120, 0.25, 'sawtooth', 0.05); }
+    function sfxUltimate() { [180, 260, 340, 460].forEach((f, i) => setTimeout(() => beep(f, 0.18, 'square', 0.07), i * 90)); }
+    function sfxVictory() { [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => beep(f, 0.2, 'triangle', 0.06), i * 110)); }
+    function sfxDefeat() { [300, 220, 140].forEach((f, i) => setTimeout(() => beep(f, 0.3, 'sawtooth', 0.05), i * 140)); }
+    function vibrate(pattern) { try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (e) {} }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      localStorage.setItem('aura_sound', soundEnabled ? 'true' : 'false');
+      updateSoundBtn();
+      if (soundEnabled) beep(440, 0.1, 'sine', 0.06);
+    }
+    function updateSoundBtn() {
+      const btn = document.getElementById('soundToggleBtn');
+      btn.textContent = soundEnabled ? '🔊' : '🔇';
+      btn.classList.toggle('on', soundEnabled);
+    }
 
     function validateEmail(email) {
       const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -485,6 +746,7 @@
         state = Object.assign({}, DEFAULT_STATE);
         showWelcomeToast();
       }
+      refreshDailyMissions();
     }
 
     function savePlayerState() {
@@ -502,6 +764,14 @@
     function showStreakToast(text) {
       const div = document.createElement('div');
       div.className = 'welcome-toast streak-toast';
+      div.innerText = text;
+      document.body.appendChild(div);
+      setTimeout(() => div.remove(), 4000);
+    }
+
+    function showAchievementToast(text) {
+      const div = document.createElement('div');
+      div.className = 'welcome-toast achievement-toast';
       div.innerText = text;
       document.body.appendChild(div);
       setTimeout(() => div.remove(), 4000);
@@ -533,6 +803,48 @@
       savePlayerState();
 
       showStreakToast(`📅 Racha Diaria: Día ${state.diaRacha} — +${bonus.toLocaleString('es-AR')} Aura de regalo`);
+    }
+
+    // MISIONES DIARIAS — 3 misiones al azar (con semilla del día) que se resetean
+    // cada 24hs, para dar objetivos cortos además de la progresión de largo plazo.
+    function refreshDailyMissions() {
+      const today = new Date().toISOString().slice(0, 10);
+      if (state.lastMissionDate === today && state.activeMissions && state.activeMissions.length) return;
+      const seed = hashStr(today + '-' + (userSession ? userSession.email : 'invitado'));
+      const shuffled = [...MISSION_POOL].sort((a, b) => hashStr(a.id + seed) - hashStr(b.id + seed));
+      state.activeMissions = shuffled.slice(0, 3).map(m => m.id);
+      state.missionProgress = {};
+      state.claimedMissions = [];
+      state.lastMissionDate = today;
+    }
+
+    function bumpMissionProgress(track, amount) {
+      amount = amount || 1;
+      state.missionProgress[track] = (state.missionProgress[track] || 0) + amount;
+    }
+
+    function claimMission(missionId) {
+      const def = MISSION_POOL.find(m => m.id === missionId);
+      if (!def) return;
+      const progress = state.missionProgress[def.track] || 0;
+      if (progress < def.target || state.claimedMissions.includes(missionId)) return;
+      state.claimedMissions.push(missionId);
+      state.aura += def.reward;
+      showStreakToast(`📋 Misión completada: +${def.reward.toLocaleString('es-AR')} Aura`);
+      render();
+    }
+
+    // LOGROS — revisa todas las condiciones y desbloquea las nuevas
+    function checkAchievements() {
+      let unlockedNew = false;
+      ACHIEVEMENTS.forEach(a => {
+        if (!state.unlockedAchievements.includes(a.id) && a.check(state)) {
+          state.unlockedAchievements.push(a.id);
+          showAchievementToast(`🏅 Logro desbloqueado: ${a.name}`);
+          unlockedNew = true;
+        }
+      });
+      return unlockedNew;
     }
 
     function checkAuth() {
@@ -620,38 +932,91 @@
 
     function initBattleStage() {
       const cat = document.getElementById('ai-difficulty').value;
-      currentCpu = generateRival(userSession ? userSession.username : 'invitado', cat);
+
+      // Cada 5 victorias totales, la siguiente batalla es contra un Jefe con más
+      // Aura y mejores recompensas — un objetivo claro a mediano plazo.
+      isBossBattle = state.totalWins > 0 && state.totalWins % 5 === 0 && state.lastBossMilestone !== state.totalWins;
+
+      currentCpu = isBossBattle
+        ? generateBoss(userSession ? userSession.username : 'invitado', cat)
+        : generateRival(userSession ? userSession.username : 'invitado', cat, state.battlesPlayed);
 
       playerMaxAura = Math.max(10000, getTotalPower() * 2);
       playerCurrentAura = playerMaxAura;
 
-      cpuMaxAura = Math.round(playerMaxAura * DIFFICULTY_MULT[cat] * currentCpu.variance);
+      let bossMult = isBossBattle ? 1.6 : 1;
+      cpuMaxAura = Math.round(playerMaxAura * DIFFICULTY_MULT[cat] * currentCpu.variance * bossMult);
       cpuCurrentAura = cpuMaxAura;
 
       isPlayerTurn = true;
+      ultimateCharge = 0;
 
       document.getElementById('p-name').innerText = userSession ? userSession.username : "Invitado";
       document.getElementById('c-name').innerText = currentCpu.name;
       document.getElementById('c-avatar').innerText = currentCpu.avatar;
 
+      document.getElementById('arenaCard').classList.toggle('boss-mode', isBossBattle);
+      document.getElementById('bossBanner').style.display = isBossBattle ? 'block' : 'none';
+
       document.getElementById('battleEndPanel').style.display = 'none';
       document.getElementById('actionsGrid').style.display = 'grid';
       setActionsEnabled(true);
 
+      resetCombatLog();
       updateBattleUI();
-      document.getElementById('actionStatus').innerText = `¡Comienza la batalla contra ${currentCpu.name}! Seleccioná tu movimiento.`;
+      updateUltimateUI();
+      logCombat(isBossBattle
+        ? `👑 ¡${currentCpu.name} bloquea tu camino! Batalla de Jefe iniciada.`
+        : `¡Comienza la batalla contra ${currentCpu.name}! Seleccioná tu movimiento.`, 'latest');
     }
 
     function setActionsEnabled(enabled) {
       document.querySelectorAll('#actionsGrid .action-btn').forEach(b => b.disabled = !enabled);
     }
 
+    function resetCombatLog() {
+      const log = document.getElementById('combatLog');
+      log.innerHTML = '';
+    }
+
+    function logCombat(text, cls) {
+      const log = document.getElementById('combatLog');
+      document.querySelectorAll('#combatLog .combat-log-line').forEach(l => l.classList.remove('latest'));
+      const line = document.createElement('div');
+      line.className = 'combat-log-line ' + (cls || '');
+      line.innerText = text;
+      log.appendChild(line);
+      while (log.children.length > 4) log.removeChild(log.firstChild);
+    }
+
+    function updateAuraRing(ringId, pct) {
+      const ring = document.getElementById(ringId);
+      if (!ring) return;
+      ring.classList.toggle('aura-low', pct < 30);
+      let color = 'var(--neon-cyan)';
+      if (pct < 30) color = 'var(--neon-pink)';
+      else if (pct < 60) color = 'var(--neon-gold)';
+      ring.style.borderColor = color;
+      ring.style.boxShadow = `0 0 14px 2px ${color}`;
+    }
+
+    function burstAuraRing(ringId) {
+      const ring = document.getElementById(ringId);
+      if (!ring) return;
+      ring.classList.add('aura-burst');
+      setTimeout(() => ring.classList.remove('aura-burst'), 500);
+    }
+
     function updateBattleUI() {
       document.getElementById('p-aura-val').innerText = Math.floor(Math.max(0, playerCurrentAura)).toLocaleString('es-AR');
       document.getElementById('c-aura-val').innerText = Math.floor(Math.max(0, cpuCurrentAura)).toLocaleString('es-AR');
 
-      document.getElementById('p-bar').style.width = Math.max(0, (playerCurrentAura / playerMaxAura) * 100) + '%';
-      document.getElementById('c-bar').style.width = Math.max(0, (cpuCurrentAura / cpuMaxAura) * 100) + '%';
+      const pPct = Math.max(0, (playerCurrentAura / playerMaxAura) * 100);
+      const cPct = Math.max(0, (cpuCurrentAura / cpuMaxAura) * 100);
+      document.getElementById('p-bar').style.width = pPct + '%';
+      document.getElementById('c-bar').style.width = cPct + '%';
+      updateAuraRing('p-ring', pPct);
+      updateAuraRing('c-ring', cPct);
 
       if (isPlayerTurn) {
         document.getElementById('p-card').classList.add('active-turn');
@@ -662,6 +1027,16 @@
       }
     }
 
+    function updateUltimateUI() {
+      const pct = Math.min(100, Math.round((ultimateCharge / ULTIMATE_MAX) * 100));
+      document.getElementById('ultimateBar').style.width = pct + '%';
+      document.getElementById('ultimateLabelPct').innerText = pct + '%';
+      const btn = document.getElementById('ultimateBtn');
+      const ready = pct >= 100 && playerCurrentAura > 0 && cpuCurrentAura > 0;
+      btn.style.display = pct >= 100 ? 'block' : 'none';
+      btn.disabled = !ready || !isPlayerTurn;
+    }
+
     const ACTION_DELAY = 1100;
     const CPU_THINK_DELAY = 1900;
 
@@ -669,6 +1044,7 @@
       if (!isPlayerTurn || playerCurrentAura <= 0 || cpuCurrentAura <= 0) return;
       isPlayerTurn = false;
       setActionsEnabled(false);
+      document.getElementById('ultimateBtn').disabled = true;
 
       const cringe = Math.random() < 0.15;
       const critico = !cringe && Math.random() < 0.12;
@@ -676,8 +1052,11 @@
       if (cringe) {
         playerCurrentAura = Math.max(0, playerCurrentAura - 1500);
         triggerCringeFx();
+        sfxCringe();
+        vibrate(80);
         showDamageNumber('p-card', '-1.500', 'var(--neon-pink)');
-        document.getElementById('actionStatus').innerText = `¡CRINGE! Fallaste ${actionName}. Perdiste 1.500 de Aura.`;
+        logCombat(`¡CRINGE! Fallaste ${actionName}. Perdiste 1.500 de Aura.`, 'cringe-line');
+        state.cringeThisBattle = true;
       } else {
         let dmg = playerMaxAura * 0.3;
         if (actionName === 'SIX SEVEN') dmg = playerMaxAura * 0.45;
@@ -689,21 +1068,37 @@
         if (critico) dmg *= 1.8;
 
         cpuCurrentAura = Math.max(0, cpuCurrentAura - dmg);
-        if (critico) { triggerCritFx(); } else { triggerHitFx(); }
+
+        // Carga la barra de Aura Suprema con cada golpe conectado (más si es crítico)
+        ultimateCharge = Math.min(ULTIMATE_MAX, ultimateCharge + (critico ? 34 : 20));
+
+        if (critico) {
+          triggerCritFx();
+          sfxCrit();
+          vibrate([40, 30, 60]);
+          burstAuraRing('c-ring');
+          bumpMissionProgress('critsToday');
+        } else {
+          triggerHitFx();
+          sfxHit();
+          vibrate(30);
+        }
         showDamageNumber('c-card', '-' + Math.floor(dmg).toLocaleString('es-AR'), critico ? 'var(--neon-gold)' : 'var(--neon-cyan)');
 
         let msg = actionName === 'POSTURA DEL GUERRERO'
           ? `Usaste Postura del Guerrero 🧘‍♂️🙏. Infligiste ${Math.floor(dmg).toLocaleString('es-AR')} de daño y recuperaste Aura.`
           : `Lanzaste ${actionName}. Le restaste ${Math.floor(dmg).toLocaleString('es-AR')} de Aura a tu rival.`;
-        if (critico) msg = `⚡ ¡GOLPE CRÍTICO! ` + msg;
-        document.getElementById('actionStatus').innerText = msg;
+        let cls = 'latest';
+        if (critico) { msg = `⚡ ¡GOLPE CRÍTICO! ` + msg; cls = 'crit-line'; }
+        logCombat(msg, cls);
       }
 
       updateBattleUI();
+      updateUltimateUI();
 
       setTimeout(() => {
         if (cpuCurrentAura <= 0) {
-          const gain = endBattle(true);
+          const gain = endBattle(true, actionName);
           if (actionName === 'SIX SEVEN') {
             document.getElementById('sixSevenAuraText').innerText = `+${gain.toLocaleString('es-AR')} AURA OBTENIDA`;
             document.getElementById('sixSevenModal').style.display = 'flex';
@@ -714,17 +1109,54 @@
       }, ACTION_DELAY);
     }
 
+    // AURA SUPREMA — el finisher que se desbloquea al llenar la barra golpeando sin
+    // fallar. Da una recompensa de riesgo/beneficio: guardar acciones normales para
+    // soltar un golpe grande, o gastarlo apenas está listo.
+    function playUltimate() {
+      if (!isPlayerTurn || ultimateCharge < ULTIMATE_MAX || playerCurrentAura <= 0 || cpuCurrentAura <= 0) return;
+      isPlayerTurn = false;
+      setActionsEnabled(false);
+      document.getElementById('ultimateBtn').disabled = true;
+
+      const dmg = playerMaxAura * 0.85;
+      cpuCurrentAura = Math.max(0, cpuCurrentAura - dmg);
+      ultimateCharge = 0;
+      state.ultimatesUsed = (state.ultimatesUsed || 0) + 1;
+      bumpMissionProgress('ultimatesToday');
+
+      triggerCritFx();
+      burstAuraRing('c-ring');
+      burstAuraRing('p-ring');
+      sfxUltimate();
+      vibrate([50, 40, 50, 40, 90]);
+      showDamageNumber('c-card', '-' + Math.floor(dmg).toLocaleString('es-AR'), 'var(--neon-gold)');
+      logCombat(`🌟 ¡AURA SUPREMA! Golpe devastador: ${Math.floor(dmg).toLocaleString('es-AR')} de daño.`, 'crit-line');
+
+      updateBattleUI();
+      updateUltimateUI();
+
+      setTimeout(() => {
+        if (cpuCurrentAura <= 0) {
+          endBattle(true, 'AURA SUPREMA');
+          return;
+        }
+        setTimeout(cpuTurn, CPU_THINK_DELAY);
+      }, ACTION_DELAY);
+    }
+
     function cpuTurn() {
       if (cpuCurrentAura <= 0) return;
       const cpuActions = ['SIX SEVEN 🤙🏽', 'MEWING 🤫', 'CORTA CUELLO ⚔️', 'POSTURA DEL GUERRERO 🧘‍♂️🙏'];
       const chosen = cpuActions[Math.floor(Math.random() * cpuActions.length)];
-      const dmg = cpuMaxAura * 0.22;
+      const dmg = cpuMaxAura * (isBossBattle ? 0.26 : 0.22);
 
       playerCurrentAura = Math.max(0, playerCurrentAura - dmg);
       triggerCringeFx();
+      sfxHit();
+      vibrate(30);
       showDamageNumber('p-card', '-' + Math.floor(dmg).toLocaleString('es-AR'), 'var(--neon-pink)');
 
-      document.getElementById('actionStatus').innerText = `${currentCpu.name} usó ${chosen} y te quitó ${Math.floor(dmg).toLocaleString('es-AR')} de Aura.`;
+      logCombat(`${currentCpu.name} usó ${chosen} y te quitó ${Math.floor(dmg).toLocaleString('es-AR')} de Aura.`, 'latest');
 
       updateBattleUI();
 
@@ -735,13 +1167,15 @@
         }
         isPlayerTurn = true;
         setActionsEnabled(true);
+        updateUltimateUI();
         updateBattleUI();
       }, ACTION_DELAY);
     }
 
-    function endBattle(won) {
+    function endBattle(won, finishMove) {
       isPlayerTurn = false;
       document.getElementById('actionsGrid').style.display = 'none';
+      document.getElementById('ultimateBtn').style.display = 'none';
       state.battlesPlayed = (state.battlesPlayed || 0) + 1;
 
       const panel = document.getElementById('battleEndPanel');
@@ -759,19 +1193,40 @@
 
       if (won) {
         state.racha = (state.racha || 0) + 1;
-        const streakMult = 1 + Math.min(state.racha * 0.1, 1);
-        gain = Math.floor(cpuMaxAura * 0.6 * streakMult * (isPremium ? 2 : 1));
-        state.aura += gain;
-        state.trofeos += 3;
+        state.totalWins = (state.totalWins || 0) + 1;
+        state.bestRacha = Math.max(state.bestRacha || 0, state.racha);
+        bumpMissionProgress('winsToday');
+        if (!state.cringeThisBattle) bumpMissionProgress('cleanWinsToday');
 
-        title.innerHTML = '🏆 ¡VICTORIA!';
-        title.style.color = 'var(--neon-cyan)';
-        subtitle.innerText = `+${gain.toLocaleString('es-AR')} Aura · +3 Trofeos · Racha x${state.racha}` + (!isPremium ? ' (con Premium, el doble)' : '');
+        const streakMult = 1 + Math.min(state.racha * 0.1, 1);
+        const bossBonus = isBossBattle ? 2.2 : 1;
+        gain = Math.floor(cpuMaxAura * 0.6 * streakMult * bossBonus * (isPremium ? 2 : 1));
+        state.aura += gain;
+        const trofeosGain = isBossBattle ? 12 : 3;
+        state.trofeos += trofeosGain;
+        state.totalTrofeos = (state.totalTrofeos || 0) + trofeosGain;
+
+        if (isBossBattle) {
+          state.bossesDefeated = (state.bossesDefeated || 0) + 1;
+          state.lastBossMilestone = state.totalWins;
+          title.innerHTML = '👑 ¡JEFE DERROTADO!';
+          title.style.color = 'var(--neon-gold)';
+          subtitle.innerText = `+${gain.toLocaleString('es-AR')} Aura · +${trofeosGain} Trofeos · Recompensa de Jefe`;
+          launchConfetti(true);
+          sfxVictory();
+        } else {
+          title.innerHTML = '🏆 ¡VICTORIA!';
+          title.style.color = 'var(--neon-cyan)';
+          subtitle.innerText = `+${gain.toLocaleString('es-AR')} Aura · +${trofeosGain} Trofeos · Racha x${state.racha}` + (!isPremium ? ' (con Premium, el doble)' : '');
+          launchConfetti(false);
+          sfxVictory();
+        }
       } else {
         state.racha = 0;
         title.innerHTML = '💀 DERROTA';
         title.style.color = 'var(--neon-pink)';
         subtitle.innerText = 'Te quedaste sin Aura. Mejorá tus personajes en la sección Personajes y volvé a intentarlo.';
+        sfxDefeat();
 
         if (!isPremium) {
           tease.style.display = 'block';
@@ -779,8 +1234,25 @@
         }
       }
 
+      state.cringeThisBattle = false;
+      checkAchievements();
       render();
       return gain;
+    }
+
+    function launchConfetti(big) {
+      const colors = ['#00d2ff', '#9d00ff', '#ff007f', '#ffbe0b'];
+      const count = big ? 60 : 30;
+      for (let i = 0; i < count; i++) {
+        const div = document.createElement('div');
+        div.className = 'confetti-piece';
+        div.style.left = Math.random() * 100 + 'vw';
+        div.style.background = colors[Math.floor(Math.random() * colors.length)];
+        div.style.animationDuration = (1.6 + Math.random() * 1.2) + 's';
+        div.style.opacity = (0.7 + Math.random() * 0.3).toString();
+        document.body.appendChild(div);
+        setTimeout(() => div.remove(), 3200);
+      }
     }
 
     function showDamageNumber(anchorId, text, color) {
@@ -860,9 +1332,11 @@
       CHARACTERS.forEach(c => {
         const count = state.owned[c.id] || 0;
         const cost = Math.floor(c.baseCost * Math.pow(1.2, count));
+        const rarity = getRarity(c.baseCost);
         const card = document.createElement('div');
-        card.className = 'card';
+        card.className = 'card rarity-' + rarity.key;
         card.innerHTML = `
+          <span class="rarity-tag" style="color:${rarity.color};">${rarity.label}</span><br>
           <div style="font-size:2rem;">${c.avatar}</div>
           <b>${c.name}</b><br>
           <small style="color:var(--neon-cyan);">+${c.power.toLocaleString('es-AR')} Poder</small><br>
@@ -890,6 +1364,58 @@
         albumGrid.appendChild(card);
       });
 
+      // MISIONES DIARIAS
+      refreshDailyMissions();
+      const missionsGrid = document.getElementById('missionsGrid');
+      missionsGrid.innerHTML = '';
+      let claimableCount = 0;
+      state.activeMissions.forEach(id => {
+        const def = MISSION_POOL.find(m => m.id === id);
+        if (!def) return;
+        const progress = Math.min(def.target, state.missionProgress[def.track] || 0);
+        const claimed = state.claimedMissions.includes(id);
+        const canClaim = progress >= def.target && !claimed;
+        if (canClaim) claimableCount++;
+        const pct = Math.round((progress / def.target) * 100);
+        const card = document.createElement('div');
+        card.className = 'card mission-card';
+        card.innerHTML = `
+          <div class="mission-info">
+            <div>${def.icon} <b>${def.label}</b></div>
+            <div class="mission-bar-container"><div class="mission-bar-fill" style="width:${pct}%;"></div></div>
+            <div class="achievement-progress">${progress} / ${def.target} · Recompensa: ${def.reward.toLocaleString('es-AR')} Aura</div>
+          </div>
+          <button class="mission-claim-btn" ${canClaim ? '' : 'disabled'} onclick="claimMission('${id}')">${claimed ? 'Hecho ✅' : 'Reclamar'}</button>
+        `;
+        missionsGrid.appendChild(card);
+      });
+      const missionsTabBtn = document.getElementById('missionsTabBtn');
+      if (claimableCount > 0) { missionsTabBtn.classList.add('has-badge'); missionsTabBtn.setAttribute('data-badge', claimableCount); }
+      else { missionsTabBtn.classList.remove('has-badge'); }
+
+      // LOGROS
+      const unlockedNow = checkAchievements();
+      const achievementsGrid = document.getElementById('achievementsGrid');
+      achievementsGrid.innerHTML = '';
+      let unlockedTotal = 0;
+      ACHIEVEMENTS.forEach(a => {
+        const unlocked = state.unlockedAchievements.includes(a.id);
+        if (unlocked) unlockedTotal++;
+        const card = document.createElement('div');
+        card.className = 'card achievement-card' + (unlocked ? '' : ' locked');
+        card.innerHTML = `
+          <div class="achievement-icon">${unlocked ? a.icon : '🔒'}</div>
+          <div>
+            <b>${a.name}</b>
+            <div class="achievement-progress">${a.desc}</div>
+          </div>
+        `;
+        achievementsGrid.appendChild(card);
+      });
+      const achievementsTabBtn = document.getElementById('achievementsTabBtn');
+      achievementsTabBtn.setAttribute('data-badge', unlockedTotal + '/' + ACHIEVEMENTS.length);
+      achievementsTabBtn.classList.add('has-badge');
+
       // RANKING
       const rankBox = document.getElementById('rankingContent');
       rankBox.innerHTML = `
@@ -899,6 +1425,7 @@
         </div>
       `;
 
+      if (unlockedNow) savePlayerState();
       savePlayerState();
     }
 
@@ -909,6 +1436,7 @@
       if (state.aura >= cost) {
         state.aura -= cost;
         state.owned[id] = count + 1;
+        bumpMissionProgress('buysToday');
         render();
       }
     }
@@ -931,14 +1459,16 @@
       document.getElementById('viewFarm').style.display = tab === 'farm' ? 'block' : 'none';
       document.getElementById('viewAlbum').style.display = tab === 'album' ? 'block' : 'none';
       document.getElementById('viewChests').style.display = tab === 'chests' ? 'block' : 'none';
+      document.getElementById('viewMissions').style.display = tab === 'missions' ? 'block' : 'none';
+      document.getElementById('viewAchievements').style.display = tab === 'achievements' ? 'block' : 'none';
       document.getElementById('viewRanking').style.display = tab === 'ranking' ? 'block' : 'none';
       document.getElementById('viewContact').style.display = tab === 'contact' ? 'block' : 'none';
 
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       if (event && event.target) {
-        event.target.classList.add('active');
+        event.target.closest('.tab-btn').classList.add('active');
       } else {
-        const map = { battle: 0, farm: 1, album: 2, chests: 3, ranking: 4, contact: 5 };
+        const map = { battle: 0, farm: 1, album: 2, chests: 3, missions: 4, achievements: 5, ranking: 6, contact: 7 };
         const btns = document.querySelectorAll('.tab-btn');
         if (btns[map[tab]]) btns[map[tab]].classList.add('active');
       }
@@ -947,11 +1477,14 @@
     // Arranque: se juega directo, sin pedir registro. Se carga el progreso guardado
     // (de la cuenta vinculada o de invitado), se aplica la racha diaria y recién
     // después se arma la primera batalla.
+    updateSoundBtn();
     checkAuth();
     loadPlayerState();
     checkDailyStreak();
     initBattleStage();
     render();
   </script>
+</body>
+</html>
 </body>
 </html>
