@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aura Farmear - La Leyenda</title>
+  <title>Aura Farmear - La Leyenda Continúa</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
@@ -83,16 +83,20 @@
     }
     
     .player-hud {
-      display: flex; justify-content: center; align-items: center; gap: 20px;
+      display: flex; justify-content: center; align-items: center; gap: 15px;
       margin-top: 15px; flex-wrap: wrap;
     }
     .hud-stat {
-      background: rgba(255,255,255,0.05); padding: 10px 20px; border-radius: 20px;
-      border: 1px solid var(--panel-border); font-weight: 600; font-size: 1.1rem;
+      background: rgba(255,255,255,0.05); padding: 8px 16px; border-radius: 20px;
+      border: 1px solid var(--panel-border); font-weight: 600; font-size: 1rem;
       display: flex; align-items: center; gap: 8px;
     }
     .hud-stat span { font-weight: 800; }
-    
+    .phase-badge {
+      background: linear-gradient(90deg, var(--neon-purple), var(--neon-pink));
+      color: #000; padding: 5px 12px; border-radius: 12px; font-weight: 800; font-size: 0.9rem; text-transform: uppercase;
+    }
+
     .nav-tabs {
       display: flex; justify-content: center; gap: 10px; margin: 25px 0; flex-wrap: wrap; padding: 0 15px;
     }
@@ -117,12 +121,15 @@
       box-shadow: 0 20px 40px rgba(0,0,0,0.5);
     }
     .character-display {
-      margin-bottom: 20px;
+      margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--panel-border);
     }
     .char-avatar { font-size: 4rem; margin-bottom: 10px; display: inline-block; animation: float 3s ease-in-out infinite; }
     @keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
     .char-name { font-family: 'Syne'; font-size: 1.5rem; color: var(--neon-cyan); }
     .char-rank { font-size: 0.9rem; color: var(--neon-purple); font-weight: 600; text-transform: uppercase; letter-spacing: 2px;}
+    
+    .traits-container { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .trait-badge { background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; border: 1px solid var(--panel-border); }
 
     .scenario-panel {
       background: #000; border: 1px solid var(--panel-border);
@@ -150,9 +157,11 @@
     .flash-green { animation: flashG 0.4s ease-out; }
     .flash-red { animation: flashR 0.4s ease-out; }
     .flash-gold { animation: flashGold 0.4s ease-out; }
+    .flash-purple { animation: flashP 0.6s ease-out; }
     @keyframes flashG { 0% { background-color: rgba(74, 222, 128, 0.3); } 100% { background-color: transparent; } }
     @keyframes flashR { 0% { background-color: rgba(244, 114, 182, 0.3); } 100% { background-color: transparent; } }
     @keyframes flashGold { 0% { background-color: rgba(250, 204, 21, 0.4); } 100% { background-color: transparent; } }
+    @keyframes flashP { 0% { background-color: rgba(192, 132, 252, 0.5); } 100% { background-color: transparent; } }
 
     .aura-float {
       position: fixed; font-family: 'Syne'; font-weight: 800; font-size: 2.5rem;
@@ -165,7 +174,7 @@
       100% { opacity: 0; transform: translateY(-100px) scale(1); }
     }
 
-    /* GRID LAYOUTS (Círculo, Ranking) */
+    /* GRID LAYOUTS */
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; max-width: 900px; margin: 0 auto; }
     .card {
       background: var(--panel-bg); border: 1px solid var(--panel-border);
@@ -184,9 +193,7 @@
 
     /* RANKING */
     .ranking-list { max-width: 600px; margin: 0 auto; background: var(--panel-bg); border-radius: 16px; overflow: hidden; border: 1px solid var(--panel-border); }
-    .rank-item {
-      display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid var(--panel-border);
-    }
+    .rank-item { display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid var(--panel-border); }
     .rank-item:last-child { border-bottom: none; }
     .rank-pos { font-family: 'Syne'; font-size: 1.5rem; font-weight: 800; width: 40px; color: var(--text-muted); }
     .rank-1 { color: var(--neon-gold); text-shadow: 0 0 10px var(--neon-gold); }
@@ -201,14 +208,6 @@
       background: linear-gradient(135deg, #2a1608, #09090b); border: 1px solid var(--cafecito);
       border-radius: 24px; padding: 40px; max-width: 600px; margin: 40px auto; box-shadow: 0 0 30px rgba(249, 115, 22, 0.1);
     }
-    .cafecito-banner h2 { color: var(--cafecito); font-size: 2rem; margin-bottom: 15px; }
-    .cafecito-btn {
-      display: inline-flex; align-items: center; gap: 10px; background: var(--cafecito);
-      color: #fff; padding: 15px 30px; border-radius: 12px; font-weight: 800; text-decoration: none;
-      font-size: 1.2rem; margin-top: 20px; transition: 0.3s;
-    }
-    .cafecito-btn:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(249, 115, 22, 0.3); }
-
   </style>
 </head>
 <body>
@@ -217,10 +216,8 @@
   <div id="charCreation" class="overlay">
     <div class="creation-box">
       <h2>CREÁ TU LEYENDA</h2>
-      <p>¿Listo para farmear Aura? Completá tus datos y elegí tu avatar para arrancar.</p>
-      
+      <p>Empezás desde abajo. Tus decisiones formarán tu personalidad y tu Aura.</p>
       <input type="text" id="playerNameInput" placeholder="Ingresá tu nombre o apodo..." maxlength="15">
-      
       <div class="avatar-selector" id="avatarSelector">
         <div class="avatar-option selected" onclick="selectAvatar(this, '😎')">😎</div>
         <div class="avatar-option" onclick="selectAvatar(this, '👽')">👽</div>
@@ -229,26 +226,24 @@
         <div class="avatar-option" onclick="selectAvatar(this, '🔥')">🔥</div>
         <div class="avatar-option" onclick="selectAvatar(this, '🥶')">🥶</div>
       </div>
-      
-      <button onclick="startGame()">EMPEZAR A FARMEAR</button>
+      <button onclick="startGame()">EMPEZAR LA TRAYECTORIA</button>
     </div>
   </div>
 
   <!-- HEADER -->
   <header style="display:none;" id="gameHeader">
     <div class="brand-title">AURA FARMEAR</div>
-    <div style="color: var(--text-muted); font-size: 0.9rem; margin-top: 5px;">Tus decisiones del día a día definen tu Aura.</div>
-    
     <div class="player-hud">
+      <div class="phase-badge" id="hudPhase">Fase 1: El Barrio</div>
       <div class="hud-stat" style="color: var(--neon-cyan);">⚡ Aura: <span id="hudAura">0</span></div>
-      <div class="hud-stat" style="color: var(--neon-purple);">👥 Multiplicador: <span id="hudMult">x1.0</span></div>
+      <div class="hud-stat" style="color: var(--neon-purple);">👥 Mult: <span id="hudMult">x1.0</span></div>
       <div class="hud-stat" style="color: var(--neon-pink);">🔥 Racha: <span id="hudStreak">0</span></div>
     </div>
   </header>
 
   <!-- TABS -->
   <nav class="nav-tabs" style="display:none;" id="gameNav">
-    <button class="tab-btn active" onclick="switchTab('situaciones', this)">⚡ Situaciones</button>
+    <button class="tab-btn active" onclick="switchTab('situaciones', this)">⚡ Modo Historia</button>
     <button class="tab-btn" onclick="switchTab('circulo', this)">👥 Tu Círculo</button>
     <button class="tab-btn" onclick="switchTab('ranking', this)">🏆 Ranking</button>
     <button class="tab-btn" onclick="switchTab('cafecito', this)">☕ Apoyar Creador</button>
@@ -256,18 +251,21 @@
 
   <main style="display:none;" id="gameMain">
     
-    <!-- TABS CONTENT: SITUACIONES -->
+    <!-- MODO HISTORIA -->
     <section id="tab-situaciones" class="view-section active">
       <div class="story-card">
         <div class="character-display">
           <div class="char-avatar" id="dispAvatar">😎</div>
           <div class="char-name" id="dispName">Jugador</div>
-          <div class="char-rank" id="dispRank">Novato Cringe</div>
+          <div class="char-rank" id="dispRank">Nadie te juna</div>
+          <div class="traits-container" id="dispTraits">
+            <!-- Rasgos dinámicos -->
+          </div>
         </div>
 
         <div class="scenario-panel">
-          <div class="category-tag" id="sitCategory">🏫 Colegio</div>
-          <div class="scenario-text" id="sitText">Cargando situación...</div>
+          <div class="category-tag" id="sitCategory">Cargando...</div>
+          <div class="scenario-text" id="sitText">Preparando tu destino...</div>
         </div>
 
         <div class="choices-grid" id="choicesContainer">
@@ -276,36 +274,30 @@
       </div>
     </section>
 
-    <!-- TABS CONTENT: CIRCULO -->
+    <!-- CIRCULO -->
     <section id="tab-circulo" class="view-section">
-      <div style="margin-bottom: 25px; color: var(--text-muted);">
+      <div style="margin-bottom: 25px;">
         <h2 style="color:#fff; margin-bottom:10px;">TU CÍRCULO ÍNTIMO</h2>
-        <p>Reclutá personajes con tu Aura para que te multipliquen las ganancias futuras.</p>
+        <p style="color: var(--text-muted);">Reclutá aliados para multiplicar el Aura que ganás en el modo historia.</p>
       </div>
-      <div class="grid" id="circleGrid">
-        <!-- Renderizado dinámico -->
-      </div>
+      <div class="grid" id="circleGrid"></div>
     </section>
 
-    <!-- TABS CONTENT: RANKING -->
+    <!-- RANKING -->
     <section id="tab-ranking" class="view-section">
       <div style="margin-bottom: 25px;">
-        <h2 style="color: var(--neon-gold); margin-bottom:10px;">RANKING GLOBAL DE AURA</h2>
-        <p style="color: var(--text-muted);">Acá están los más coperos. Tratá de no quedar último.</p>
+        <h2 style="color: var(--neon-gold); margin-bottom:10px;">RANKING GLOBAL</h2>
+        <p style="color: var(--text-muted);">El Olimpo de los basados.</p>
       </div>
-      <div class="ranking-list" id="rankingList">
-        <!-- Renderizado dinámico -->
-      </div>
+      <div class="ranking-list" id="rankingList"></div>
     </section>
 
-    <!-- TABS CONTENT: CAFECITO -->
+    <!-- CAFECITO -->
     <section id="tab-cafecito" class="view-section">
       <div class="cafecito-banner">
-        <h2>¿TE GUSTA EL JUEGO?</h2>
+        <h2>¿BANCÁS EL PROYECTO?</h2>
         <p style="font-size: 1.1rem; color: var(--text-muted); line-height: 1.6;">
-          Este juego es 100% gratuito y sin premium para que todos puedan farmear Aura tranquilos. 
-          Si te copó la idea, te sacó una risa y me querés dar una mano para seguir creando cosas, 
-          ¡invitame un Cafecito! ☕🔥
+          Aura Farmear es gratis y sin publicidad molesta. Si te copó la trayectoria de tu personaje y te sacó una risa, invitame un Cafecito para seguir sumando fases y eventos nuevos. ☕🔥
         </p>
         <div style="margin-top: 20px;">
             <a href="https://cafecito.app/aurafarmear" target="_blank">
@@ -320,108 +312,108 @@
   <script>
     // ESTADO DEL JUGADOR
     const player = {
-      name: 'Invitado',
-      avatar: '😎',
-      aura: 0,
-      streak: 0,
-      multiplier: 1.0,
-      circleIds: []
+      name: 'Invitado', avatar: '😎', aura: 0, streak: 0, multiplier: 1.0, 
+      phase: 1, circleIds: [], traits: [], lastSituationIdx: -1
     };
 
-    // BASE DE DATOS DE SITUACIONES (Aleatorias y variadas para jóvenes)
+    // BASE DE DATOS MASIVA Y POR FASES
     const situations = [
-      {
-        category: '🏫 Colegio',
-        text: 'El profe pregunta quién hizo la tarea y nadie levanta la mano. Vos la hiciste pero hay silencio sepulcral. ¿Qué hacés?',
-        choices: [
-          { text: 'Hacerme el dormido en el banco', type: 'neutro' },
-          { text: 'Mandar al frente al de al lado', type: 'cringe' },
-          { text: 'Levantar la mano con orgullo y salvar a todos', type: 'critico' },
-          { text: 'Decir que el perro se la comió', type: 'copero' }
-        ]
-      },
-      {
-        category: '📱 Redes',
-        text: 'Tu crush sube una historia en "Mejores Amigos" escuchando tu banda favorita.',
-        choices: [
-          { text: 'Responderle con un fueguito 🔥', type: 'neutro' },
-          { text: 'Ignorarla para hacerte el interesante', type: 'cringe' },
-          { text: 'Mandarle un meme súper específico de la banda', type: 'critico' },
-          { text: 'Ponerle "Temazo" y sacar charla', type: 'copero' }
-        ]
-      },
-      {
-        category: '⚽ Club',
-        text: 'Faltan 2 minutos para que termine el picadito y hay penal decisivo para tu equipo.',
-        choices: [
-          { text: 'Dejársela al 10 del equipo', type: 'neutro' },
-          { text: 'Esconderte atrás del arco para no patear', type: 'cringe' },
-          { text: 'Agarrar la pelota y picarla (y hacer el gol)', type: 'critico' },
-          { text: 'Patear fuerte al medio asegurando', type: 'copero' }
-        ]
-      },
-      {
-        category: '🎉 Previa',
-        text: 'Ponen un tema viejísimo de hace 10 años que en su momento era hit, pero ahora nadie baila.',
-        choices: [
-          { text: 'Quedarte sentado tomando algo', type: 'neutro' },
-          { text: 'Ir a cambiar la música sin preguntarle a nadie', type: 'cringe' },
-          { text: 'Armar un trencito y revivir la fiesta', type: 'critico' },
-          { text: 'Agitarla cantando el estribillo a los gritos', type: 'copero' }
-        ]
-      },
-      {
-        category: '🌳 Plaza',
-        text: 'Estás tomando mate con tus amigos y un perro de la calle se acerca a robar un bizcochito.',
-        choices: [
-          { text: 'Espantarlo despacito', type: 'neutro' },
-          { text: 'Pegar un grito del susto y tirar el termo', type: 'cringe' },
-          { text: 'Darle la mitad del paquete y adoptarlo moralmente', type: 'critico' },
-          { text: 'Darle un solo bizcochito para que no joda', type: 'copero' }
-        ]
-      },
-      {
-        category: '📱 Redes',
-        text: 'Mandaste un mensaje re largo por WhatsApp y te clavan el visto por 4 horas.',
-        choices: [
-          { text: 'Esperar pacientemente', type: 'neutro' },
-          { text: 'Borrar el mensaje y poner "?"', type: 'cringe' },
-          { text: 'Subir una indirecta a Instagram', type: 'cringe' },
-          { text: 'Seguir con tu vida porque sos inalcanzable', type: 'critico' }
-        ]
-      },
-      {
-        category: '🏫 Colegio',
-        text: 'Toca exponer en grupo y el que tenía que estudiar tu parte no vino.',
-        choices: [
-          { text: 'Leer de la cartulina disimuladamente', type: 'neutro' },
-          { text: 'Decirle al profe "él no hizo nada, pongale un 1"', type: 'cringe' },
-          { text: 'Improvisar un discurso motivacional sobre el tema', type: 'critico' },
-          { text: 'Explicar con tus palabras zafando la nota', type: 'copero' }
-        ]
-      }
+      // FASE 1: BARRIO Y COLEGIO (Aura 0 - 300)
+      { phase: 1, category: '🏫 Colegio', text: 'El profe pregunta quién hizo la tarea. Vos la hiciste pero el aula está en silencio.', choices: [
+          { text: 'Mirar al techo haciéndote el boludo', type: 'neutro' },
+          { text: 'Gritar "¡Yo la hice profe, mire!"', type: 'cringe', trait: 'Traga 🤓' },
+          { text: 'Decir que el perro se la comió por las dudas', type: 'copero' },
+          { text: 'Pasarle las respuestas disimuladamente a los pibes', type: 'critico', trait: 'Tipazo 🤝' }
+      ]},
+      { phase: 1, category: '⚽ Potrero', text: 'Falta uno para el picadito y te invitan a jugar con los más grandes.', choices: [
+          { text: 'Decir que te duele la panza para no pasar vergüenza', type: 'cringe', trait: 'Cagón 🐔' },
+          { text: 'Ir al arco y tratar de que no te maten a pelotazos', type: 'neutro' },
+          { text: 'Jugar de 5 metiendo pata y pidiendo todas', type: 'copero' },
+          { text: 'Tirarle un caño al más grandote en la primera jugada', type: 'critico', trait: 'Lírico ⚽' }
+      ]},
+      { phase: 1, category: '📱 Chat', text: 'Le mandás un meme buenísimo a tu crush y te responde con un "jaja" seco.', choices: [
+          { text: 'Clavar visto y seguir con la tuya', type: 'copero' },
+          { text: 'Ponerle "por qué tan seca?"', type: 'cringe', trait: 'Intenso 🚩' },
+          { text: 'Responder con un sticker de un gatito triste', type: 'neutro' },
+          { text: 'Archivar el chat. Si no valora el arte, ahí no es.', type: 'critico', trait: 'Basado 🗿' }
+      ]},
+      { phase: 1, category: '🌳 Kiosco', text: 'Faltan 50 pesos para pagar la coquita y los alfajores.', choices: [
+          { text: 'Dejar un alfajor y volverte triste', type: 'neutro' },
+          { text: 'Pedirle al kiosquero que te anote', type: 'copero' },
+          { text: 'Revisar la calle a ver si hay plata tirada', type: 'cringe' },
+          { text: 'Negociar los 50 pesos a cambio de barrerle la vereda', type: 'critico', trait: 'Comerciante 💼' }
+      ]},
+
+      // FASE 2: FACULTAD Y LA JODA (Aura 301 - 1500)
+      { phase: 2, category: '🎉 Previa', text: 'Estás en una previa y el dueño de casa pone música electrónica rarísima.', choices: [
+          { text: 'Hacer que te gusta moviendo la cabeza lento', type: 'neutro' },
+          { text: 'Agarrar el cable auxiliar y clavar cumbia vieja', type: 'critico', trait: 'Salvador 🦸‍♂️' },
+          { text: 'Quejarte en voz alta: "¡Pongan reggaeton!"', type: 'cringe' },
+          { text: 'Pedirle amablemente un tema intercalado', type: 'copero' }
+      ]},
+      { phase: 2, category: '🌃 Boliche', text: 'El patovica te mira de arriba a abajo y dice que no estás en lista.', choices: [
+          { text: 'Hacer un escándalo gritando "¿Sabés quién soy?"', type: 'cringe', trait: 'Fantasma 👻' },
+          { text: 'Quedarte callado y volverte a tu casa a dormir', type: 'neutro' },
+          { text: 'Chamuyarte al RRPP que pasa por ahí y entrar gratis', type: 'critico', trait: 'Labia 🗣️' },
+          { text: 'Pagar la entrada calladito y entrar a disfrutar', type: 'copero' }
+      ]},
+      { phase: 2, category: '📚 Parcial', text: 'Es el primer parcial de la facultad. No estudiaste nada del punto 3.', choices: [
+          { text: 'Entregar en blanco y aceptar la derrota', type: 'neutro' },
+          { text: 'Hacer un machete gigante en la regla (te ven todos)', type: 'cringe' },
+          { text: 'Guitarrear una respuesta filosófica usando sinónimos', type: 'copero' },
+          { text: 'Acordarte de un TikTok que hablaba del tema y salvar el punto', type: 'critico', trait: 'Cine 🎬' }
+      ]},
+      { phase: 2, category: '🍖 Asado', text: 'Te toca ser el asador oficial para 10 personas.', choices: [
+          { text: 'Arrebatar la carne por meterle mucho fuego', type: 'cringe' },
+          { text: 'Sacar el chori a tiempo y picar algo para calmar', type: 'neutro' },
+          { text: 'Hacer un asado perfecto con aplauso incluido', type: 'critico', trait: 'Asador 🥩' },
+          { text: 'Tardar 4 horas pero entregar una carne que se corta con cuchara', type: 'copero' }
+      ]},
+
+      // FASE 3: MUNDO ADULTO Y FAMA (Aura 1501+)
+      { phase: 3, category: '💼 Entrevista', text: 'Te preguntan cuál es tu mayor debilidad en una entrevista para tu laburo soñado.', choices: [
+          { text: 'Decir "Soy demasiado perfeccionista"', type: 'cringe', trait: 'NPC 🤖' },
+          { text: 'Ser honesto y decir que a veces sos desorganizado', type: 'neutro' },
+          { text: 'Decir "No tengo debilidades, soy una máquina"', type: 'cringe' },
+          { text: 'Explicar un defecto real pero cómo lo estás solucionando', type: 'critico', trait: 'Jefe 👑' }
+      ]},
+      { phase: 3, category: '🐦 Twitter (X)', text: 'Un famoso te cita un tweet intentando dejarte en ridículo.', choices: [
+          { text: 'Borrar el tweet del susto', type: 'cringe' },
+          { text: 'Poner el celu en modo avión', type: 'neutro' },
+          { text: 'Responderle con datos reales y domarlo', type: 'critico', trait: 'Domador 🦁' },
+          { text: 'Citarlo con un meme de Francella y ganar miles de likes', type: 'copero' }
+      ]},
+      { phase: 3, category: '💵 Finanzas', text: 'Tenés unos ahorros extra y un amigo te ofrece meterlos en una cripto de perritos.', choices: [
+          { text: 'Meter los ahorros de tu vida y perder todo', type: 'cringe', trait: 'Ludópata 📉' },
+          { text: 'Decirle que paso y comprar dólares tranquilo', type: 'copero' },
+          { text: 'Meter plata, sacar ganancia rápido e invitarle la cena', type: 'critico', trait: 'Lobo 🐺' },
+          { text: 'Ignorar el mensaje', type: 'neutro' }
+      ]},
+      { phase: 3, category: '📺 Stream', text: 'Estás prendiendo stream y de la nada te hostean con 10,000 personas.', choices: [
+          { text: 'Quedarte mudo del pánico por 5 minutos', type: 'cringe' },
+          { text: 'Agradecer normal y seguir jugando', type: 'neutro' },
+          { text: 'Hacer la de Cristiano Ronaldo gritando SIUUU', type: 'copero' },
+          { text: 'Aprovechar la gente para hacer una colecta solidaria', type: 'critico', trait: 'Prócer 🇦🇷' }
+      ]}
     ];
 
-    // PERSONAJES PARA COMPRAR (CÍRCULO)
     const companions = [
-      { id: 1, name: 'El Pibe de los Mates', desc: '+0.2 al Multiplicador. Siempre tiene el agua a punto.', cost: 50, mult: 0.2, avatar: '🧉' },
-      { id: 2, name: 'La Amiga Frontal', desc: '+0.5 al Multiplicador. Te salva de situaciones cringe.', cost: 150, mult: 0.5, avatar: '💅' },
-      { id: 3, name: 'El Rústico del Club', desc: '+1.0 al Multiplicador. Va al piso a trabar con la cabeza.', cost: 500, mult: 1.0, avatar: '🦵' },
-      { id: 4, name: 'El Rey del Stream', desc: '+2.5 al Multiplicador. Farmea views y aura en simultáneo.', cost: 1500, mult: 2.5, avatar: '🎧' },
-      { id: 5, name: 'Leyenda Urbana', desc: '+5.0 al Multiplicador. Máximo respeto en todo el barrio.', cost: 5000, mult: 5.0, avatar: '🗿' }
+      { id: 1, name: 'El Pibe de los Mates', desc: '+0.2 al Mult. Siempre agua a punto.', cost: 80, mult: 0.2, avatar: '🧉' },
+      { id: 2, name: 'La Amiga Frontal', desc: '+0.5 al Mult. Te salva del cringe.', cost: 250, mult: 0.5, avatar: '💅' },
+      { id: 3, name: 'El Rústico del Club', desc: '+1.0 al Mult. Va a trabar con la cabeza.', cost: 800, mult: 1.0, avatar: '🦵' },
+      { id: 4, name: 'El Rey del Stream', desc: '+2.5 al Mult. Farmea views por vos.', cost: 2500, mult: 2.5, avatar: '🎧' },
+      { id: 5, name: 'Lionel', desc: '+5.0 al Mult. Te hace ganar todas las copas.', cost: 8000, mult: 5.0, avatar: '🐐' }
     ];
 
-    // BOTS PARA EL RANKING
     let fakeRankings = [
-      { name: 'Spreen', aura: 25000, avatar: '🐻' },
-      { name: 'ElXokas', aura: 18000, avatar: '🤬' },
-      { name: 'Ibai', aura: 15000, avatar: '🐷' },
+      { name: 'Spreen', aura: 12500, avatar: '🐻' },
+      { name: 'ElXokas', aura: 9800, avatar: '🤬' },
+      { name: 'Ibai', aura: 8500, avatar: '🐷' },
       { name: 'Messi', aura: 99999, avatar: '🐐' },
-      { name: 'Juan', aura: 150, avatar: '👦' },
-      { name: 'Coscu', aura: 8500, avatar: '🐕' }
+      { name: 'Juan', aura: 350, avatar: '👦' },
+      { name: 'Coscu', aura: 5500, avatar: '🐕' }
     ];
 
-    // LÓGICA DE INICIO
     function selectAvatar(element, icon) {
       document.querySelectorAll('.avatar-option').forEach(el => el.classList.remove('selected'));
       element.classList.add('selected');
@@ -430,42 +422,64 @@
 
     function startGame() {
       const nameInput = document.getElementById('playerNameInput').value.trim();
-      if(nameInput !== '') {
-        player.name = nameInput;
-      }
+      if(nameInput !== '') player.name = nameInput;
       
       document.getElementById('charCreation').style.display = 'none';
       document.getElementById('gameHeader').style.display = 'block';
       document.getElementById('gameNav').style.display = 'flex';
       document.getElementById('gameMain').style.display = 'block';
       
-      updateHUD();
+      updatePhase();
       loadNextSituation();
       renderCircle();
       generateRanking();
     }
 
-    // TABS
     function switchTab(tabId, btn) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
       document.getElementById('tab-' + tabId).classList.add('active');
-      
       if(tabId === 'ranking') generateRanking();
     }
 
-    // LÓGICA DE SITUACIONES
+    function checkPhaseProgression() {
+      let oldPhase = player.phase;
+      if(player.aura < 300) player.phase = 1;
+      else if(player.aura >= 300 && player.aura < 1500) player.phase = 2;
+      else if(player.aura >= 1500) player.phase = 3;
+
+      if(oldPhase !== player.phase) {
+        document.body.classList.add('flash-purple');
+        setTimeout(() => document.body.classList.remove('flash-purple'), 600);
+        updatePhase();
+      }
+    }
+
+    function updatePhase() {
+      let phaseText = "Fase 1: El Barrio";
+      if(player.phase === 2) phaseText = "Fase 2: La Joda";
+      if(player.phase === 3) phaseText = "Fase 3: Leyenda";
+      document.getElementById('hudPhase').innerText = phaseText;
+    }
+
     function loadNextSituation() {
-      // Elegir aleatoria
-      const sit = situations[Math.floor(Math.random() * situations.length)];
+      // Filtrar situaciones por fase actual
+      const available = situations.filter(s => s.phase === player.phase);
+      
+      // Lógica anti-repetición inmediata
+      let rndIdx;
+      do {
+        rndIdx = Math.floor(Math.random() * available.length);
+      } while(available.length > 1 && rndIdx === player.lastSituationIdx);
+      
+      player.lastSituationIdx = rndIdx;
+      const sit = available[rndIdx];
       
       document.getElementById('sitCategory').innerText = sit.category;
       document.getElementById('sitText').innerText = sit.text;
       
-      // Mezclar opciones
       const shuffled = [...sit.choices].sort(() => 0.5 - Math.random());
-      
       const container = document.getElementById('choicesContainer');
       container.innerHTML = '';
       
@@ -473,55 +487,57 @@
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
         btn.innerText = choice.text;
-        btn.onclick = () => makeDecision(choice.type);
+        btn.onclick = () => makeDecision(choice);
         container.appendChild(btn);
       });
     }
 
-    function makeDecision(type) {
+    function makeDecision(choice) {
       let baseGain = 0;
-      let textFeedback = '';
       let colorClass = '';
 
-      if(type === 'cringe') {
-        baseGain = -20;
-        player.streak = 0; // Rompe racha
-        textFeedback = "-20 AURA (CRINGE TOTAL)";
+      if(choice.type === 'cringe') {
+        baseGain = -25;
+        player.streak = 0;
         colorClass = 'flash-red';
-        document.body.classList.add(colorClass);
-      } else if(type === 'neutro') {
-        baseGain = 5;
-        textFeedback = "+5 AURA (Zafaste)";
-      } else if(type === 'copero') {
-        baseGain = 15;
+      } else if(choice.type === 'neutro') {
+        baseGain = 10;
+      } else if(choice.type === 'copero') {
+        baseGain = 25;
         player.streak++;
-        textFeedback = "+15 AURA (¡Buena movida!)";
         colorClass = 'flash-green';
-        document.body.classList.add(colorClass);
-      } else if(type === 'critico') {
-        baseGain = 50;
+      } else if(choice.type === 'critico') {
+        baseGain = 70;
         player.streak += 2;
-        textFeedback = "+50 AURA (¡MOMENTO ÉPICO!)";
         colorClass = 'flash-gold';
-        document.body.classList.add(colorClass);
       }
 
-      // Aplicar multiplicador
+      // Asignar Rasgo (Trait) si lo tiene y el jugador no lo posee
+      if(choice.trait && !player.traits.includes(choice.trait)) {
+        player.traits.push(choice.trait);
+        // Evitar que el contenedor crezca infinito (max 4 rasgos mostrados)
+        if(player.traits.length > 4) player.traits.shift(); 
+      }
+
       let finalGain = baseGain > 0 ? Math.floor(baseGain * player.multiplier) : baseGain;
-      
-      // Bonus por racha si no fue cringe
-      if(type !== 'cringe' && player.streak > 3) {
-        finalGain += (player.streak * 2);
+      if(choice.type !== 'cringe' && player.streak > 2) {
+        finalGain += (player.streak * 3); // Bonus racha
       }
 
       player.aura += finalGain;
-      if(player.aura < 0) player.aura = 0; // No aura negativa
+      if(player.aura < 0) player.aura = 0; 
 
+      if(colorClass) {
+        document.body.classList.add(colorClass);
+        setTimeout(() => document.body.classList.remove(colorClass), 400);
+      }
+
+      checkPhaseProgression();
       updateHUD();
-      showFloatingNumber(finalGain, type);
+      showFloatingNumber(finalGain, choice.type);
       
+      // Delay corto antes de la próxima para ver animación
       setTimeout(() => {
-        document.body.classList.remove('flash-red', 'flash-green', 'flash-gold');
         loadNextSituation();
       }, 500);
     }
@@ -545,7 +561,6 @@
       setTimeout(() => el.remove(), 1000);
     }
 
-    // LÓGICA DE TIENDA / CÍRCULO
     function renderCircle() {
       const grid = document.getElementById('circleGrid');
       grid.innerHTML = '';
@@ -561,7 +576,7 @@
           <button class="card-btn" 
                   ${isOwned ? 'disabled' : ''} 
                   onclick="buyCompanion(${comp.id}, ${comp.cost}, ${comp.mult})">
-            ${isOwned ? 'YA RECLUTADO' : 'Cuesta: ' + comp.cost + ' Aura'}
+            ${isOwned ? 'RECLUTADO' : 'Cuesta: ' + comp.cost + ' ⚡'}
           </button>
         `;
         grid.appendChild(card);
@@ -573,18 +588,18 @@
         player.aura -= cost;
         player.multiplier += mult;
         player.circleIds.push(id);
+        
+        checkPhaseProgression();
         updateHUD();
         renderCircle();
         
-        // Animación linda
         document.body.classList.add('flash-gold');
         setTimeout(() => document.body.classList.remove('flash-gold'), 400);
       } else {
-        alert("¡No tenés suficiente Aura para reclutar a este personaje!");
+        alert("¡Te falta Aura para reclutarlo! Seguí farmeando en la historia.");
       }
     }
 
-    // ACTUALIZAR INTERFAZ
     function updateHUD() {
       document.getElementById('hudAura').innerText = player.aura;
       document.getElementById('hudMult').innerText = 'x' + player.multiplier.toFixed(1);
@@ -593,19 +608,26 @@
       document.getElementById('dispAvatar').innerText = player.avatar;
       document.getElementById('dispName').innerText = player.name;
       
-      let rankName = "Novato Cringe";
-      if(player.aura > 500) rankName = "Aura Respetable";
-      if(player.aura > 2000) rankName = "Jefe del Barrio";
+      let rankName = "Nadie te juna";
+      if(player.aura > 300) rankName = "Pibe Respetado";
+      if(player.aura > 1000) rankName = "Jefe del Barrio";
+      if(player.aura > 3000) rankName = "Influencer Picante";
       if(player.aura > 10000) rankName = "Deidad Argentina";
       document.getElementById('dispRank').innerText = rankName;
+
+      // Renderizar Rasgos
+      const traitsDiv = document.getElementById('dispTraits');
+      traitsDiv.innerHTML = '';
+      player.traits.forEach(t => {
+        const badge = document.createElement('div');
+        badge.className = 'trait-badge';
+        badge.innerText = t;
+        traitsDiv.appendChild(badge);
+      });
     }
 
-    // RANKING
     function generateRanking() {
-      // Agregar al jugador temporalmente a la lista para ordenar
       const currentList = [...fakeRankings, { name: player.name + ' (VOS)', aura: player.aura, avatar: player.avatar, isMe: true }];
-      
-      // Ordenar por aura descendente
       currentList.sort((a, b) => b.aura - a.aura);
       
       const listDiv = document.getElementById('rankingList');
