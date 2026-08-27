@@ -208,6 +208,34 @@
       background: linear-gradient(135deg, #2a1608, #09090b); border: 1px solid var(--cafecito);
       border-radius: 24px; padding: 40px; max-width: 600px; margin: 40px auto; box-shadow: 0 0 30px rgba(249, 115, 22, 0.1);
     }
+      body { background: radial-gradient(circle at 15% 0%, rgba(34,211,238,.12), transparent 34rem), radial-gradient(circle at 90% 12%, rgba(192,132,252,.12), transparent 30rem), var(--bg-dark); }
+    body::before { content: ''; position: fixed; inset: 0; pointer-events: none; opacity: .28; background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px); background-size: 32px 32px; mask-image: linear-gradient(to bottom, black, transparent 75%); }
+    .story-card, .card, .ranking-list, .cafecito-banner { background: linear-gradient(145deg, rgba(39,39,42,.88), rgba(24,24,27,.88)); backdrop-filter: blur(14px); }
+    .scenario-panel { background: linear-gradient(145deg, rgba(0,0,0,.72), rgba(24,24,27,.62)); position: relative; overflow: hidden; }
+    .scenario-panel::after { content: '✦'; position: absolute; right: 18px; top: 8px; color: rgba(192,132,252,.22); font-size: 4rem; transform: rotate(15deg); }
+    .scenario-topline { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 15px; }
+    .category-tag { margin-bottom: 0; }
+    .question-progress { color: var(--text-muted); font-size: .82rem; font-weight: 700; white-space: nowrap; }
+    .choice-btn { display: flex; align-items: center; gap: 13px; min-height: 62px; background: rgba(255,255,255,.045); }
+    .choice-number { display: grid; place-items: center; flex: 0 0 28px; height: 28px; border: 1px solid var(--neon-purple); border-radius: 50%; color: var(--neon-purple); font-size: .82rem; font-weight: 800; }
+    .choice-btn:hover .choice-number { background: var(--neon-purple); color: #09090b; }
+    .choice-btn:disabled { cursor: default; opacity: .65; transform: none; }
+    .choice-btn.answered { animation: choicePulse .35s ease-out; }
+    @keyframes choicePulse { 50% { border-color: var(--neon-gold); } }
+    .feedback-panel { min-height: 0; margin-top: 0; padding: 0 16px; border-radius: 12px; color: transparent; transition: all .25s ease; }
+    .feedback-panel.visible { min-height: 48px; margin-top: 18px; padding: 13px 16px; color: var(--text-main); background: rgba(255,255,255,.06); border: 1px solid var(--panel-border); text-align: left; font-size: .95rem; line-height: 1.4; }
+    .feedback-panel.cringe { border-color: var(--neon-pink); background: rgba(244,114,182,.09); }
+    .feedback-panel.copero { border-color: var(--neon-green); background: rgba(74,222,128,.09); }
+    .feedback-panel.critico, .feedback-panel.gold { border-color: var(--neon-gold); background: rgba(250,204,21,.09); }
+    .feedback-panel.warning { border-color: var(--cafecito); background: rgba(249,115,22,.1); }
+    .progress-track { height: 7px; margin-top: 20px; background: rgba(255,255,255,.07); border-radius: 99px; overflow: hidden; }
+    .progress-fill { width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink)); transition: width .45s ease; }
+    .save-status { margin-top: 10px; color: var(--text-muted); font-size: .76rem; }
+    .reset-btn { border: 1px solid var(--panel-border); background: rgba(255,255,255,.04); color: var(--text-muted); border-radius: 20px; padding: 8px 13px; cursor: pointer; font: 600 .85rem 'Outfit'; transition: .2s; }
+    .reset-btn:hover { color: var(--text-main); border-color: var(--neon-pink); }
+    .final-message { padding: 22px; border: 1px solid var(--neon-gold); border-radius: 14px; color: var(--neon-gold); background: rgba(250,204,21,.08); line-height: 1.5; }
+    button:focus-visible, input:focus-visible { outline: 3px solid var(--neon-cyan); outline-offset: 3px; }
+    @media (max-width: 560px) { .brand-title { font-size: 1.9rem; } header { padding: 15px 10px; } .player-hud { gap: 8px; margin-top: 10px; } .hud-stat { padding: 7px 10px; font-size: .86rem; } .reset-btn { width: 100%; } .story-card { padding: 18px; border-radius: 18px; } .scenario-panel { padding: 18px 15px; } .scenario-topline { align-items: flex-start; flex-direction: column; gap: 8px; } .scenario-text { font-size: 1.08rem; } .choice-btn { padding: 13px 12px; font-size: .94rem; } .creation-box { padding: 28px 20px; } }
   </style>
 </head>
 <body>
@@ -238,6 +266,8 @@
       <div class="hud-stat" style="color: var(--neon-cyan);">⚡ Aura: <span id="hudAura">0</span></div>
       <div class="hud-stat" style="color: var(--neon-purple);">👥 Mult: <span id="hudMult">x1.0</span></div>
       <div class="hud-stat" style="color: var(--neon-pink);">🔥 Racha: <span id="hudStreak">0</span></div>
+      <div class="hud-stat" style="color: var(--neon-gold);">🏅 Récord: <span id="hudBestStreak">0</span></div>
+      <button class="reset-btn" onclick="resetGame()" type="button">↻ Nueva partida</button>
     </div>
   </header>
 
@@ -311,9 +341,11 @@
 
   <script>
     // ESTADO DEL JUGADOR
+    const STORAGE_KEY = 'aura-farmear-partida-v2';
     const player = {
-      name: 'Invitado', avatar: '😎', aura: 0, streak: 0, multiplier: 1.0, 
-      phase: 1, circleIds: [], traits: [], lastSituationIdx: -1
+      name: 'Invitado', avatar: '😎', aura: 0, streak: 0, bestStreak: 0, multiplier: 1.0,
+      phase: 1, circleIds: [], traits: [], usedSituations: { 1: [], 2: [], 3: [] },
+      totalAnswered: 0, currentSituationId: null, isProcessing: false
     };
 
     // BASE DE DATOS MASIVA Y POR FASES
@@ -394,7 +426,36 @@
           { text: 'Agradecer normal y seguir jugando', type: 'neutro' },
           { text: 'Hacer la de Cristiano Ronaldo gritando SIUUU', type: 'copero' },
           { text: 'Aprovechar la gente para hacer una colecta solidaria', type: 'critico', trait: 'Prócer 🇦🇷' }
-      ]}
+      ]},
+      { id: "extra-1", phase: 1, category: "🚌 Colectivo", text: "Subís al colectivo con la SUBE en rojo y hay una fila de 17 personas atrás tuyo.", choices: [{ text: "Fingir que la máquina no anda y mirar al chofer con fe", type: "cringe", feedback: "La máquina sí andaba. El silencio del colectivo fue cinematográfico." }, { text: "Pedirle a alguien que te banque el viaje y prometer devolverlo", type: "copero", feedback: "Un desconocido te salva. Nace una alianza de transporte público." }, { text: "Bajarte dignamente y caminar como si fuera parte del plan", type: "neutro", feedback: "No perdiste Aura: ganaste 24 cuadras de desarrollo de personaje." }, { text: "Encontrar una moneda en el bolsillo justo a tiempo", type: "critico", trait: "Milagro 🪙", feedback: "El bolsillo tenía una misión secreta. Subís como una leyenda." }] },
+      { id: "extra-2", phase: 1, category: "🍕 Cumpleaños", text: "En un cumpleaños queda una sola porción de pizza y todos dicen que no tienen hambre.", choices: [{ text: "Esperar a que alguien la agarre y perderla para siempre", type: "neutro", feedback: "La porción desaparece misteriosamente. Nadie vio nada." }, { text: "Partirla en pedacitos para compartir", type: "copero", trait: "Diplomático 🕊️", feedback: "Paz mundial, pero con muzzarella. El salón te respeta." }, { text: "Agarrarla diciendo ‘si nadie la quiere…’ mientras todos te miran", type: "cringe", feedback: "La frase fue legal, pero el ambiente pidió VAR." }, { text: "Proponer un torneo de piedra, papel o tijera", type: "critico", trait: "Estratega 🎲", feedback: "Convertiste una picada en los Juegos Olímpicos. Y ganaste." }] },
+      { id: "extra-3", phase: 1, category: "🐶 Mascota", text: "Tu perro se queda mirando la pared durante diez minutos. Claramente sabe algo que vos no.", choices: [{ text: "Mirar la pared también, para entrar en frecuencia", type: "copero", feedback: "No descubriste el misterio, pero ahora tienen un vínculo profundo." }, { text: "Llamarlo y ofrecerle un premio", type: "neutro", feedback: "El perro acepta el soborno. La investigación queda archivada." }, { text: "Subir una historia: ‘mi perro ve fantasmas’", type: "critico", trait: "Cazafantasmas 👻", feedback: "Cien respuestas y dos teorías conspirativas. Contenido premium." }, { text: "Mudarte porque claramente la casa está embrujada", type: "cringe", feedback: "El alquiler no era el problema, pero ahora tenés otro." }] },
+      { id: "extra-4", phase: 1, category: "🎮 Cyber", text: "El rival te bardea en el chat justo antes de la partida decisiva.", choices: [{ text: "Responderle con otro insulto de ocho párrafos", type: "cringe", feedback: "Escribiste una novela y perdiste por tiempo. Literatura trágica." }, { text: "Silenciarlo y jugar concentrado", type: "copero", trait: "Modo Foco 🎯", feedback: "El chat gritó solo. Vos hablaste con resultados." }, { text: "Poner ‘gg’ antes de empezar para desconcertarlo", type: "neutro", feedback: "No funcionó, pero tu serenidad confundió hasta al árbitro." }, { text: "Ganar y responder únicamente con un pulgar arriba", type: "critico", trait: "Frío 🧊", feedback: "Una victoria y un emoji. El rival va a pensar en eso toda la semana." }] },
+      { id: "extra-5", phase: 1, category: "📸 Foto", text: "Un amigo sube una foto grupal donde salís con los ojos cerrados y cara de trámite.", choices: [{ text: "Pedir que la borre en mayúsculas", type: "cringe", feedback: "La foto ya tenía 43 likes. Llegaste tarde al juicio." }, { text: "Reírte y comentar ‘mi mejor ángulo’", type: "copero", feedback: "Desarmaste la burla antes de que naciera. Jugada social." }, { text: "No decir nada y cambiar tu foto de perfil", type: "neutro", feedback: "Una retirada silenciosa, prolija y con filtro nuevo." }, { text: "Responder con una foto peor de todos", type: "critico", trait: "Contraataque 💥", feedback: "La guerra visual terminó en empate técnico y muchas carcajadas." }] },
+      { id: "extra-6", phase: 1, category: "🧉 Recreo", text: "Llevaste el mate, pero te olvidaste la yerba. El grupo te mira como si hubieras traicionado la patria.", choices: [{ text: "Decir que era mate lavado de autor", type: "copero", feedback: "Nadie te creyó, pero la seguridad de tu explicación fue impecable." }, { text: "Comprar yerba y salvar la ronda", type: "critico", trait: "Cebador Supremo 🧉", feedback: "La ronda vuelve a la vida. Te nombran ministro del recreo." }, { text: "Tomar agua y fingir que era una experiencia detox", type: "neutro", feedback: "Una decisión saludable en el lugar menos saludable para presumirla." }, { text: "Culpar al que cebó último", type: "cringe", feedback: "La yerba no apareció y ahora hay una interna en el grupo." }] },
+      { id: "extra-7", phase: 1, category: "🛒 Almacén", text: "Vas a comprar una cosa y volvés con una gaseosa, tres snacks y cero idea de qué pasó.", choices: [{ text: "Aceptar que el changuito tomó sus propias decisiones", type: "neutro", feedback: "El presupuesto perdió, pero el espíritu ganó snacks." }, { text: "Devolver todo salvo una golosina estratégica", type: "copero", feedback: "Disciplina financiera con una pequeña excepción de chocolate." }, { text: "Convencer a todos de que fue una compra inteligente", type: "critico", trait: "Marketing 🛍️", feedback: "Nadie necesitaba eso, pero ahora todos quieren tu plan de negocios." }, { text: "Esconder las compras antes de llegar a casa", type: "cringe", feedback: "Misión sigilo fallida: la bolsa hizo ruido en la entrada." }] },
+      { id: "extra-8", phase: 1, category: "🎤 Karaoke", text: "Te anotan para cantar una canción que conocés solamente por el estribillo.", choices: [{ text: "Cantar el estribillo 14 veces con convicción", type: "copero", feedback: "No fue la canción completa, pero fue una experiencia completa." }, { text: "Pasarle el micrófono al siguiente y hacer coros", type: "neutro", feedback: "Participaste sin exponerte. Diplomacia vocal." }, { text: "Inventar la letra y mirar al techo con emoción", type: "critico", trait: "Artista 🎙️", feedback: "La letra era inédita. El público la declaró vanguardista." }, { text: "Decir que el micrófono te da alergia", type: "cringe", feedback: "Una excusa creativa, aunque nadie vio la alergia." }] },
+      { id: "extra-9", phase: 1, category: "🏀 Plaza", text: "La pelota cae en el patio del vecino y justo sale un señor con cara de pocos amigos.", choices: [{ text: "Pedirla con respeto y ofrecer devolverla rápido", type: "copero", feedback: "La educación desbloqueó el DLC: pelota recuperada." }, { text: "Mandar al más chico del grupo a negociar", type: "neutro", feedback: "Delegación de riesgos nivel experto." }, { text: "Hacer una maniobra imposible para recuperarla", type: "critico", trait: "Especialista 🥷", feedback: "Una operación de rescate digna de una película de bajo presupuesto." }, { text: "Decir que la pelota nunca fue tuya", type: "cringe", feedback: "La pelota tenía tu nombre escrito. Evidencia contundente." }] },
+      { id: "extra-10", phase: 1, category: "📚 Biblioteca", text: "Entrás a estudiar y a los dos minutos abrís el celular ‘solo para ver la hora’.", choices: [{ text: "Dejarlo boca abajo y estudiar 20 minutos", type: "copero", trait: "Concentrado 📖", feedback: "Veinte minutos reales. La ciencia todavía intenta explicarlo." }, { text: "Poner un video de productividad de 40 minutos", type: "neutro", feedback: "Aprendiste a estudiar mirando a otra persona estudiar." }, { text: "Usar el celular como cronómetro y cumplir", type: "critico", feedback: "Tecnología aplicada al progreso. Aura académica desbloqueada." }, { text: "Buscar ‘cómo estudiar rápido’ y terminar viendo recetas", type: "cringe", feedback: "No estudiaste, pero ya sabés hacer budín de banana." }] },
+      { id: "extra-11", phase: 1, category: "🧹 Casa", text: "Tu mamá dice ‘después hablamos’ y automáticamente se apaga la música de toda la casa.", choices: [{ text: "Preguntar ‘¿qué hice ahora?’ con voz de documental", type: "cringe", feedback: "La frase activó tres antecedentes y una auditoría familiar." }, { text: "Ordenar algo antes de que empiece la charla", type: "copero", feedback: "Llegaste con una ofrenda de paz: el cuarto respira." }, { text: "Sentarte y escuchar sin inventar excusas", type: "neutro", feedback: "Madurez inesperada. Alguien anote la fecha." }, { text: "Resolver el problema antes de que lo mencione", type: "critico", trait: "Radar Familiar 📡", feedback: "Te adelantaste al sermón. Movimiento de campeón." }] },
+      { id: "extra-12", phase: 2, category: "💳 Fin de mes", text: "Faltan cinco días para cobrar y tu cuenta bancaria tiene menos épica que un tutorial sin audio.", choices: [{ text: "Revisar gastos y cocinar con lo que hay", type: "copero", trait: "Sobreviviente 🍝", feedback: "Arroz, creatividad y dignidad: combo completo." }, { text: "Pedir delivery y confiar en el universo", type: "cringe", feedback: "El universo te mandó una notificación del banco." }, { text: "Organizar una cena a la canasta con amigos", type: "critico", trait: "Economista Social 🧠", feedback: "Una mesa llena y una billetera que no lloró." }, { text: "Mirar el saldo cada diez minutos", type: "neutro", feedback: "El número no subió, pero ahora conocés cada decimal." }] },
+      { id: "extra-13", phase: 2, category: "🏠 Alquiler", text: "El dueño del departamento te manda ‘¿todo bien?’ sin contexto un martes a las 23:47.", choices: [{ text: "Responder ‘sí, ¿por?’ y esperar el impacto", type: "neutro", feedback: "Un mensaje de siete letras, una noche de suspenso." }, { text: "Revisar si rompiste algo antes de contestar", type: "copero", feedback: "La prevención evitó descubrir una tragedia doméstica." }, { text: "Mandarle una foto del departamento impecable", type: "critico", trait: "Inquilino Modelo 🧽", feedback: "La evidencia visual te convirtió en ciudadano ejemplar." }, { text: "No responder hasta el día siguiente", type: "cringe", feedback: "El silencio no arregló nada, pero sí arruinó tu sueño." }] },
+      { id: "extra-14", phase: 2, category: "💼 Laburo", text: "Tu jefe pregunta quién puede hacerse cargo de una tarea urgente y de repente todos descubren el techo.", choices: [{ text: "Ofrecerte sin entender qué hay que hacer", type: "cringe", feedback: "El heroísmo sin briefing es una especie peligrosa." }, { text: "Preguntar alcance, tiempo y prioridades", type: "critico", trait: "Profesional 🧾", feedback: "Tres preguntas y una reunión que quizás nunca ocurra." }, { text: "Esperar cinco segundos y ofrecer una mano concreta", type: "copero", feedback: "Ayudaste sin regalar tu semana. Equilibrio legendario." }, { text: "Mandar un emoji de ojos y volver a tu tarea", type: "neutro", feedback: "No te escondiste: simplemente gestionaste expectativas." }] },
+      { id: "extra-15", phase: 2, category: "🧑‍🤝‍🧑 Amistad", text: "Un amigo te dice ‘no pasa nada’ con una sonrisa que claramente significa que pasa todo.", choices: [{ text: "Hacerte el distraído hasta que se le pase", type: "cringe", feedback: "El problema no se fue: se puso una campera y volvió." }, { text: "Preguntar una vez y dejarle espacio", type: "copero", feedback: "Acompañar sin invadir: Aura de amigo confiable." }, { text: "Mandarle un meme y después hablar en serio", type: "critico", trait: "Psicólogo de Guardia 🛋️", feedback: "El meme abrió la puerta. La conversación hizo el resto." }, { text: "Decir ‘te entiendo’ sin saber qué pasó", type: "neutro", feedback: "Frase comodín: no solucionó, pero evitó empeorar." }] },
+      { id: "extra-16", phase: 2, category: "🚗 Tránsito", text: "El GPS dice que llegás en 12 minutos, pero el tránsito acaba de declarar independencia.", choices: [{ text: "Insultar al mapa como si pudiera escucharte", type: "cringe", feedback: "El GPS recalculó; tu paciencia no." }, { text: "Avisar que llegás tarde antes de que te pregunten", type: "copero", feedback: "La honestidad llegó antes que vos. Bien jugado." }, { text: "Encontrar una ruta alternativa por calles imposibles", type: "critico", trait: "Navegante 🗺️", feedback: "Llegaste por un lugar que ni Google va a admitir." }, { text: "Poner música y aceptar el destino", type: "neutro", feedback: "No avanzaste mucho, pero al menos hubo soundtrack." }] },
+      { id: "extra-17", phase: 2, category: "🍻 Reunión", text: "En una juntada todos dicen que van a pedir ‘algo tranqui’ y terminan armando un debate nacional.", choices: [{ text: "Intentar moderar con una pizarra", type: "critico", trait: "Moderador 🧑‍⚖️", feedback: "Cinco minutos de orden. Nuevo récord mundial." }, { text: "Votar y aceptar el resultado", type: "copero", feedback: "Democracia gastronómica: imperfecta, pero con papas." }, { text: "Decir ‘me da igual’ y después quejarte", type: "cringe", feedback: "La frase ‘me da igual’ acaba de perder credibilidad." }, { text: "Pedir lo mismo que el que paga", type: "neutro", feedback: "Pragmatismo puro. La cuenta también es parte del juego." }] },
+      { id: "extra-18", phase: 2, category: "🎓 Facultad", text: "El grupo de trabajo se llama ‘Final Final Ahora Sí’ y nadie abrió el documento.", choices: [{ text: "Crear el documento y repartir tareas claras", type: "critico", trait: "Líder de Emergencia 🚨", feedback: "Una persona organizó el caos. Esa persona sos vos." }, { text: "Mandar un ‘¿cómo vienen?’ al grupo", type: "neutro", feedback: "El mensaje quedó en visto, pero al menos existe el grupo." }, { text: "Hacer tu parte y subirla sin drama", type: "copero", feedback: "No necesitaste una asamblea para avanzar. Aura productiva." }, { text: "Cambiar el nombre a ‘Final Final Definitivo’", type: "cringe", feedback: "El nombre mejoró. El trabajo, lamentablemente, no." }] },
+      { id: "extra-19", phase: 2, category: "📦 Mudanza", text: "Encontrás una caja que dice ‘varios’ y nadie recuerda qué hay adentro desde 2019.", choices: [{ text: "Abrirla con la solemnidad de un arqueólogo", type: "copero", feedback: "Encontraste cables de tres celulares que ya no existen." }, { text: "Tirarla sin mirar y confiar en tu nueva vida", type: "critico", trait: "Minimalista 🧘", feedback: "Libertad emocional, dos cargadores y una duda eterna." }, { text: "Volver a cerrarla y mudarla otra vez", type: "neutro", feedback: "La caja sigue invicta. El misterio se muda con vos." }, { text: "Preguntar en el grupo familiar y abrir una investigación", type: "cringe", feedback: "Ocho audios, ninguna respuesta y una foto de 2021." }] },
+      { id: "extra-20", phase: 2, category: "💬 Grupo de WhatsApp", text: "Alguien manda un audio de 7 minutos para explicar algo que podía decir en una línea.", choices: [{ text: "Escucharlo a velocidad 2x y tomar notas", type: "critico", trait: "Traductor de Audios 🎧", feedback: "Convertiste un podcast en una decisión." }, { text: "Pedir un resumen con amabilidad", type: "copero", feedback: "La humanidad agradece tu servicio público." }, { text: "Responder ‘jajaja’ sin haberlo escuchado", type: "cringe", feedback: "El audio tenía una pregunta directa. El karma también manda audios." }, { text: "Dejarlo para después y olvidarlo", type: "neutro", feedback: "El mensaje quedó viviendo en el limbo del grupo." }] },
+      { id: "extra-21", phase: 3, category: "🌐 Internet", text: "Tu publicación se vuelve viral y de pronto opinan sobre vos personas que no sabías que existían.", choices: [{ text: "Responder cada comentario durante seis horas", type: "cringe", feedback: "Ganaste visibilidad y perdiste una tarde completa." }, { text: "Agradecer, silenciar notificaciones y seguir con tu día", type: "copero", trait: "Fama Saludable 🌱", feedback: "La viralidad no te robó el volante. Muy poca gente puede decir eso." }, { text: "Convertir la atención en una causa útil", type: "critico", trait: "Viral con Propósito 📣", feedback: "El algoritmo te dio megáfono y lo usaste con criterio." }, { text: "Borrar todo y fingir que nunca pasó", type: "neutro", feedback: "Internet hizo capturas, pero tu paz mental ganó un punto." }] },
+      { id: "extra-22", phase: 3, category: "🎬 Entrevista", text: "Te piden que describas tu carrera en 30 segundos y tu cerebro muestra la ruedita de carga.", choices: [{ text: "Contar todo desde el jardín de infantes", type: "cringe", feedback: "El reloj llegó a cero en la época del secundario." }, { text: "Usar una historia breve con un aprendizaje concreto", type: "critico", trait: "Narrador 🎬", feedback: "Treinta segundos, tres ideas y una impresión que queda." }, { text: "Decir qué hacés hoy y qué buscás aprender", type: "copero", feedback: "Claro, honesto y sin vender humo industrial." }, { text: "Responder ‘es largo de explicar’", type: "neutro", feedback: "Técnicamente cierto. Estratégicamente, una puerta entreabierta." }] },
+      { id: "extra-23", phase: 3, category: "🏢 Oficina", text: "Te invitan a una reunión que podría haber sido un mensaje, pero ahora tiene 14 asistentes.", choices: [{ text: "Entrar y tomar notas como cronista oficial", type: "neutro", feedback: "La reunión duró una hora. Tus notas sobrevivieron." }, { text: "Proponer una agenda y un objetivo al inicio", type: "critico", trait: "Domador de Reuniones 🗓️", feedback: "El caos tuvo estructura durante 43 minutos. Inédito." }, { text: "Preguntar si pueden resolverlo por escrito", type: "copero", feedback: "Una pregunta sencilla salvó tiempo de 14 personas." }, { text: "Decir ‘me quedo sin cámara’ y desaparecer", type: "cringe", feedback: "La cámara se apagó; tu reputación también un poquito." }] },
+      { id: "extra-24", phase: 3, category: "💸 Inversión", text: "Un influencer asegura que encontró ‘la oportunidad del siglo’ y te manda un link con muchos fueguitos.", choices: [{ text: "Pedir información, riesgos y fuentes antes de decidir", type: "critico", trait: "Anti-Humo 🧯", feedback: "Los fueguitos no eran un análisis financiero. Te salvaste." }, { text: "No invertir en algo que no entendés", type: "copero", feedback: "El mejor rendimiento fue conservar la plata y el criterio." }, { text: "Invertir una suma pequeña por curiosidad", type: "neutro", feedback: "Curiosidad controlada: la billetera respira." }, { text: "Vender el auto para entrar primero", type: "cringe", feedback: "El siglo tenía una oportunidad, pero no era esa." }] },
+      { id: "extra-25", phase: 3, category: "📱 Redes", text: "Un desconocido te manda un hilo de 38 mensajes para explicarte por qué estás equivocado.", choices: [{ text: "Responder con 39 mensajes y una bibliografía", type: "cringe", feedback: "La discusión ya tiene temporada 2 y nadie pidió renovación." }, { text: "Leer, rescatar algo útil y no entrar en guerra", type: "copero", trait: "Templanza 🧘‍♂️", feedback: "Aprendiste algo sin regalarle tu sistema nervioso al algoritmo." }, { text: "Pedir una fuente concreta y cerrar ahí", type: "critico", feedback: "Una pregunta limpia desarmó 38 mensajes de humo." }, { text: "Dejarlo en visto con elegancia", type: "neutro", feedback: "A veces el botón de visto es una frontera saludable." }] },
+      { id: "extra-26", phase: 3, category: "🎙️ Podcast", text: "Te invitan a un podcast y te das cuenta de que el micrófono está prendido desde hace cinco minutos.", choices: [{ text: "Seguir hablando como si nada", type: "neutro", feedback: "La naturalidad te salvó. O al menos nadie lo notó demasiado." }, { text: "Convertir el error en una anécdota", type: "copero", feedback: "El blooper se volvió el mejor clip del episodio." }, { text: "Admitirlo y revisar todo antes de continuar", type: "critico", trait: "Control de Calidad ✅", feedback: "Profesionalismo: la versión menos viral, pero más confiable." }, { text: "Culpar al micrófono por tu monólogo", type: "cringe", feedback: "El micrófono quedó imputado, pero nadie le creyó." }] },
+      { id: "extra-27", phase: 3, category: "🧳 Viaje", text: "Llegás al aeropuerto y el cartel dice ‘último aviso’ para tu vuelo.", choices: [{ text: "Correr haciendo zigzag y pedir permiso a los gritos", type: "cringe", feedback: "Llegaste transpirado y con una historia que nadie pidió." }, { text: "Seguir las indicaciones y correr sin empujar", type: "copero", feedback: "Velocidad, respeto y una puerta que todavía estaba abierta." }, { text: "Pedir ayuda al personal apenas ves el aviso", type: "critico", trait: "Viajero Pro ✈️", feedback: "Un pedido claro hizo más que diez vueltas de pánico." }, { text: "Aceptar el destino y comprar un café", type: "neutro", feedback: "Perdiste un vuelo, pero encontraste una anécdota cara." }] },
+      { id: "extra-28", phase: 3, category: "🎤 Escenario", text: "Te toca dar una presentación y el proyector decide mostrar tu escritorio lleno de archivos llamados ‘final_final’.", choices: [{ text: "Cerrar todo y respirar antes de empezar", type: "copero", feedback: "El público vio humanidad, no desastre. Buena recuperación." }, { text: "Hacer un chiste y pasar a la presentación", type: "critico", trait: "Improvisador 🎭", feedback: "El accidente se convirtió en hielo roto. Entraste con ventaja." }, { text: "Pedir un minuto para ordenar la pantalla", type: "neutro", feedback: "Un minuto de pausa vale más que una hora de excusas." }, { text: "Decir que era una instalación artística sobre el caos", type: "cringe", feedback: "El concepto era audaz. La carpeta ‘cosas’ te delató." }] },
+      { id: "extra-29", phase: 3, category: "🏆 Final", text: "Después de meses farmeando Aura, alguien te pregunta qué vas a hacer ahora que sos una leyenda.", choices: [{ text: "Decir que todavía falta muchísimo por aprender", type: "copero", feedback: "La verdadera leyenda no necesita gritarlo. El Aura se siente." }, { text: "Ayudar a alguien que recién empieza", type: "critico", trait: "Mentor del Aura 🌟", feedback: "El ciclo se completa: ahora vos desbloqueás a otros." }, { text: "Tomarte un descanso y disfrutar el camino", type: "neutro", feedback: "También es ganar saber cuándo bajar un cambio." }, { text: "Pedir que te llamen ‘Su Excelencia’", type: "cringe", feedback: "La corona era simbólica, pero la vergüenza fue real." }] }
     ];
 
     const companions = [
@@ -420,19 +481,53 @@
       player.avatar = icon;
     }
 
+    function getSituationKey(situation) {
+      return situation.id || [situation.phase, situation.category, situation.text].join('|');
+    }
+
+    function getPhaseSituations(phase) { return situations.filter(s => s.phase === phase); }
+
+    function getUsedForPhase(phase) {
+      if (!Array.isArray(player.usedSituations[phase])) player.usedSituations[phase] = [];
+      return player.usedSituations[phase];
+    }
+
+    function saveGame() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          name: player.name, avatar: player.avatar, aura: player.aura, streak: player.streak,
+          bestStreak: player.bestStreak, multiplier: player.multiplier, phase: player.phase,
+          circleIds: player.circleIds, traits: player.traits, usedSituations: player.usedSituations,
+          totalAnswered: player.totalAnswered
+        }));
+        const status = document.getElementById('saveStatus');
+        if (status) status.textContent = '✓ Progreso guardado en este dispositivo';
+      } catch (error) { console.warn('No se pudo guardar la partida', error); }
+    }
+
+    function restoreGame() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (!saved) return false;
+        Object.assign(player, saved);
+        player.circleIds = Array.isArray(player.circleIds) ? player.circleIds : [];
+        player.traits = Array.isArray(player.traits) ? player.traits : [];
+        player.usedSituations = saved.usedSituations || { 1: [], 2: [], 3: [] };
+        player.isProcessing = false;
+        const input = document.getElementById('playerNameInput');
+        if (input && player.name !== 'Invitado') input.value = player.name;
+        return true;
+      } catch (error) { console.warn('No se pudo restaurar la partida', error); return false; }
+    }
+
     function startGame() {
       const nameInput = document.getElementById('playerNameInput').value.trim();
-      if(nameInput !== '') player.name = nameInput;
-      
+      if (nameInput !== '') player.name = nameInput.slice(0, 15);
       document.getElementById('charCreation').style.display = 'none';
       document.getElementById('gameHeader').style.display = 'block';
       document.getElementById('gameNav').style.display = 'flex';
       document.getElementById('gameMain').style.display = 'block';
-      
-      updatePhase();
-      loadNextSituation();
-      renderCircle();
-      generateRanking();
+      updatePhase(); updateHUD(); renderCircle(); generateRanking(); loadNextSituation(); saveGame();
     }
 
     function switchTab(tabId, btn) {
@@ -440,219 +535,164 @@
       btn.classList.add('active');
       document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
       document.getElementById('tab-' + tabId).classList.add('active');
-      if(tabId === 'ranking') generateRanking();
+      if (tabId === 'ranking') generateRanking();
     }
 
     function checkPhaseProgression() {
-      let oldPhase = player.phase;
-      if(player.aura < 300) player.phase = 1;
-      else if(player.aura >= 300 && player.aura < 1500) player.phase = 2;
-      else if(player.aura >= 1500) player.phase = 3;
-
-      if(oldPhase !== player.phase) {
+      const auraPhase = player.aura < 300 ? 1 : player.aura < 1500 ? 2 : 3;
+      const oldPhase = player.phase;
+      player.phase = Math.max(player.phase || 1, auraPhase);
+      if (oldPhase !== player.phase) {
         document.body.classList.add('flash-purple');
-        setTimeout(() => document.body.classList.remove('flash-purple'), 600);
+        setTimeout(() => document.body.classList.remove('flash-purple'), 700);
+        showFeedback('🚪 Nuevo capítulo desbloqueado: ' + getPhaseName(player.phase), 'gold');
         updatePhase();
       }
     }
 
-    function updatePhase() {
-      let phaseText = "Fase 1: El Barrio";
-      if(player.phase === 2) phaseText = "Fase 2: La Joda";
-      if(player.phase === 3) phaseText = "Fase 3: Leyenda";
-      document.getElementById('hudPhase').innerText = phaseText;
+    function getPhaseName(phase) {
+      if (phase === 2) return 'La Joda';
+      if (phase === 3) return 'La Leyenda';
+      return 'El Barrio';
+    }
+
+    function updatePhase() { document.getElementById('hudPhase').innerText = 'Fase ' + player.phase + ': ' + getPhaseName(player.phase); }
+
+    function shuffle(items) {
+      const result = [...items];
+      for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+      }
+      return result;
     }
 
     function loadNextSituation() {
-      // Filtrar situaciones por fase actual
-      const available = situations.filter(s => s.phase === player.phase);
-      
-      // Lógica anti-repetición inmediata
-      let rndIdx;
-      do {
-        rndIdx = Math.floor(Math.random() * available.length);
-      } while(available.length > 1 && rndIdx === player.lastSituationIdx);
-      
-      player.lastSituationIdx = rndIdx;
-      const sit = available[rndIdx];
-      
-      document.getElementById('sitCategory').innerText = sit.category;
-      document.getElementById('sitText').innerText = sit.text;
-      
-      const shuffled = [...sit.choices].sort(() => 0.5 - Math.random());
-      const container = document.getElementById('choicesContainer');
-      container.innerHTML = '';
-      
-      shuffled.forEach(choice => {
-        const btn = document.createElement('button');
-        btn.className = 'choice-btn';
-        btn.innerText = choice.text;
-        btn.onclick = () => makeDecision(choice);
-        container.appendChild(btn);
+      player.isProcessing = false;
+      const pool = getPhaseSituations(player.phase);
+      const used = getUsedForPhase(player.phase);
+      let remaining = pool.filter(s => !used.includes(getSituationKey(s)));
+      if (remaining.length === 0) {
+        if (player.phase < 3) {
+          player.aura += 200; player.phase += 1; updatePhase(); updateHUD();
+          showFeedback('🏁 Capítulo completado. Bonus de +200 Aura y pasás a ' + getPhaseName(player.phase) + '.', 'gold');
+          saveGame();
+          remaining = getPhaseSituations(player.phase).filter(s => !getUsedForPhase(player.phase).includes(getSituationKey(s)));
+        } else {
+          document.getElementById('sitCategory').innerText = '🏆 FINAL DE TEMPORADA';
+          document.getElementById('sitText').innerText = 'Completaste todas las situaciones disponibles. Sos oficialmente una leyenda del Aura.';
+          document.getElementById('choicesContainer').innerHTML = '<div class="final-message">Volvé más adelante para nuevos eventos. Mientras tanto, tu récord queda guardado.</div>';
+          document.getElementById('progressText').innerText = 'Temporada completada';
+          document.getElementById('progressFill').style.width = '100%'; saveGame(); return;
+        }
+      }
+      const situation = remaining[Math.floor(Math.random() * remaining.length)];
+      const key = getSituationKey(situation); player.currentSituationId = key;
+      const completed = getUsedForPhase(player.phase).length;
+      const total = getPhaseSituations(player.phase).length;
+      document.getElementById('sitCategory').innerText = situation.category;
+      document.getElementById('sitText').innerText = situation.text;
+      document.getElementById('progressText').innerText = 'Capítulo ' + player.phase + ' · ' + completed + '/' + total;
+      document.getElementById('progressFill').style.width = Math.min(100, (completed / total) * 100) + '%';
+      const feedback = document.getElementById('feedbackPanel'); feedback.className = 'feedback-panel'; feedback.textContent = '';
+      const container = document.getElementById('choicesContainer'); container.innerHTML = '';
+      shuffle(situation.choices).forEach((choice, index) => {
+        const btn = document.createElement('button'); btn.className = 'choice-btn'; btn.type = 'button';
+        btn.innerHTML = '<span class="choice-number">' + (index + 1) + '</span><span>' + choice.text + '</span>';
+        btn.addEventListener('click', () => makeDecision(choice, situation)); container.appendChild(btn);
       });
     }
 
-    function makeDecision(choice) {
-      let baseGain = 0;
-      let colorClass = '';
+    function getFeedback(choice) {
+      if (choice.feedback) return choice.feedback;
+      if (choice.type === 'cringe') return 'El comité del Aura tomó nota. La próxima sale mejor.';
+      if (choice.type === 'critico') return 'Decisión de protagonista. El barrio acaba de tomar apuntes.';
+      if (choice.type === 'copero') return 'Buena lectura de la situación. Aura limpia y sin humo.';
+      return 'No fue épico, pero tampoco fue un papelón. Eso también cuenta.';
+    }
 
-      if(choice.type === 'cringe') {
-        baseGain = -25;
-        player.streak = 0;
-        colorClass = 'flash-red';
-      } else if(choice.type === 'neutro') {
-        baseGain = 10;
-      } else if(choice.type === 'copero') {
-        baseGain = 25;
-        player.streak++;
-        colorClass = 'flash-green';
-      } else if(choice.type === 'critico') {
-        baseGain = 70;
-        player.streak += 2;
-        colorClass = 'flash-gold';
-      }
+    function showFeedback(message, tone) {
+      const panel = document.getElementById('feedbackPanel');
+      if (!panel) return;
+      panel.className = 'feedback-panel visible ' + (tone || ''); panel.textContent = message;
+    }
 
-      // Asignar Rasgo (Trait) si lo tiene y el jugador no lo posee
-      if(choice.trait && !player.traits.includes(choice.trait)) {
-        player.traits.push(choice.trait);
-        // Evitar que el contenedor crezca infinito (max 4 rasgos mostrados)
-        if(player.traits.length > 4) player.traits.shift(); 
-      }
-
-      let finalGain = baseGain > 0 ? Math.floor(baseGain * player.multiplier) : baseGain;
-      if(choice.type !== 'cringe' && player.streak > 2) {
-        finalGain += (player.streak * 3); // Bonus racha
-      }
-
-      player.aura += finalGain;
-      if(player.aura < 0) player.aura = 0; 
-
-      if(colorClass) {
-        document.body.classList.add(colorClass);
-        setTimeout(() => document.body.classList.remove(colorClass), 400);
-      }
-
-      checkPhaseProgression();
-      updateHUD();
-      showFloatingNumber(finalGain, choice.type);
-      
-      // Delay corto antes de la próxima para ver animación
-      setTimeout(() => {
-        loadNextSituation();
-      }, 500);
+    function makeDecision(choice, situation) {
+      if (player.isProcessing) return;
+      player.isProcessing = true;
+      document.querySelectorAll('.choice-btn').forEach(btn => { btn.disabled = true; btn.classList.add('answered'); });
+      const key = getSituationKey(situation); const used = getUsedForPhase(player.phase);
+      if (!used.includes(key)) used.push(key);
+      let baseGain = 10; let colorClass = '';
+      if (choice.type === 'cringe') { baseGain = -25; player.streak = 0; colorClass = 'flash-red'; }
+      else if (choice.type === 'copero') { baseGain = 25; player.streak += 1; colorClass = 'flash-green'; }
+      else if (choice.type === 'critico') { baseGain = 70; player.streak += 2; colorClass = 'flash-gold'; }
+      if (choice.trait && !player.traits.includes(choice.trait)) { player.traits.push(choice.trait); if (player.traits.length > 6) player.traits.shift(); }
+      player.bestStreak = Math.max(player.bestStreak || 0, player.streak);
+      const finalGain = baseGain > 0 ? Math.floor(baseGain * player.multiplier) + (player.streak > 2 ? player.streak * 3 : 0) : baseGain;
+      player.aura = Math.max(0, player.aura + finalGain); player.totalAnswered = (player.totalAnswered || 0) + 1;
+      if (colorClass) { document.body.classList.add(colorClass); setTimeout(() => document.body.classList.remove(colorClass), 450); }
+      checkPhaseProgression(); updateHUD(); showFloatingNumber(finalGain, choice.type);
+      showFeedback(getFeedback(choice) + ' ' + (finalGain >= 0 ? '+' : '') + finalGain + ' Aura.', choice.type); saveGame();
+      setTimeout(loadNextSituation, 1200);
     }
 
     function showFloatingNumber(amount, type) {
-      const el = document.createElement('div');
-      el.className = 'aura-float';
-      
-      let color = '#fff';
-      if(type === 'cringe') color = 'var(--neon-pink)';
-      if(type === 'copero') color = 'var(--neon-green)';
-      if(type === 'critico') color = 'var(--neon-gold)';
-      
-      el.style.color = color;
-      el.innerText = (amount >= 0 ? '+' : '') + amount + ' Aura';
-      el.style.left = '50%';
-      el.style.top = '40%';
-      el.style.transform = 'translate(-50%, -50%)';
-      
-      document.body.appendChild(el);
+      const el = document.createElement('div'); el.className = 'aura-float';
+      const colors = { cringe: 'var(--neon-pink)', copero: 'var(--neon-green)', critico: 'var(--neon-gold)' };
+      el.style.color = colors[type] || '#fff'; el.innerText = (amount >= 0 ? '+' : '') + amount + ' Aura';
+      el.style.left = '50%'; el.style.top = '40%'; el.style.transform = 'translate(-50%, -50%)'; document.body.appendChild(el);
       setTimeout(() => el.remove(), 1000);
     }
 
     function renderCircle() {
-      const grid = document.getElementById('circleGrid');
-      grid.innerHTML = '';
-      
+      const grid = document.getElementById('circleGrid'); grid.innerHTML = '';
       companions.forEach(comp => {
-        const isOwned = player.circleIds.includes(comp.id);
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <div class="card-avatar">${comp.avatar}</div>
-          <div class="card-title">${comp.name}</div>
-          <div class="card-desc">${comp.desc}</div>
-          <button class="card-btn" 
-                  ${isOwned ? 'disabled' : ''} 
-                  onclick="buyCompanion(${comp.id}, ${comp.cost}, ${comp.mult})">
-            ${isOwned ? 'RECLUTADO' : 'Cuesta: ' + comp.cost + ' ⚡'}
-          </button>
-        `;
-        grid.appendChild(card);
+        const isOwned = player.circleIds.includes(comp.id); const card = document.createElement('div'); card.className = 'card';
+        const avatar = document.createElement('div'); avatar.className = 'card-avatar'; avatar.textContent = comp.avatar;
+        const title = document.createElement('div'); title.className = 'card-title'; title.textContent = comp.name;
+        const desc = document.createElement('div'); desc.className = 'card-desc'; desc.textContent = comp.desc;
+        const button = document.createElement('button'); button.className = 'card-btn'; button.type = 'button'; button.disabled = isOwned;
+        button.textContent = isOwned ? 'RECLUTADO' : 'Cuesta: ' + comp.cost + ' ⚡'; button.addEventListener('click', () => buyCompanion(comp.id, comp.cost, comp.mult));
+        card.append(avatar, title, desc, button); grid.appendChild(card);
       });
     }
 
     function buyCompanion(id, cost, mult) {
-      if(player.aura >= cost) {
-        player.aura -= cost;
-        player.multiplier += mult;
-        player.circleIds.push(id);
-        
-        checkPhaseProgression();
-        updateHUD();
-        renderCircle();
-        
-        document.body.classList.add('flash-gold');
-        setTimeout(() => document.body.classList.remove('flash-gold'), 400);
-      } else {
-        alert("¡Te falta Aura para reclutarlo! Seguí farmeando en la historia.");
-      }
+      if (player.circleIds.includes(id)) return;
+      if (player.aura < cost) { showFeedback('Te faltan ' + (cost - player.aura) + ' Aura para reclutarlo. El farmeo continúa.', 'warning'); return; }
+      player.aura -= cost; player.multiplier += mult; player.circleIds.push(id); checkPhaseProgression(); updateHUD(); renderCircle(); saveGame();
+      document.body.classList.add('flash-gold'); setTimeout(() => document.body.classList.remove('flash-gold'), 450);
+      showFeedback('🤝 Aliado reclutado. Tu multiplicador ahora es x' + player.multiplier.toFixed(1) + '.', 'gold');
     }
 
     function updateHUD() {
-      document.getElementById('hudAura').innerText = player.aura;
-      document.getElementById('hudMult').innerText = 'x' + player.multiplier.toFixed(1);
-      document.getElementById('hudStreak').innerText = player.streak;
-      
-      document.getElementById('dispAvatar').innerText = player.avatar;
-      document.getElementById('dispName').innerText = player.name;
-      
-      let rankName = "Nadie te juna";
-      if(player.aura > 300) rankName = "Pibe Respetado";
-      if(player.aura > 1000) rankName = "Jefe del Barrio";
-      if(player.aura > 3000) rankName = "Influencer Picante";
-      if(player.aura > 10000) rankName = "Deidad Argentina";
-      document.getElementById('dispRank').innerText = rankName;
-
-      // Renderizar Rasgos
-      const traitsDiv = document.getElementById('dispTraits');
-      traitsDiv.innerHTML = '';
-      player.traits.forEach(t => {
-        const badge = document.createElement('div');
-        badge.className = 'trait-badge';
-        badge.innerText = t;
-        traitsDiv.appendChild(badge);
-      });
+      document.getElementById('hudAura').innerText = player.aura; document.getElementById('hudMult').innerText = 'x' + player.multiplier.toFixed(1);
+      document.getElementById('hudStreak').innerText = player.streak; document.getElementById('hudBestStreak').innerText = player.bestStreak || 0;
+      document.getElementById('dispAvatar').innerText = player.avatar; document.getElementById('dispName').innerText = player.name;
+      let rankName = 'Nadie te juna'; if (player.aura > 300) rankName = 'Pibe Respetado'; if (player.aura > 1000) rankName = 'Jefe del Barrio'; if (player.aura > 3000) rankName = 'Influencer Picante'; if (player.aura > 10000) rankName = 'Deidad Argentina';
+      document.getElementById('dispRank').innerText = rankName; const traitsDiv = document.getElementById('dispTraits'); traitsDiv.innerHTML = '';
+      player.traits.forEach(t => { const badge = document.createElement('div'); badge.className = 'trait-badge'; badge.innerText = t; traitsDiv.appendChild(badge); });
     }
 
     function generateRanking() {
-      const currentList = [...fakeRankings, { name: player.name + ' (VOS)', aura: player.aura, avatar: player.avatar, isMe: true }];
-      currentList.sort((a, b) => b.aura - a.aura);
-      
-      const listDiv = document.getElementById('rankingList');
-      listDiv.innerHTML = '';
-      
+      const currentList = [...fakeRankings, { name: player.name + ' (VOS)', aura: player.aura, avatar: player.avatar, isMe: true }].sort((a, b) => b.aura - a.aura);
+      const listDiv = document.getElementById('rankingList'); listDiv.innerHTML = '';
       currentList.forEach((r, idx) => {
-        const item = document.createElement('div');
-        item.className = 'rank-item ' + (r.isMe ? 'rank-me' : '');
-        
-        let posClass = '';
-        if(idx === 0) posClass = 'rank-1';
-        if(idx === 1) posClass = 'rank-2';
-        if(idx === 2) posClass = 'rank-3';
-        
-        item.innerHTML = `
-          <div class="rank-pos ${posClass}">#${idx + 1}</div>
-          <div class="rank-info">
-            <span style="font-size:1.8rem;">${r.avatar}</span>
-            <span style="font-weight:700; font-size:1.1rem;">${r.name}</span>
-          </div>
-          <div class="rank-score">${r.aura} ⚡</div>
-        `;
-        listDiv.appendChild(item);
+        const item = document.createElement('div'); item.className = 'rank-item ' + (r.isMe ? 'rank-me' : '');
+        const pos = document.createElement('div'); pos.className = 'rank-pos ' + (idx < 3 ? 'rank-' + (idx + 1) : ''); pos.textContent = '#' + (idx + 1);
+        const info = document.createElement('div'); info.className = 'rank-info'; const avatar = document.createElement('span'); avatar.style.fontSize = '1.8rem'; avatar.textContent = r.avatar;
+        const name = document.createElement('span'); name.style.fontWeight = '700'; name.style.fontSize = '1.1rem'; name.textContent = r.name; info.append(avatar, name);
+        const score = document.createElement('div'); score.className = 'rank-score'; score.textContent = r.aura + ' ⚡'; item.append(pos, info, score); listDiv.appendChild(item);
       });
     }
+
+    function resetGame() {
+      if (!confirm('¿Borrar tu progreso local y empezar una leyenda nueva?')) return;
+      localStorage.removeItem(STORAGE_KEY); window.location.reload();
+    }
+
+    restoreGame();
   </script>
 </body>
 </html>
