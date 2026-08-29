@@ -21,7 +21,6 @@
       --text-muted: #a1a1aa;
       --cafecito: #f97316;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background: var(--bg-dark);
@@ -33,15 +32,7 @@
       min-height: 100vh;
       background: radial-gradient(circle at 15% 0%, rgba(34,211,238,.12), transparent 34rem), radial-gradient(circle at 90% 12%, rgba(192,132,252,.12), transparent 30rem), var(--bg-dark);
     }
-    body::before {
-      content: ''; position: fixed; inset: 0; pointer-events: none; opacity: .28;
-      background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
-      background-size: 32px 32px; mask-image: linear-gradient(to bottom, black, transparent 75%);
-    }
-
     h1, h2, h3, .brand-title { font-family: 'Syne', sans-serif; text-transform: uppercase; }
-
-    /* OVERLAYS & MODALS */
     .overlay {
       position: fixed; inset: 0; background: rgba(9,9,11,0.95);
       z-index: 9999; display: flex; justify-content: center; align-items: center;
@@ -51,7 +42,6 @@
       background: var(--panel-bg); border: 2px solid var(--neon-cyan);
       padding: 40px; border-radius: 24px; width: 90%; max-width: 500px;
       box-shadow: 0 0 40px rgba(34, 211, 238, 0.2);
-      animation: fadeIn 0.4s ease;
     }
     .modal-box h2 { font-size: 2rem; margin-bottom: 15px; }
     .modal-box p { color: var(--text-muted); margin-bottom: 25px; line-height: 1.6; font-size: 1.1rem; }
@@ -73,10 +63,6 @@
       color: #000; border: none; border-radius: 12px; cursor: pointer;
       text-transform: uppercase; font-family: 'Syne'; transition: 0.3s;
     }
-    .modal-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(192, 132, 252, 0.4); }
-    .modal-btn.gold { background: linear-gradient(90deg, var(--neon-gold), #f59e0b); }
-
-    /* LAYOUT */
     header {
       padding: 20px; background: rgba(24, 24, 27, 0.8);
       border-bottom: 1px solid var(--panel-border);
@@ -98,131 +84,62 @@
       background: linear-gradient(90deg, var(--neon-purple), var(--neon-pink));
       color: #000; padding: 5px 12px; border-radius: 12px; font-weight: 800; font-size: 0.9rem; text-transform: uppercase;
     }
-
     .nav-tabs { display: flex; justify-content: center; gap: 10px; margin: 25px 0; flex-wrap: wrap; padding: 0 15px; }
     .tab-btn {
       background: var(--panel-bg); border: 1px solid var(--panel-border);
       color: var(--text-muted); padding: 12px 24px; border-radius: 12px;
-      cursor: pointer; font-weight: 600; font-size: 1rem; transition: 0.2s; font-family: 'Outfit';
+      cursor: pointer; font-weight: 600; font-size: 1rem; font-family: 'Outfit';
     }
-    .tab-btn.active {
-      background: var(--text-main); color: #000; border-color: transparent;
-      box-shadow: 0 0 20px rgba(255,255,255,0.2);
-    }
-
-    /* SITUACIONES */
-    .view-section { display: none; padding: 0 15px; animation: fadeIn 0.4s ease; }
+    .tab-btn.active { background: var(--text-main); color: #000; border-color: transparent; }
+    .view-section { display: none; padding: 0 15px; }
     .view-section.active { display: block; }
-    @keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
-
     .story-card {
       background: linear-gradient(145deg, rgba(39,39,42,.88), rgba(24,24,27,.88));
-      backdrop-filter: blur(14px);
-      border: 1px solid var(--panel-border);
-      border-radius: 24px; padding: 30px; max-width: 650px; margin: 0 auto;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      border: 1px solid var(--panel-border); border-radius: 24px; padding: 30px; max-width: 650px; margin: 0 auto;
     }
     .character-display { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--panel-border); }
-    .char-avatar { font-size: 4rem; margin-bottom: 10px; display: inline-block; animation: float 3s ease-in-out infinite; }
-    @keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
+    .char-avatar { font-size: 4rem; margin-bottom: 10px; display: inline-block; }
     .char-name { font-family: 'Syne'; font-size: 1.5rem; color: var(--neon-cyan); }
-    .char-rank { font-size: 0.9rem; color: var(--neon-purple); font-weight: 600; text-transform: uppercase; letter-spacing: 2px;}
+    .char-rank { font-size: 0.9rem; color: var(--neon-purple); font-weight: 600; text-transform: uppercase; }
     .traits-container { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; min-height: 28px; }
     .trait-badge { background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; border: 1px solid var(--panel-border); }
-
     .scenario-panel {
       background: linear-gradient(145deg, rgba(0,0,0,.72), rgba(24,24,27,.62));
-      border: 1px solid var(--panel-border);
-      border-radius: 16px; padding: 25px; margin-bottom: 25px; position: relative; overflow: hidden;
+      border: 1px solid var(--panel-border); border-radius: 16px; padding: 25px; margin-bottom: 25px; text-align: left;
     }
-    .scenario-panel::after { content: '✦'; position: absolute; right: 18px; top: 8px; color: rgba(192,132,252,.15); font-size: 4rem; transform: rotate(15deg); }
-    
-    .scenario-topline { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 15px; }
     .category-tag {
       display: inline-block; font-size: 0.75rem; font-weight: 800; text-transform: uppercase;
-      color: var(--neon-green); background: rgba(74, 222, 128, 0.1);
-      padding: 5px 12px; border-radius: 12px;
+      color: var(--neon-green); background: rgba(74, 222, 128, 0.1); padding: 5px 12px; border-radius: 12px; margin-bottom: 12px;
     }
-    .scenario-text { font-size: 1.2rem; line-height: 1.6; font-weight: 400; text-align: left; }
-
+    .scenario-text { font-size: 1.2rem; line-height: 1.6; font-weight: 400; }
     .choices-grid { display: flex; flex-direction: column; gap: 12px; }
     .choice-btn {
       display: flex; align-items: center; gap: 13px; min-height: 62px;
       background: rgba(255,255,255,.045); border: 1px solid var(--panel-border);
       color: #fff; padding: 16px 20px; border-radius: 12px; font-weight: 600;
-      cursor: pointer; font-size: 1rem; font-family: 'Outfit'; text-align: left;
-      transition: all 0.2s; position: relative; overflow: hidden;
+      cursor: pointer; font-size: 1rem; font-family: 'Outfit'; text-align: left; transition: 0.2s;
     }
     .choice-number {
       display: grid; place-items: center; flex: 0 0 28px; height: 28px;
-      border: 1px solid var(--neon-purple); border-radius: 50%; color: var(--neon-purple);
-      font-size: .82rem; font-weight: 800; transition: 0.2s;
+      border: 1px solid var(--neon-purple); border-radius: 50%; color: var(--neon-purple); font-size: .82rem; font-weight: 800;
     }
-    .choice-btn:hover { border-color: var(--neon-cyan); background: rgba(34, 211, 238, 0.05); transform: translateX(5px); }
-    .choice-btn:hover .choice-number { background: var(--neon-purple); color: #09090b; }
-    .choice-btn:disabled { cursor: default; opacity: .65; transform: none; }
-    .choice-btn.answered { animation: choicePulse .35s ease-out; border-color: var(--neon-gold); }
-
-    /* DYNAMIC ELEMENTS */
-    .feedback-panel { margin-top: 15px; padding: 15px; border-radius: 12px; color: var(--text-main); font-size: 1rem; text-align: left; animation: fadeIn 0.3s ease; }
+    .choice-btn:hover { border-color: var(--neon-cyan); background: rgba(34, 211, 238, 0.05); }
+    .feedback-panel { margin-top: 15px; padding: 15px; border-radius: 12px; color: var(--text-main); font-size: 1rem; text-align: left; }
     .feedback-panel.cringe { border: 1px solid var(--neon-pink); background: rgba(244,114,182,.09); }
     .feedback-panel.copero { border: 1px solid var(--neon-green); background: rgba(74,222,128,.09); }
     .feedback-panel.critico, .feedback-panel.gold { border: 1px solid var(--neon-gold); background: rgba(250,204,21,.09); }
     .feedback-panel.neutro { border: 1px solid var(--text-muted); background: rgba(255,255,255,.05); }
-    
     .progress-container { margin-top: 20px; }
     .progress-track { height: 8px; background: rgba(255,255,255,.07); border-radius: 99px; overflow: hidden; }
-    .progress-fill { width: 0%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink)); transition: width .45s ease; }
-    .progress-text { font-size: 0.8rem; color: var(--text-muted); margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+    .progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink)); transition: width .45s ease; }
+    .progress-text { font-size: 0.8rem; color: var(--text-muted); margin-top: 5px; text-transform: uppercase; font-weight: 600; }
     .save-status { margin-top: 10px; color: var(--neon-green); font-size: .8rem; opacity: 0; transition: opacity 0.3s; }
-
-    /* FEEDBACK ANIMATIONS */
-    .flash-green { animation: flashG 0.4s ease-out; }
-    .flash-red { animation: flashR 0.4s ease-out; }
-    .flash-gold { animation: flashGold 0.4s ease-out; }
-    .flash-purple { animation: flashP 0.6s ease-out; }
-    @keyframes flashG { 0% { background-color: rgba(74, 222, 128, 0.3); } 100% { background-color: transparent; } }
-    @keyframes flashR { 0% { background-color: rgba(244, 114, 182, 0.3); } 100% { background-color: transparent; } }
-    @keyframes flashGold { 0% { background-color: rgba(250, 204, 21, 0.4); } 100% { background-color: transparent; } }
-    @keyframes flashP { 0% { background-color: rgba(192, 132, 252, 0.5); } 100% { background-color: transparent; } }
-
-    .aura-float {
-      position: fixed; font-family: 'Syne'; font-weight: 800; font-size: 2.5rem;
-      pointer-events: none; z-index: 9998; animation: auraUp 1s ease-out forwards;
-      text-shadow: 0 0 15px currentColor;
-    }
-    @keyframes auraUp {
-      0% { opacity: 1; transform: translate(-50%, 0) scale(0.8); }
-      50% { transform: translate(-50%, -40px) scale(1.2); }
-      100% { opacity: 0; transform: translate(-50%, -100px) scale(1); }
-    }
-
-    .reset-btn { border: 1px solid var(--panel-border); background: rgba(255,255,255,.04); color: var(--text-muted); border-radius: 20px; padding: 8px 13px; cursor: pointer; font: 600 .85rem 'Outfit'; transition: .2s; }
-    .reset-btn:hover { color: var(--text-main); border-color: var(--neon-pink); }
-    
-    /* CAFECITO */
-    .cafecito-banner {
-      background: linear-gradient(135deg, #2a1608, #09090b); border: 1px solid var(--cafecito);
-      border-radius: 24px; padding: 40px; max-width: 600px; margin: 40px auto; box-shadow: 0 0 30px rgba(249, 115, 22, 0.1);
-    }
-
-    @media (max-width: 560px) {
-      .brand-title { font-size: 1.9rem; }
-      header { padding: 15px 10px; }
-      .player-hud { gap: 8px; margin-top: 10px; }
-      .hud-stat { padding: 7px 10px; font-size: .86rem; }
-      .reset-btn { width: 100%; }
-      .story-card { padding: 18px; border-radius: 18px; }
-      .scenario-panel { padding: 18px 15px; }
-      .scenario-text { font-size: 1.08rem; }
-      .choice-btn { padding: 13px 12px; font-size: .94rem; }
-      .modal-box { padding: 28px 20px; }
-    }
+    .reset-btn { border: 1px solid var(--panel-border); background: rgba(255,255,255,.04); color: var(--text-muted); border-radius: 20px; padding: 8px 13px; cursor: pointer; font: 600 .85rem 'Outfit'; }
+    .cafecito-banner { background: linear-gradient(135deg, #2a1608, #09090b); border: 1px solid var(--cafecito); border-radius: 24px; padding: 40px; max-width: 600px; margin: 40px auto; }
   </style>
 </head>
 <body>
 
-  <!-- CHARACTER CREATION -->
   <div id="charCreation" class="overlay">
     <div class="modal-box">
       <h2>CREÁ TU LEYENDA</h2>
@@ -240,7 +157,6 @@
     </div>
   </div>
 
-  <!-- NARRATIVE INTRO MODAL -->
   <div id="storyIntro" class="overlay" style="display: none;">
     <div class="modal-box" style="border-color: var(--neon-purple);">
       <h2 id="introTitle" style="color: var(--neon-purple);">CAPÍTULO 1</h2>
@@ -249,7 +165,6 @@
     </div>
   </div>
 
-  <!-- HEADER -->
   <header style="display:none;" id="gameHeader">
     <div class="brand-title">AURA FARMEAR</div>
     <div class="player-hud">
@@ -261,15 +176,12 @@
     </div>
   </header>
 
-  <!-- TABS -->
   <nav class="nav-tabs" style="display:none;" id="gameNav">
     <button class="tab-btn active" onclick="switchTab('situaciones', this)">⚡ Modo Historia</button>
     <button class="tab-btn" onclick="switchTab('cafecito', this)">☕ Apoyar Creador</button>
   </nav>
 
   <main style="display:none;" id="gameMain">
-    
-    <!-- MODO HISTORIA -->
     <section id="tab-situaciones" class="view-section active">
       <div class="story-card" id="storyCardMain">
         <div class="character-display">
@@ -278,23 +190,15 @@
           <div class="char-rank" id="dispRank">Nadie te juna</div>
           <div class="traits-container" id="dispTraits"></div>
         </div>
-
         <div class="scenario-panel">
-          <div class="scenario-topline">
-             <div class="category-tag" id="sitCategory">Cargando...</div>
-          </div>
+          <div class="category-tag" id="sitCategory">Cargando...</div>
           <div class="scenario-text" id="sitText">Preparando tu destino...</div>
         </div>
-
-        <div class="choices-grid" id="choicesContainer">
-          <!-- Botones dinámicos -->
-        </div>
-
+        <div class="choices-grid" id="choicesContainer"></div>
         <div id="dynamic-area"></div>
       </div>
     </section>
 
-    <!-- CAFECITO -->
     <section id="tab-cafecito" class="view-section">
       <div class="cafecito-banner">
         <h2 style="color: var(--cafecito); margin-bottom: 10px;">¿BANCÁS EL PROYECTO?</h2>
@@ -303,18 +207,16 @@
         </p>
         <div style="margin-top: 25px;">
             <a href="https://cafecito.app/aurafarmear" target="_blank">
-                <img srcset="https://cdn.cafecito.app/imgs/buttons/button_5.png 1x, https://cdn.cafecito.app/imgs/buttons/button_5_2x.png 2x, https://cdn.cafecito.app/imgs/buttons/button_5_3.75x.png 3.75x" src="https://cdn.cafecito.app/imgs/buttons/button_5.png" alt="Invitame un café en cafecito.app" style="height: 45px;" />
+                <img src="https://cdn.cafecito.app/imgs/buttons/button_5.png" alt="Invitame un café en cafecito.app" style="height: 45px;" />
             </a>
         </div>
       </div>
     </section>
-
   </main>
 
   <script>
-    // BASE DE DATOS DE SITUACIONES (50+ Situaciones con dialecto argentino)
     const situations = [
-      // FASE 1: BARRIO Y COLEGIO
+      // FASE 1
       { id: "f1_1", phase: 1, category: '🏫 Colegio', text: 'El profe pregunta quién hizo la tarea. Vos la hiciste pero el aula está en un silencio sepulcral.', choices: [
           { text: 'Mirar al techo haciéndote el boludo', type: 'neutro', feedback: 'Zafaste, pero nadie se enteró de tu esfuerzo.' },
           { text: 'Gritar "¡Yo la hice profe, mire!"', type: 'cringe', trait: 'Traga 🤓', feedback: 'Todo el curso te miró con odio. Perdiste respeto.' },
@@ -325,112 +227,19 @@
           { text: 'Decir que te duele la panza para no pasar vergüenza', type: 'cringe', trait: 'Cagón 🐔', feedback: 'Te gritaron "pecho frío" mientras te ibas.' },
           { text: 'Ir al arco y tratar de que no te maten a pelotazos', type: 'neutro', feedback: 'Atajaste dos, te hicieron diez. Un día normal.' },
           { text: 'Jugar de 5 metiendo pata y pidiendo todas', type: 'copero', feedback: 'Repartiste murra y te ganaste el respeto.' },
-          { text: 'Tirarle un caño al más grandote en la primera jugada', type: 'critico', trait: 'Lírico ⚽', feedback: 'El potrero enloqueció. Magia pura, Ronaldinho te envidia.' }
+          { text: 'Tirarle un caño al más grandote en la primera jugada', type: 'critico', trait: 'Lírico ⚽', feedback: 'El potrero enloqueció. Magia pura.' }
       ]},
       { id: "f1_3", phase: 1, category: '🌳 Kiosco', text: 'Vas al kiosco y te faltan 50 pesos para pagar la coquita y los alfajores.', choices: [
           { text: 'Dejar un alfajor y volverte triste', type: 'neutro', feedback: 'La dignidad intacta, pero con menos azúcar.' },
           { text: 'Pedirle al kiosquero que te anote en la libreta', type: 'copero', feedback: 'El kiosquero te guiñó el ojo. Confianza barrial.' },
           { text: 'Revisar la calle a ver si hay plata tirada', type: 'cringe', feedback: 'Encontraste una chapita oxidada. Papelón.' },
-          { text: 'Negociar los 50 pesos a cambio de barrerle la vereda', type: 'critico', trait: 'Mentalidad de Tiburón 🦈', feedback: 'Kiosco barrido, panza llena. Emprendedor nato.' }
+          { text: 'Negociar los 50 pesos a cambio de barrerle la vereda', type: 'critico', trait: 'Mentalidad de Tiburón 🦈', feedback: 'Kiosco barrido, panza llena.' }
       ]},
-      { id: "f1_4", phase: 1, category: '🚌 Colectivo', text: 'Subís al bondi, apoyás la SUBE y te tira "Saldo Insuficiente". Hay 15 personas atrás.', choices: [
-          { text: 'Fingir que la máquina anda mal y mirar al chofer con fe', type: 'cringe', feedback: 'El chofer te mandó al fondo sin boleto. Todos te juzgan.' },
-          { text: 'Pedirle a alguien que te banque el pasaje a los gritos', type: 'copero', feedback: 'Una señora copada te salvó. Hay fe en la humanidad.' },
-          { text: 'Bajarte dignamente y caminar 30 cuadras', type: 'neutro', feedback: 'Perdiste tiempo pero ganaste cardio.' },
-          { text: 'Encontrar una moneda de 500 en el bolsillo mágico', type: 'critico', trait: 'Suertudo 🍀', feedback: 'El milagro del bolsillo. Subís como un campeón.' }
-      ]},
-      { id: "f1_5", phase: 1, category: '🍕 Cumpleaños', text: 'En el cumple de un amigo queda la última porción de pizza. Todos la miran pero nadie activa.', choices: [
-          { text: 'Agarrarla diciendo "si nadie la quiere..."', type: 'cringe', feedback: 'La agarraste pero sentiste la tensión en el aire.' },
-          { text: 'Partirla en 8 pedacitos microscópicos para compartir', type: 'copero', trait: 'Solidario 🕊️', feedback: 'Diplomacia pura. Quedaste como un rey.' },
-          { text: 'Mirar para otro lado hasta que alguien la agarre', type: 'neutro', feedback: 'Te quedaste con hambre, pero sin culpa.' },
-          { text: 'Proponer un torneo de piedra, papel o tijera a muerte', type: 'critico', trait: 'Estratega 🎲', feedback: 'Armaste un evento de eSports y ganaste la final. Épico.' }
-      ]},
-      { id: "f1_6", phase: 1, category: '🐶 Calle', text: 'Un perro de la calle te empieza a seguir a 3 cuadras de tu casa.', choices: [
-          { text: 'Aprietas el paso porque te da miedo', type: 'cringe', feedback: 'El perro notó tu miedo y te ladró.' },
-          { text: 'Le hacés mimitos y le decís "no podés venir, pichicho"', type: 'copero', feedback: 'Momento emotivo. Te vas con culpa.' },
-          { text: 'Lo ignorás completamente mirando el celular', type: 'neutro', feedback: 'El perro se aburrió y se fue con otro.' },
-          { text: 'Comprarle un pancho, adoptarlo y llamarlo "Capitán"', type: 'critico', trait: 'Corazón de Oro 💛', feedback: 'Tenés un nuevo mejor amigo. El barrio aplaude.' }
-      ]},
-      { id: "f1_7", phase: 1, category: '🎮 Cyber', text: 'El pibito de al lado en el cyber te bardea porque le ganaste en el Counter.', choices: [
-          { text: 'Putearlo en arameo frente a todos', type: 'cringe', feedback: 'El dueño del cyber te cortó la máquina.' },
-          { text: 'Silenciarlo en la vida real ignorándolo', type: 'neutro', feedback: 'El silencio duele más que las palabras.' },
-          { text: 'Ofrecerle la revancha apostando la hora', type: 'copero', feedback: 'Aceptó y le volviste a ganar. Domado.' },
-          { text: 'Levantarte, darle la mano y decirle "buen intento, pichón"', type: 'critico', trait: 'Basado 🗿', feedback: 'Lo dejaste recalculando. Destrucción psicológica.' }
-      ]},
-      { id: "f1_8", phase: 1, category: '📸 Redes', text: 'Un amigo sube una foto grupal a Instagram donde salís cerrando los ojos.', choices: [
-          { text: 'Comentar "BORRÁ ESTO YA" en mayúsculas', type: 'cringe', feedback: 'Solo lograste que más gente se fije en tu cara.' },
-          { text: 'Reírte y comentar "Mi mejor ángulo perri"', type: 'copero', feedback: 'Auto-bullying del bueno. Sumaste likes.' },
-          { text: 'Dejarlo pasar, total nadie mira las fotos grupales', type: 'neutro', feedback: 'Literalmente a nadie le importó.' },
-          { text: 'Responderle subiendo un meme escrachándolo a él peor', type: 'critico', trait: 'Vengador ⚔️', feedback: 'Contraataque letal. La foto de tu amigo se hizo viral por fea.' }
-      ]},
-      { id: "f1_9", phase: 1, category: '🧉 Recreo', text: 'Llevaste el equipo de mate al patio pero te olvidaste la yerba.', choices: [
-          { text: 'Fingir demencia y guardar todo', type: 'neutro', feedback: 'Te quedaste sin mate pero nadie hizo preguntas.' },
-          { text: 'Reciclar yerba usada del profe de matemáticas', type: 'cringe', feedback: 'Todos se dieron cuenta del asco que era. Perdiste.' },
-          { text: 'Hacer una vaquita exprés para comprar en el buffet', type: 'copero', feedback: 'Organización comunitaria exitosa.' },
-          { text: 'Mendigar yerba curso por curso como un poeta maldito', type: 'critico', trait: 'Caradura 🎭', feedback: 'Conseguiste yerba de 3 marcas distintas y armaste un blend épico.' }
-      ]},
-      { id: "f1_10", phase: 1, category: '⚽ Techo', text: 'Pateaste fuerte y la pelota cayó en la casa de doña Tota, la vecina mala.', choices: [
-          { text: 'Dar la pelota por perdida y llorar internamente', type: 'cringe', feedback: 'Tus amigos te miran con decepción.' },
-          { text: 'Tocarle el timbre y pedir perdón con cara de perrito', type: 'copero', feedback: 'Doña Tota te la devolvió pero te comiste un sermón.' },
-          { text: 'Esperar a que se haga de noche para recuperarla', type: 'neutro', feedback: 'Operación sigilo completada, pero te cagaste de frío.' },
-          { text: 'Trepar la medianera modo Spider-Man a plena luz del día', type: 'critico', trait: 'Kamikaze 🥷', feedback: 'Rescate exitoso. Sos la leyenda de la cuadra.' }
-      ]},
-
-      // FASE 2: FACULTAD Y JODA
-      { id: "f2_1", phase: 2, category: '🎉 Previa', text: 'Estás en una previa, todos aburridos mirando el celular y el dueño puso música de ascensor.', choices: [
-          { text: 'Hacer que te gusta moviendo la cabeza lento', type: 'neutro', feedback: 'La noche sigue en un letargo aburrido.' },
-          { text: 'Agarrar el cable auxiliar y clavar cumbia clásica', type: 'critico', trait: 'Salvador 🦸‍♂️', feedback: 'Resucitaste la previa. Todos perreando.' },
-          { text: 'Quejarte a los gritos: "¡Pongan reggaeton viejo!"', type: 'cringe', feedback: 'Te miraron mal. Quedaste como un pesado.' },
-          { text: 'Armar un juego de tomar rápido para levantar', type: 'copero', feedback: 'Excelente dinámica. La gente se prendió fuego.' }
-      ]},
-      { id: "f2_2", phase: 2, category: '🌃 Boliche', text: 'Llegan a la puerta del boliche y el patovica, con cara de perro, les dice que no están en lista.', choices: [
-          { text: 'Gritar "¿Sabés quién soy yo? Llamalo a Tincho"', type: 'cringe', trait: 'Fantasma 👻', feedback: 'El patovica se rió en tu cara y te empujó.' },
-          { text: 'Irte callado al kiosco de la esquina a llorar penas', type: 'neutro', feedback: 'Al menos el pancho estaba barato.' },
-          { text: 'Chamuyarte a un RRPP que pasaba por ahí y negociar', type: 'critico', trait: 'Labia 🗣️', feedback: 'Entraron gratis y con consumición. Dios de las RR.PP.' },
-          { text: 'Pagar la entrada como un ciudadano de bien', type: 'copero', feedback: 'Te dolió la billetera pero adentro explotaba.' }
-      ]},
-      { id: "f2_3", phase: 2, category: '📚 Parcial', text: 'Primer parcial de la facultad. Leés el punto 3 y está escrito en chino mandarín. No sabés nada.', choices: [
-          { text: 'Entregar en blanco y aceptar el 2', type: 'neutro', feedback: 'La honestidad no te salva del recuperatorio.' },
-          { text: 'Sacar el machete en medio del aula y que te vea el profe', type: 'cringe', feedback: 'Te sacaron la hoja. Humillación total.' },
-          { text: 'Guitarrear una respuesta larguísima usando sinónimos', type: 'copero', feedback: 'El profe te puso "regular". La sanata sirvió.' },
-          { text: 'Acordarte de un TikTok random que explicaba el tema', type: 'critico', trait: 'Cine 🎬', feedback: 'El TikTok era preciso. Metiste un 8. Masterclass.' }
-      ]},
-      { id: "f2_4", phase: 2, category: '🍖 Asado', text: 'Te toca ser el asador oficial de la peña con 15 hambrientos presionando.', choices: [
-          { text: 'Arrebatar la carne por meterle cartón al fuego', type: 'cringe', feedback: 'Asado quemado por fuera, crudo por dentro. Herejía.' },
-          { text: 'Sacar unos choris rápido para calmar a las fieras', type: 'neutro', feedback: 'Compraste tiempo. Zafaste la crisis.' },
-          { text: 'Servir un asado perfecto, jugosito y con aplauso', type: 'critico', trait: 'Asador 🥩', feedback: 'Te llevaron en andas. Sos el Messi de la parrilla.' },
-          { text: 'Tardar 4 horas pero entregar manteca que se corta con cuchara', type: 'copero', feedback: 'Se murieron de hambre, pero valió cada maldito segundo.' }
-      ]},
-      { id: "f2_5", phase: 2, category: '🔥 Tinder', text: 'Hacés match con alguien que parece un modelo. Te manda: "Hola, qué onda?"', choices: [
-          { text: 'Responder "hola todo bien y vos?" a los 3 segundos', type: 'cringe', feedback: 'Te clavó el visto por aburrido.' },
-          { text: 'Clavarte un visto vos mismo para hacerte rogar', type: 'neutro', feedback: 'Se olvidó de vos a los 5 minutos.' },
-          { text: 'Mandarle un audio imitándola/o', type: 'copero', feedback: 'Se mató de risa. Hay onda.' },
-          { text: 'Tirarle un chamuyo tan surrealista que no puede no responder', type: 'critico', trait: 'Poeta 🖋️', feedback: 'Enganchó de una. Ya están arreglando para salir.' }
-      ]},
-      { id: "f2_6", phase: 2, category: '💪 Gimnasio', text: 'Vas al gym re motivado y un matungo te dice "te falta para llegar al fallo, bro".', choices: [
-          { text: 'Intentar levantar 100kg para hacerte el groso y casi morir', type: 'cringe', feedback: 'Te tuvieron que rescatar de abajo de la barra.' },
-          { text: 'Decirle "gracias" y seguir con tus mancuernitas de 5kg', type: 'neutro', feedback: 'Seguiste tu rutina en paz.' },
-          { text: 'Pedirle que te explique bien y hacerte amigo', type: 'copero', feedback: 'Ahora tenés un gym-bro gigante que te cuida.' },
-          { text: 'Tirarle factos sobre hipertrofia que leíste en un paper', type: 'critico', trait: 'Cerebrito 🧠', feedback: 'El matungo quedó domado por la ciencia. Respeto.' }
-      ]},
-      { id: "f2_7", phase: 2, category: '🚖 Taxi', text: 'Te subís al taxi post joda y el tachero te empieza a hablar de política a las 4 AM.', choices: [
-          { text: 'Ponerte a discutir a los gritos defeniendo tus ideales', type: 'cringe', feedback: 'Viaje larguísimo y estresante. Casi chocan.' },
-          { text: 'Decirle "tiene razón maestro" a todo para que se calle', type: 'copero', feedback: 'Estrategia clásica. Te dejó en la puerta tranquilo.' },
-          { text: 'Hacerte el dormido', type: 'neutro', feedback: 'El tachero prendió la radio. Paz mental.' },
-          { text: 'Darle una vuelta de tuerca filosófica que lo deje recalculando', type: 'critico', trait: 'Filósofo 🤔', feedback: 'El tachero frenó el auto para reflexionar. Viaje gratis.' }
-      ]},
-      { id: "f2_8", phase: 2, category: '📄 Fotocopiadora', text: 'Fila de 30 personas en la fotocopiadora de la facu y vos solo necesitás UN apunte.', choices: [
-          { text: 'Hacerte el gil y meterte por el costado', type: 'cringe', feedback: 'Te gritaron "¡a la fila, atrevido!". Vergüenza.' },
-          { text: 'Comerte la hora de fila scrolleando TikTok', type: 'neutro', feedback: 'Perdiste media vida pero tenés el apunte.' },
-          { text: 'Pedirle por favor al de adelante si te deja pasar', type: 'copero', feedback: 'El pibe se copó. Solidaridad estudiantil.' },
-          { text: 'Encontrar el PDF en un grupo de WhatsApp y mandarlo a imprimir directo', type: 'critico', trait: 'Hacker 💻', feedback: 'Bypassaste el sistema. Sos el Neo de la facultad.' }
-      ]},
-
-      // FASE 3: MUNDO ADULTO Y FAMA
+      // FASE 3 (Mundo Adulto y Fama)
       { id: "f3_1", phase: 3, category: '💼 Entrevista', text: 'Entrevista para tu laburo soñado. Te preguntan: "¿Cuál es tu mayor defecto?"', choices: [
           { text: 'Decir "Soy demasiado perfeccionista"', type: 'cringe', trait: 'NPC 🤖', feedback: 'El de RR.HH. rodó los ojos. Respuesta de manual.' },
           { text: 'Ser honesto y decir que te cuesta madrugar', type: 'neutro', feedback: 'Apreciaron la honestidad, pero no sumaste.' },
-          { text: 'Decir "Mi único defecto es no estar trabajando acá ya"', type: 'copero', feedback: 'Se rieron. Metiste carisma corporativo.' },
+          { text: 'Decir "Mi único defecto es no estar trabajando acá ya"', type: 'copero', feedback: 'Se riorion. Metiste carisma corporativo.' },
           { text: 'Dar un defecto real y explicar con métricas cómo lo solucionaste', type: 'critico', trait: 'Jefe 👑', feedback: 'Te contrataron en el acto. Sos el CEO ahora.' }
       ]},
       { id: "f3_2", phase: 3, category: '🐦 Twitter', text: 'Un periodista mala leche te cita un tweet intentando cancelarte públicamente.', choices: [
@@ -444,43 +253,12 @@
           { text: 'Clavarle un visto gigante', type: 'neutro', feedback: 'Esquivaste la bala de la estafa.' },
           { text: 'Decirle amablemente que estás metiendo todo en plazo fijo', type: 'copero', feedback: 'Se rindió rápido y no te molestó más.' },
           { text: 'Venderle VOS a él un curso de finanzas reales', type: 'critico', trait: 'Lobo 🐺', feedback: 'Reverse card magistral. Te pagó a vos.' }
-      ]},
-      { id: "f3_4", phase: 3, category: '📺 Stream', text: 'Prendiste un stream casual y de la nada el Ibai de turno te hostea con 50.000 viewers.', choices: [
-          { text: 'Quedarte mudo, transpirar y apagar directo', type: 'cringe', feedback: 'Te perdiste la oportunidad de tu vida por pánico.' },
-          { text: 'Agradecer normal, sonreír y seguir jugando', type: 'neutro', feedback: 'Mantuvo a un par de miles. Nada mal.' },
-          { text: 'Hacer el festejo de Cristiano Ronaldo gritando SIUUU', type: 'copero', feedback: 'Clip viral al instante. La gente te amó.' },
-          { text: 'Aprovechar la audiencia para armar una colecta solidaria récord', type: 'critico', trait: 'Prócer 🇦🇷', feedback: 'Juntaste millones para un hospital. Leyenda absoluta.' }
-      ]},
-      { id: "f3_5", phase: 3, category: '🎤 Discurso', text: 'Te toca dar el discurso de graduación frente a toda la universidad y se te pierde el papel.', choices: [
-          { text: 'Empezar a tartamudear y salir corriendo', type: 'cringe', feedback: 'Tu meme está en todos los grupos de WhatsApp de la facu.' },
-          { text: 'Decir "gracias a todos, fue un placer" y bajar rápido', type: 'neutro', feedback: 'Corto y al pie. Nadie se quejó.' },
-          { text: 'Hablar desde el corazón sobre las noches sin dormir', type: 'copero', feedback: 'Hiciste llorar a tres profesores. Emotivo.' },
-          { text: 'Improvisar un stand-up bardeando al decano con altura', type: 'critico', trait: 'Standapero 🎙️', feedback: 'Ovación de pie. Hasta el decano se rió.' }
-      ]},
-      { id: "f3_6", phase: 3, category: '🏢 Trabajo', text: 'Tu jefe presenta TU idea como suya en la reunión con los directores.', choices: [
-          { text: 'Masticar bronca y asentir con la cabeza', type: 'cringe', feedback: 'Te pasaron por encima y te fuiste con úlcera.' },
-          { text: 'Decir "qué bueno que le gustó la idea que le pasé ayer"', type: 'copero', feedback: 'Sutil pero venenoso. Los directores lo notaron.' },
-          { text: 'Mandarle un mail a RR.HH. quejándote', type: 'neutro', feedback: 'Burocracia inútil, pero hiciste el descargo.' },
-          { text: 'Interrumpir y explicar la idea con gráficos que solo vos tenés', type: 'critico', trait: 'Estratega ♟️', feedback: 'Tu jefe quedó expuesto. Te ascendieron a vos en su lugar.' }
-      ]},
-      { id: "f3_7", phase: 3, category: '🚘 Auto', text: 'Vas a comprar tu primer auto a la concesionaria y el vendedor te quiere encajar el más caro.', choices: [
-          { text: 'Firmar todo sin leer por vergüenza a decir que no', type: 'cringe', feedback: 'Quedaste endeudado hasta el 2040 por un auto que no usás.' },
-          { text: 'Decirle "lo voy a pensar" e irte caminando', type: 'neutro', feedback: 'Clásica retirada táctica porteña.' },
-          { text: 'Llevar a tu amigo el mecánico para que le baje el humo', type: 'copero', feedback: 'El vendedor transpiró. Compraste bien.' },
-          { text: 'Negociarle el precio hasta sacarle cubiertas nuevas y polarizado gratis', type: 'critico', trait: 'Negociador 🤝', feedback: 'El vendedor terminó pidiéndote consejos a vos.' }
-      ]},
-      { id: "f3_8", phase: 3, category: '🍷 Canje', text: 'Fuiste a un restaurante carísimo por canje, pero la comida es un asco.', choices: [
-          { text: 'Subir una historia diciendo "es la mejor comida del mundo"', type: 'cringe', feedback: 'Tus seguidores fueron, se intoxicaron y te cancelaron.' },
-          { text: 'Comer poco y no subir nada, fingiendo demencia', type: 'neutro', feedback: 'No cumpliste el canje pero cuidaste tu paladar.' },
-          { text: 'Hablar con el dueño en privado y sugerirle mejoras', type: 'copero', feedback: 'El dueño te agradeció la honestidad. Tipazo.' },
-          { text: 'Hacer una crítica gastronómica sincera pero constructiva en redes', type: 'critico', trait: 'Crítico 👨‍🍳', feedback: 'Tus seguidores amaron tu honestidad. Aura de influencer real.' }
       ]}
     ];
 
-    const PHASE_LIMIT = 5; // Preguntas necesarias para pasar de fase
+    const PHASE_LIMIT = 5; 
     let currentPhaseSituations = [];
 
-    // ESTADO DEL JUGADOR
     const STORAGE_KEY = 'aura-farmear-v3';
     let player = {
       name: 'Invitado', avatar: '😎', aura: 0, streak: 0, bestStreak: 0, multiplier: 1.0,
@@ -503,11 +281,6 @@
 
     function saveGame() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(player));
-      const s = document.getElementById('saveIndicator');
-      if(s) {
-          s.style.opacity = '1';
-          setTimeout(() => s.style.opacity = '0', 2000);
-      }
     }
 
     function resetGame() {
@@ -542,22 +315,20 @@
     }
 
     const phaseIntros = {
-      1: { title: "CAPÍTULO 1: EL BARRIO", text: "Acá naciste, acá te criaste. En las calles de tu barrio empezás siendo un don nadie. Tus primeras decisiones marcarán si sos uno más del montón o si tenés pasta para llegar lejos. Preparate para los recreos, los potreros y el bondi." },
-      2: { title: "CAPÍTULO 2: LA JODA Y EL ESTUDIO", text: "Creciste. Ahora la vida se divide entre parciales imposibles, boliches explotados y el rebusque constante. El Aura empieza a pesar más. Cada chamuyo, cada previa y cada asado cuentan para tu reputación." },
-      3: { title: "CAPÍTULO 3: MUNDO ADULTO Y FAMA", text: "Llegaste a las grandes ligas. La verdadera jungla. Entrevistas de trabajo, redes sociales, plata y haters. Estás a un paso de convertirte en una Leyenda absoluta. No la pechees ahora." }
+      1: { title: "CAPÍTULO 1: EL BARRIO", text: "Acá naciste, acá te criaste. En las calles de tu barrio empezás siendo un don nadie." },
+      2: { title: "CAPÍTULO 2: LA JODA Y EL ESTUDIO", text: "Creciste. Parciales, boliches y el rebusque constante." },
+      3: { title: "CAPÍTULO 3: MUNDO ADULTO Y FAMA", text: "Llegaste a las grandes ligas. Entrevistas de trabajo, redes sociales y haters." }
     };
 
     function showPhaseIntro() {
       const intro = phaseIntros[player.phase];
       if(!intro) {
-          // JUEGO TERMINADO
-          document.getElementById('introTitle').textContent = "¡LEYENDA ABSOLUTA!";
-          document.getElementById('introTitle').style.color = "var(--neon-gold)";
-          document.getElementById('introText').textContent = `Completaste tu viaje, ${player.name}. Desde el barrio hasta la cima del mundo. Tu Aura final es de ${player.aura}. Pasaste a la historia.`;
-          document.getElementById('introBtn').textContent = "REINICIAR VIAJE";
-          document.getElementById('introBtn').onclick = resetGame;
-          document.getElementById('storyIntro').style.display = 'flex';
-          return;
+        document.getElementById('introTitle').textContent = "¡LEYENDA ABSOLUTA!";
+        document.getElementById('introText').textContent = `Completaste tu viaje, ${player.name}. Tu Aura final es de ${player.aura}.`;
+        document.getElementById('introBtn').textContent = "REINICIAR";
+        document.getElementById('introBtn').onclick = resetGame;
+        document.getElementById('storyIntro').style.display = 'flex';
+        return;
       }
       document.getElementById('introTitle').textContent = intro.title;
       document.getElementById('introText').textContent = intro.text;
@@ -571,10 +342,9 @@
 
     function setupPhase() {
       currentPhaseSituations = situations.filter(s => s.phase === player.phase);
-      // Shuffle
+      if(currentPhaseSituations.length === 0) currentPhaseSituations = [...situations];
       currentPhaseSituations.sort(() => Math.random() - 0.5);
       
-      // Clean dynamic elements
       const dynamicArea = document.getElementById('dynamic-area');
       dynamicArea.innerHTML = `
         <div class="progress-container">
@@ -589,23 +359,15 @@
 
     function loadSituation() {
       if (player.answeredInPhase >= PHASE_LIMIT) {
-          // PASAR DE FASE
           player.phase++;
           player.answeredInPhase = 0;
-          player.aura += 500; // Bonus por pasar
+          player.aura += 500;
           saveGame();
           showPhaseIntro();
           return;
       }
 
-      const sit = currentPhaseSituations.pop();
-      if (!sit) {
-          // Si se quedó sin en esta fase por error, lo forzamos
-          player.answeredInPhase = PHASE_LIMIT;
-          loadSituation();
-          return;
-      }
-      
+      const sit = currentPhaseSituations.pop() || situations[0];
       player.currentSituationId = sit.id;
       player.isProcessing = false;
       
@@ -615,9 +377,7 @@
       const container = document.getElementById('choicesContainer');
       container.innerHTML = '';
       
-      // Shuffle choices
       const choices = [...sit.choices].sort(() => Math.random() - 0.5);
-      
       choices.forEach((c, index) => {
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
@@ -625,7 +385,6 @@
         btn.onclick = (e) => selectChoice(e, btn, c);
         container.appendChild(btn);
       });
-      
       saveGame();
     }
 
@@ -633,41 +392,24 @@
       if (player.isProcessing) return;
       player.isProcessing = true;
 
-      // Lock buttons
-      const buttons = document.querySelectorAll('.choice-btn');
-      buttons.forEach(b => b.disabled = true);
+      document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
       btnElement.classList.add('answered');
 
-      // Calcular Aura
       let auraGain = 0;
-      let flashClass = '';
-      
       switch(choice.type) {
-        case 'critico': auraGain = 100; player.streak++; flashClass = 'flash-gold'; break;
-        case 'copero': auraGain = 50; player.streak++; flashClass = 'flash-green'; break;
-        case 'neutro': auraGain = 10; player.streak = 0; flashClass = ''; break;
-        case 'cringe': auraGain = -30; player.streak = 0; flashClass = 'flash-red'; break;
+        case 'critico': auraGain = 100; player.streak++; break;
+        case 'copero': auraGain = 50; player.streak++; break;
+        case 'neutro': auraGain = 10; player.streak = 0; break;
+        case 'cringe': auraGain = -30; player.streak = 0; break;
       }
 
       if(player.streak > player.bestStreak) player.bestStreak = player.streak;
-      
-      const finalAura = Math.floor(auraGain * player.multiplier);
-      player.aura = Math.max(0, player.aura + finalAura);
+      player.aura = Math.max(0, player.aura + auraGain);
 
-      // Trait
       if (choice.trait && !player.traits.includes(choice.trait) && player.traits.length < 4) {
-          player.traits.push(choice.trait);
+        player.traits.push(choice.trait);
       }
 
-      // Visuals
-      if(flashClass) {
-          document.querySelector('.scenario-panel').classList.add(flashClass);
-          setTimeout(() => document.querySelector('.scenario-panel').classList.remove(flashClass), 600);
-      }
-      
-      showFloatingAura(e, finalAura);
-      
-      // Feedback Panel
       let feedback = document.getElementById('dynamic-feedback');
       if(!feedback) {
           feedback = document.createElement('div');
@@ -675,9 +417,8 @@
           document.getElementById('dynamic-area').insertBefore(feedback, document.getElementById('dynamic-area').firstChild);
       }
       feedback.className = `feedback-panel ${choice.type}`;
-      feedback.innerHTML = `<strong>${auraGain > 0 ? '+ Aura' : '- Aura'}:</strong> ${choice.feedback || 'Decisión tomada.'}`;
+      feedback.innerHTML = `<strong>${auraGain > 0 ? '+ Aura' : '- Aura'}:</strong> ${choice.feedback}`;
 
-      // Update State
       player.answeredInPhase++;
       updateHUD();
       updateCharacterCard();
@@ -699,24 +440,6 @@
       }
     }
 
-    function showFloatingAura(e, amount) {
-      const float = document.createElement('div');
-      float.className = 'aura-float';
-      float.textContent = (amount > 0 ? '+' : '') + amount;
-      
-      // Use center of screen if event is undefined
-      const x = e ? e.clientX : window.innerWidth / 2;
-      const y = e ? e.clientY : window.innerHeight / 2;
-      
-      float.style.left = x + 'px';
-      float.style.top = y + 'px';
-      float.style.color = amount > 0 ? 'var(--neon-green)' : 'var(--neon-pink)';
-      if(amount > 80) { float.style.color = 'var(--neon-gold)'; float.style.fontSize = '3rem'; }
-      
-      document.body.appendChild(float);
-      setTimeout(() => float.remove(), 1000);
-    }
-
     function updateHUD() {
       document.getElementById('hudAura').textContent = player.aura;
       document.getElementById('hudStreak').textContent = player.streak;
@@ -732,7 +455,6 @@
       if(player.aura > 300) rank = "Conocido del barrio";
       if(player.aura > 1000) rank = "Basado respetable";
       if(player.aura > 3000) rank = "Jefe Absoluto";
-      if(player.aura > 6000) rank = "Mito Viviente";
       document.getElementById('dispRank').textContent = rank;
 
       const traitsContainer = document.getElementById('dispTraits');
@@ -752,7 +474,6 @@
       btnElement.classList.add('active');
     }
 
-    // INIT
     window.onload = loadGame;
   </script>
 </body>
