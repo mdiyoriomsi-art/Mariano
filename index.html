@@ -6,144 +6,187 @@
   <title>Aura Farmear - La Leyenda Continúa</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-dark: #09090b;
-      --panel-bg: #18181b;
-      --panel-border: #27272a;
-      --neon-cyan: #22d3ee;
-      --neon-purple: #c084fc;
-      --neon-pink: #f472b6;
-      --neon-green: #4ade80;
-      --neon-gold: #facc15;
-      --text-main: #f8fafc;
-      --text-muted: #a1a1aa;
+      --bg: #141311;
+      --bg-glow-1: rgba(255,201,60,.10);
+      --bg-glow-2: rgba(155,107,255,.10);
+      --card-bg: #201e1a;
+      --panel-bg: #29271f;
+      --border: #46423a;
+      --border-strong: #5c564a;
+      --gold: #ffc93c;
+      --pink: #ff4d8d;
+      --teal: #33d6a6;
+      --violet: #9b6bff;
+      --text-main: #f5f1e8;
+      --text-muted: #b3aa9a;
       --cafecito: #f97316;
+      --shadow-hard: 6px 6px 0 rgba(0,0,0,.4);
+      --shadow-hard-sm: 4px 4px 0 rgba(0,0,0,.35);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: var(--bg-dark);
+      background: var(--bg);
       color: var(--text-main);
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Manrope', sans-serif;
       text-align: center;
-      padding-bottom: 50px;
+      padding-bottom: 60px;
       overflow-x: hidden;
       min-height: 100vh;
-      background: radial-gradient(circle at 15% 0%, rgba(34,211,238,.12), transparent 34rem), radial-gradient(circle at 90% 12%, rgba(192,132,252,.12), transparent 30rem), var(--bg-dark);
+      background:
+        radial-gradient(circle at 12% 4%, var(--bg-glow-1), transparent 32rem),
+        radial-gradient(circle at 92% 14%, var(--bg-glow-2), transparent 28rem),
+        var(--bg);
     }
-    h1, h2, h3, .brand-title { font-family: 'Syne', sans-serif; text-transform: uppercase; }
+    h1, h2, .brand-title { font-family: 'Bungee', sans-serif; }
+    button, input { font-family: 'Manrope', sans-serif; }
+    :focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
     .overlay {
-      position: fixed; inset: 0; background: rgba(9,9,11,0.95);
+      position: fixed; inset: 0; background: rgba(10,10,9,0.92);
       z-index: 9999; display: flex; justify-content: center; align-items: center;
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(6px); padding: 20px;
     }
     .modal-box {
-      background: var(--panel-bg); border: 2px solid var(--neon-cyan);
-      padding: 40px; border-radius: 24px; width: 90%; max-width: 500px;
-      box-shadow: 0 0 40px rgba(34, 211, 238, 0.2);
+      background: var(--card-bg); border: 3px solid var(--gold);
+      padding: 36px 32px; border-radius: 18px; width: 100%; max-width: 460px;
+      box-shadow: var(--shadow-hard);
     }
-    .modal-box h2 { font-size: 2rem; margin-bottom: 15px; }
-    .modal-box p { color: var(--text-muted); margin-bottom: 25px; line-height: 1.6; font-size: 1.1rem; }
+    .modal-box h2 { font-size: 1.6rem; margin-bottom: 6px; color: var(--gold); line-height: 1.3; }
+    .modal-eyebrow { font-size: .8rem; color: var(--text-muted); letter-spacing: .5px; margin-bottom: 14px; }
+    .modal-box p { color: var(--text-muted); margin-bottom: 22px; line-height: 1.6; font-size: 1rem; }
     .modal-box input {
-      width: 100%; padding: 15px; margin-bottom: 20px;
-      background: #000; border: 1px solid var(--panel-border);
-      border-radius: 12px; color: #fff; font-family: 'Outfit'; font-size: 1.1rem;
+      width: 100%; padding: 14px; margin-bottom: 18px;
+      background: #0e0d0c; border: 2px solid var(--border);
+      border-radius: 10px; color: #fff; font-size: 1rem;
     }
-    .avatar-selector { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
+    .modal-box input:focus { border-color: var(--gold); }
+    .avatar-selector { display: flex; justify-content: center; gap: 10px; margin-bottom: 22px; flex-wrap: wrap; }
     .avatar-option {
-      font-size: 2.5rem; cursor: pointer; padding: 10px;
-      border-radius: 16px; border: 2px solid transparent; transition: 0.3s;
-      background: rgba(255,255,255,0.05);
+      font-size: 2rem; cursor: pointer; padding: 8px 10px;
+      border-radius: 12px; border: 2px solid var(--border); transition: transform .15s, border-color .15s;
+      background: var(--panel-bg);
     }
-    .avatar-option.selected { border-color: var(--neon-cyan); background: rgba(34, 211, 238, 0.1); transform: scale(1.1); }
+    .avatar-option.selected { border-color: var(--gold); background: rgba(255,201,60,.12); transform: scale(1.08) rotate(-3deg); }
     .modal-btn {
-      width: 100%; padding: 15px; font-size: 1.2rem; font-weight: 800;
-      background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
-      color: #000; border: none; border-radius: 12px; cursor: pointer;
-      text-transform: uppercase; font-family: 'Syne'; transition: 0.3s;
+      width: 100%; padding: 15px; font-size: 1.05rem; font-weight: 800;
+      background: var(--gold); color: #141311; border: 3px solid #141311;
+      border-radius: 12px; cursor: pointer; font-family: 'Bungee'; letter-spacing: .3px;
+      box-shadow: var(--shadow-hard-sm); transition: transform .1s;
     }
+    .modal-btn:active { transform: translate(3px,3px); box-shadow: none; }
+
     header {
-      padding: 20px; background: rgba(24, 24, 27, 0.8);
-      border-bottom: 1px solid var(--panel-border);
-      position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px);
+      padding: 18px 15px; background: rgba(32, 30, 26, 0.85);
+      border-bottom: 3px solid var(--border);
+      position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px);
     }
     .brand-title {
-      font-size: 2.5rem; font-weight: 800;
-      background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      font-size: 1.9rem; color: var(--gold);
+      text-shadow: 3px 3px 0 rgba(0,0,0,.35);
     }
-    .player-hud { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 15px; flex-wrap: wrap; }
+    .brand-tagline { color: var(--text-muted); font-size: .82rem; margin-top: 2px; }
+    .player-hud { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
     .hud-stat {
-      background: rgba(255,255,255,0.05); padding: 8px 16px; border-radius: 20px;
-      border: 1px solid var(--panel-border); font-weight: 600; font-size: 1rem;
-      display: flex; align-items: center; gap: 8px;
+      background: var(--panel-bg); padding: 7px 14px; border-radius: 20px;
+      border: 2px solid var(--border); font-weight: 700; font-size: .92rem;
+      display: flex; align-items: center; gap: 6px;
     }
     .hud-stat span { font-weight: 800; }
+    .hud-stat.pulse { animation: pulseGold .5s ease; }
+    @keyframes pulseGold { 0%{ transform: scale(1);} 40%{ transform: scale(1.15); border-color: var(--gold);} 100%{ transform: scale(1);} }
     .phase-badge {
-      background: linear-gradient(90deg, var(--neon-purple), var(--neon-pink));
-      color: #000; padding: 5px 12px; border-radius: 12px; font-weight: 800; font-size: 0.9rem; text-transform: uppercase;
+      background: var(--violet); color: #fff; padding: 6px 14px; border-radius: 20px;
+      font-weight: 800; font-size: .85rem; border: 2px solid #141311;
     }
-    .nav-tabs { display: flex; justify-content: center; gap: 10px; margin: 25px 0; flex-wrap: wrap; padding: 0 15px; }
+    .reset-btn { border: 2px solid var(--border); background: var(--panel-bg); color: var(--text-muted); border-radius: 20px; padding: 7px 12px; cursor: pointer; font: 700 .8rem 'Manrope'; }
+
+    .nav-tabs { display: flex; justify-content: center; gap: 8px; margin: 22px 0; flex-wrap: wrap; padding: 0 15px; }
     .tab-btn {
-      background: var(--panel-bg); border: 1px solid var(--panel-border);
-      color: var(--text-muted); padding: 12px 24px; border-radius: 12px;
-      cursor: pointer; font-weight: 600; font-size: 1rem; font-family: 'Outfit';
+      background: var(--panel-bg); border: 2px solid var(--border);
+      color: var(--text-muted); padding: 11px 20px; border-radius: 12px;
+      cursor: pointer; font-weight: 700; font-size: .95rem;
     }
-    .tab-btn.active { background: var(--text-main); color: #000; border-color: transparent; }
+    .tab-btn.active { background: var(--text-main); color: #141311; border-color: #141311; }
     .view-section { display: none; padding: 0 15px; }
     .view-section.active { display: block; }
+
     .story-card {
-      background: linear-gradient(145deg, rgba(39,39,42,.88), rgba(24,24,27,.88));
-      border: 1px solid var(--panel-border); border-radius: 24px; padding: 30px; max-width: 650px; margin: 0 auto;
+      background: var(--card-bg);
+      border: 3px solid var(--border); border-radius: 20px; padding: 28px; max-width: 620px; margin: 0 auto;
+      box-shadow: var(--shadow-hard);
     }
-    .character-display { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--panel-border); }
-    .char-avatar { font-size: 4rem; margin-bottom: 10px; display: inline-block; }
-    .char-name { font-family: 'Syne'; font-size: 1.5rem; color: var(--neon-cyan); }
-    .char-rank { font-size: 0.9rem; color: var(--neon-purple); font-weight: 600; text-transform: uppercase; }
-    .traits-container { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; min-height: 28px; }
-    .trait-badge { background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; border: 1px solid var(--panel-border); }
+    .character-display { margin-bottom: 18px; padding-bottom: 18px; border-bottom: 2px dashed var(--border); }
+    .char-avatar { font-size: 3.4rem; margin-bottom: 6px; display: inline-block; }
+    .char-name { font-family: 'Bungee'; font-size: 1.2rem; color: var(--gold); }
+    .char-rank { font-size: .85rem; color: var(--violet); font-weight: 700; margin-top: 2px; }
+    .traits-container { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 12px; min-height: 26px; }
+    .trait-badge {
+      background: var(--panel-bg); padding: 4px 10px; border-radius: 6px; font-size: .78rem; font-weight: 700;
+      border: 2px solid var(--border-strong); box-shadow: var(--shadow-hard-sm);
+    }
+    .trait-badge:nth-child(odd) { transform: rotate(-2deg); }
+    .trait-badge:nth-child(even) { transform: rotate(2deg); }
+
     .scenario-panel {
-      background: linear-gradient(145deg, rgba(0,0,0,.72), rgba(24,24,27,.62));
-      border: 1px solid var(--panel-border); border-radius: 16px; padding: 25px; margin-bottom: 25px; text-align: left;
+      background: var(--panel-bg);
+      border: 2px solid var(--border); border-radius: 14px; padding: 22px; margin-bottom: 22px; text-align: left;
     }
+    .scenario-panel.special {
+      border: 3px dashed var(--gold); background: linear-gradient(145deg, rgba(255,201,60,.08), var(--panel-bg));
+      animation: flipIn .4s ease;
+    }
+    @keyframes flipIn { from { transform: rotateX(-8deg) scale(.97); opacity: 0; } to { transform: none; opacity: 1; } }
     .category-tag {
-      display: inline-block; font-size: 0.75rem; font-weight: 800; text-transform: uppercase;
-      color: var(--neon-green); background: rgba(74, 222, 128, 0.1); padding: 5px 12px; border-radius: 12px; margin-bottom: 12px;
+      display: inline-block; font-size: .78rem; font-weight: 800;
+      color: var(--teal); background: rgba(51,214,166,.12); padding: 5px 12px; border-radius: 8px; margin-bottom: 12px;
     }
-    .scenario-text { font-size: 1.2rem; line-height: 1.6; font-weight: 400; }
-    .choices-grid { display: flex; flex-direction: column; gap: 12px; }
+    .category-tag.special-tag { color: var(--gold); background: rgba(255,201,60,.14); }
+    .scenario-text { font-size: 1.12rem; line-height: 1.55; font-weight: 600; }
+    .choices-grid { display: flex; flex-direction: column; gap: 10px; }
     .choice-btn {
-      display: flex; align-items: center; gap: 13px; min-height: 62px;
-      background: rgba(255,255,255,.045); border: 1px solid var(--panel-border);
-      color: #fff; padding: 16px 20px; border-radius: 12px; font-weight: 600;
-      cursor: pointer; font-size: 1rem; font-family: 'Outfit'; text-align: left; transition: 0.2s;
+      display: flex; align-items: center; gap: 12px; min-height: 58px;
+      background: var(--card-bg); border: 2px solid var(--border);
+      color: #fff; padding: 14px 18px; border-radius: 10px; font-weight: 600;
+      cursor: pointer; font-size: .96rem; text-align: left; transition: border-color .15s, transform .1s;
     }
     .choice-number {
-      display: grid; place-items: center; flex: 0 0 28px; height: 28px;
-      border: 1px solid var(--neon-purple); border-radius: 50%; color: var(--neon-purple); font-size: .82rem; font-weight: 800;
+      display: grid; place-items: center; flex: 0 0 26px; height: 26px;
+      border: 2px solid var(--violet); border-radius: 50%; color: var(--violet); font-size: .78rem; font-weight: 800;
     }
-    .choice-btn:hover { border-color: var(--neon-cyan); background: rgba(34, 211, 238, 0.05); }
-    .feedback-panel { margin-top: 15px; padding: 15px; border-radius: 12px; color: var(--text-main); font-size: 1rem; text-align: left; }
-    .feedback-panel.cringe { border: 1px solid var(--neon-pink); background: rgba(244,114,182,.09); }
-    .feedback-panel.copero { border: 1px solid var(--neon-green); background: rgba(74,222,128,.09); }
-    .feedback-panel.critico, .feedback-panel.gold { border: 1px solid var(--neon-gold); background: rgba(250,204,21,.09); }
-    .feedback-panel.neutro { border: 1px solid var(--text-muted); background: rgba(255,255,255,.05); }
-    .progress-container { margin-top: 20px; }
-    .progress-track { height: 8px; background: rgba(255,255,255,.07); border-radius: 99px; overflow: hidden; }
-    .progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink)); transition: width .45s ease; }
-    .progress-text { font-size: 0.8rem; color: var(--text-muted); margin-top: 5px; text-transform: uppercase; font-weight: 600; }
-    .save-status { margin-top: 10px; color: var(--neon-green); font-size: .8rem; opacity: 0; transition: opacity 0.3s; }
-    .reset-btn { border: 1px solid var(--panel-border); background: rgba(255,255,255,.04); color: var(--text-muted); border-radius: 20px; padding: 8px 13px; cursor: pointer; font: 600 .85rem 'Outfit'; }
-    .cafecito-banner { background: linear-gradient(135deg, #2a1608, #09090b); border: 1px solid var(--cafecito); border-radius: 24px; padding: 40px; max-width: 600px; margin: 40px auto; }
+    .choice-btn:hover:not(:disabled) { border-color: var(--gold); transform: translate(-1px,-1px); }
+    .choice-btn:disabled { cursor: default; opacity: .55; }
+
+    .feedback-panel { margin-top: 14px; padding: 14px 16px; border-radius: 10px; color: var(--text-main); font-size: .96rem; text-align: left; border: 2px solid var(--border); }
+    .feedback-panel.cringe { border-color: var(--pink); background: rgba(255,77,141,.1); }
+    .feedback-panel.copero { border-color: var(--teal); background: rgba(51,214,166,.1); }
+    .feedback-panel.critico { border-color: var(--gold); background: rgba(255,201,60,.1); }
+    .feedback-panel.neutro { border-color: var(--border-strong); background: rgba(255,255,255,.04); }
+
+    .progress-container { margin-top: 18px; }
+    .progress-track { height: 10px; background: rgba(255,255,255,.07); border-radius: 99px; overflow: hidden; border: 1px solid var(--border); }
+    .progress-fill { width: 0%; height: 100%; background: var(--gold); transition: width .45s ease; }
+    .progress-text { font-size: .75rem; color: var(--text-muted); margin-top: 6px; font-weight: 700; }
+
+    .cafecito-banner { background: linear-gradient(135deg, #2a1608, #141311); border: 3px solid var(--cafecito); border-radius: 20px; padding: 36px 28px; max-width: 580px; margin: 0 auto; box-shadow: var(--shadow-hard); }
+    .cafecito-banner h2 { color: var(--cafecito); margin-bottom: 10px; font-size: 1.4rem; }
+    .cafecito-banner p { font-size: 1rem; color: var(--text-muted); line-height: 1.6; }
+
+    @media (max-width: 480px) {
+      .brand-title { font-size: 1.5rem; }
+      .story-card { padding: 20px 16px; }
+    }
   </style>
 </head>
 <body>
 
   <div id="charCreation" class="overlay">
     <div class="modal-box">
-      <h2>CREÁ TU LEYENDA</h2>
-      <p>Empezás desde abajo. Tus decisiones formarán tu personalidad y tu Aura.</p>
+      <div class="modal-eyebrow">Aura Farmear</div>
+      <h2>Creá tu leyenda de barrio</h2>
+      <p>Nadie te conoce todavía. Cada decisión que tomes te va a sumar o restar aura hasta que te conviertas en mito o en el chiste del grupo. Vos elegís.</p>
       <input type="text" id="playerNameInput" placeholder="Ingresá tu nombre o apodo..." maxlength="15">
       <div class="avatar-selector" id="avatarSelector">
         <div class="avatar-option selected" onclick="selectAvatar(this, '😎')">😎</div>
@@ -153,32 +196,34 @@
         <div class="avatar-option" onclick="selectAvatar(this, '🔥')">🔥</div>
         <div class="avatar-option" onclick="selectAvatar(this, '🥶')">🥶</div>
       </div>
-      <button class="modal-btn" onclick="startGame()">EMPEZAR LA TRAYECTORIA</button>
+      <button class="modal-btn" onclick="startGame()">Arrancar la trayectoria</button>
     </div>
   </div>
 
   <div id="storyIntro" class="overlay" style="display: none;">
-    <div class="modal-box" style="border-color: var(--neon-purple);">
-      <h2 id="introTitle" style="color: var(--neon-purple);">CAPÍTULO 1</h2>
+    <div class="modal-box" style="border-color: var(--violet);">
+      <div class="modal-eyebrow" id="introEyebrow">Nuevo capítulo</div>
+      <h2 id="introTitle" style="color: var(--violet);">CAPÍTULO 1</h2>
       <p id="introText">...</p>
-      <button class="modal-btn" id="introBtn" onclick="closeIntro()">VAMOS</button>
+      <button class="modal-btn" id="introBtn" style="background: var(--violet); color:#fff;" onclick="closeIntro()">Vamos</button>
     </div>
   </div>
 
   <header style="display:none;" id="gameHeader">
-    <div class="brand-title">AURA FARMEAR</div>
+    <div class="brand-title">Aura Farmear</div>
+    <div class="brand-tagline">Sumá aura, evitá el papelón</div>
     <div class="player-hud">
-      <div class="phase-badge" id="hudPhase">Fase 1: El Barrio</div>
-      <div class="hud-stat" style="color: var(--neon-cyan);">⚡ Aura: <span id="hudAura">0</span></div>
-      <div class="hud-stat" style="color: var(--neon-purple);">👥 Mult: <span id="hudMult">x1.0</span></div>
-      <div class="hud-stat" style="color: var(--neon-pink);">🔥 Racha: <span id="hudStreak">0</span></div>
+      <div class="phase-badge" id="hudPhase">Fase 1</div>
+      <div class="hud-stat" id="hudAuraBox" style="color: var(--gold);">⚡ Aura: <span id="hudAura">0</span></div>
+      <div class="hud-stat" style="color: var(--violet);">📈 Mult: <span id="hudMult">x1.0</span></div>
+      <div class="hud-stat" style="color: var(--pink);">🔥 Racha: <span id="hudStreak">0</span></div>
       <button class="reset-btn" onclick="resetGame()" type="button">↻ Nueva partida</button>
     </div>
   </header>
 
   <nav class="nav-tabs" style="display:none;" id="gameNav">
-    <button class="tab-btn active" onclick="switchTab('situaciones', this)">⚡ Modo Historia</button>
-    <button class="tab-btn" onclick="switchTab('cafecito', this)">☕ Apoyar Creador</button>
+    <button class="tab-btn active" onclick="switchTab('situaciones', this)">⚡ Modo historia</button>
+    <button class="tab-btn" onclick="switchTab('cafecito', this)">☕ Apoyar creador</button>
   </nav>
 
   <main style="display:none;" id="gameMain">
@@ -190,7 +235,7 @@
           <div class="char-rank" id="dispRank">Nadie te juna</div>
           <div class="traits-container" id="dispTraits"></div>
         </div>
-        <div class="scenario-panel">
+        <div class="scenario-panel" id="scenarioPanel">
           <div class="category-tag" id="sitCategory">Cargando...</div>
           <div class="scenario-text" id="sitText">Preparando tu destino...</div>
         </div>
@@ -201,11 +246,11 @@
 
     <section id="tab-cafecito" class="view-section">
       <div class="cafecito-banner">
-        <h2 style="color: var(--cafecito); margin-bottom: 10px;">¿BANCÁS EL PROYECTO?</h2>
-        <p style="font-size: 1.1rem; color: var(--text-muted); line-height: 1.6;">
+        <h2>¿Bancás el proyecto?</h2>
+        <p>
           Aura Farmear es gratis y sin publicidad molesta. Si te copó la trayectoria de tu personaje y te sacó una risa, invitame un Cafecito para seguir sumando fases y eventos nuevos. ☕🔥
         </p>
-        <div style="margin-top: 25px;">
+        <div style="margin-top: 22px;">
             <a href="https://cafecito.app/aurafarmear" target="_blank">
                 <img src="https://cdn.cafecito.app/imgs/buttons/button_5.png" alt="Invitame un café en cafecito.app" style="height: 45px;" />
             </a>
@@ -215,60 +260,214 @@
   </main>
 
   <script>
+    // ---------- CONTENIDO ----------
     const situations = [
-      // FASE 1
-      { id: "f1_1", phase: 1, category: '🏫 Colegio', text: 'El profe pregunta quién hizo la tarea. Vos la hiciste pero el aula está en un silencio sepulcral.', choices: [
+      // ===== FASE 1: EL BARRIO =====
+      { id: "f1_1", phase: 1, category: '🏫 Colegio', text: 'El profe pregunta quién hizo la tarea. Vos la hiciste, pero el aula está en un silencio sepulcral.', choices: [
           { text: 'Mirar al techo haciéndote el boludo', type: 'neutro', feedback: 'Zafaste, pero nadie se enteró de tu esfuerzo.' },
-          { text: 'Gritar "¡Yo la hice profe, mire!"', type: 'cringe', trait: 'Traga 🤓', feedback: 'Todo el curso te miró con odio. Perdiste respeto.' },
-          { text: 'Decir que el perro se la comió por las dudas', type: 'copero', feedback: 'El profe se rió. Sumaste puntos de carisma.' },
+          { text: 'Gritar "¡Yo la hice, profe, mire!"', type: 'cringe', trait: 'Traga 🤓', feedback: 'Todo el curso te miró con odio. Perdiste respeto.' },
+          { text: 'Decir que el perro se la comió, por las dudas', type: 'copero', feedback: 'El profe se rió. Sumaste puntos de carisma.' },
           { text: 'Pasarle las respuestas disimuladamente a los pibes', type: 'critico', trait: 'Tipazo 🤝', feedback: 'Te convertiste en el héroe del aula. Aura pura.' }
       ]},
       { id: "f1_2", phase: 1, category: '⚽ Potrero', text: 'Falta uno para el picadito y te invitan a jugar con los más grandes del barrio.', choices: [
           { text: 'Decir que te duele la panza para no pasar vergüenza', type: 'cringe', trait: 'Cagón 🐔', feedback: 'Te gritaron "pecho frío" mientras te ibas.' },
           { text: 'Ir al arco y tratar de que no te maten a pelotazos', type: 'neutro', feedback: 'Atajaste dos, te hicieron diez. Un día normal.' },
-          { text: 'Jugar de 5 metiendo pata y pidiendo todas', type: 'copero', feedback: 'Repartiste murra y te ganaste el respeto.' },
+          { text: 'Jugar de 5, metiendo pata y pidiendo todas', type: 'copero', feedback: 'Repartiste murra y te ganaste el respeto.' },
           { text: 'Tirarle un caño al más grandote en la primera jugada', type: 'critico', trait: 'Lírico ⚽', feedback: 'El potrero enloqueció. Magia pura.' }
       ]},
-      { id: "f1_3", phase: 1, category: '🌳 Kiosco', text: 'Vas al kiosco y te faltan 50 pesos para pagar la coquita y los alfajores.', choices: [
+      { id: "f1_3", phase: 1, category: '🏪 Kiosco', text: 'Vas al kiosco y te faltan 50 pesos para pagar la coquita y los alfajores.', choices: [
           { text: 'Dejar un alfajor y volverte triste', type: 'neutro', feedback: 'La dignidad intacta, pero con menos azúcar.' },
           { text: 'Pedirle al kiosquero que te anote en la libreta', type: 'copero', feedback: 'El kiosquero te guiñó el ojo. Confianza barrial.' },
-          { text: 'Revisar la calle a ver si hay plata tirada', type: 'cringe', feedback: 'Encontraste una chapita oxidada. Papelón.' },
-          { text: 'Negociar los 50 pesos a cambio de barrerle la vereda', type: 'critico', trait: 'Mentalidad de Tiburón 🦈', feedback: 'Kiosco barrido, panza llena.' }
+          { text: 'Revisar la vereda a ver si hay plata tirada', type: 'cringe', feedback: 'Encontraste una chapita oxidada. Papelón.' },
+          { text: 'Negociar los 50 pesos a cambio de barrerle la vereda', type: 'critico', trait: 'Mentalidad tiburón 🦈', feedback: 'Kiosco barrido, panza llena.' }
       ]},
-      // FASE 3 (Mundo Adulto y Fama)
+      { id: "f1_4", phase: 1, category: '🔔 Recreo', text: 'Un compañero te empieza a cargar en frente de todos por las zapatillas rotas.', choices: [
+          { text: 'Reírte fuerte antes que nadie para adelantarte', type: 'cringe', trait: 'Nervioso 😅', feedback: 'Se notó que te dolió. La cargada siguió toda la semana.' },
+          { text: 'Ignorarlo y seguir jugando a las bolitas', type: 'neutro', feedback: 'No escaló, pero tampoco ganaste nada.' },
+          { text: 'Contestarle con un chiste sobre su corte de pelo', type: 'copero', feedback: 'El curso explotó de risa. Te lo diste vuelta.' },
+          { text: 'Decirle tranqui que la semana que viene estrenás zapatillas nuevas y listo', type: 'critico', trait: 'Frío 🧊', feedback: 'Ni te inmutaste. Ganaste puntos de personalidad.' }
+      ]},
+      { id: "f1_5", phase: 1, category: '🎂 Cumpleaños', text: 'Te invitan al cumple del pibe que nunca te banca, y sabés que va a estar todo el curso.', choices: [
+          { text: 'No ir para no pasar mal momento', type: 'cringe', trait: 'Ausente 👻', feedback: 'Al otro día todos hablaban de la piñata. Te la perdiste.' },
+          { text: 'Ir, comer torta y quedarte en un rincón', type: 'neutro', feedback: 'Torta gratis, pero nadie se acordó que estuviste.' },
+          { text: 'Ir con onda y organizar el juego de la silla vos mismo', type: 'copero', feedback: 'Terminaste siendo el alma de la fiesta.' },
+          { text: 'Llevarle un regalo mejor que el de todos y hacer las paces', type: 'critico', trait: 'Estratega 🧠', feedback: 'Se hicieron amigos. Aura de diplomático.' }
+      ]},
+      { id: "f1_6", phase: 1, category: '🤾 Educación física', text: 'Toca elegir equipos para handball y sos de los últimos en quedar sin elegir.', choices: [
+          { text: 'Poner cara de que no te importa mientras se te cae el alma', type: 'cringe', trait: 'Orgulloso 😤', feedback: 'Todos se dieron cuenta igual. Fue incómodo.' },
+          { text: 'Aceptar y jugar en cualquier posición que te toque', type: 'neutro', feedback: 'Cumpliste. Nadie te aplaudió, nadie te retó.' },
+          { text: 'Pedir ser arquero y hacer atajadas de otro planeta', type: 'copero', feedback: 'Terminaste siendo el sorpresón del partido.' },
+          { text: 'Armar tu propio equipo con los que quedaron y ganarles a los "elegidos"', type: 'critico', trait: 'Líder nato 🎖️', feedback: 'Historia del recreo por meses.' }
+      ]},
+      { id: "f1_7", phase: 1, category: '🎤 Acto escolar', text: 'La profe de música te elige para cantar un solo frente a todo el colegio.', choices: [
+          { text: 'Fingir que perdiste la voz esa mañana', type: 'cringe', trait: 'Escapista 🏃', feedback: 'La excusa fue tan mala que ni la maestra te la creyó.' },
+          { text: 'Cantar bajito mirando el piso todo el tema', type: 'neutro', feedback: 'Terminaste el número, pero nadie escuchó bien.' },
+          { text: 'Cambiar la letra por una versión graciosa del barrio', type: 'copero', feedback: 'Todo el patio se cagó de risa, en el buen sentido.' },
+          { text: 'Practicar toda la semana y salir a romperla en el escenario', type: 'critico', trait: 'Estrella 🌟', feedback: 'Ovación de pie. Tu nombre quedó en la leyenda del cole.' }
+      ]},
+      { id: "f1_8", phase: 1, category: '🎒 Exposición', text: 'Se te rompe el termo en la mochila y te arruina todos los cuadernos justo antes de exponer.', choices: [
+          { text: 'Entrar en pánico y llorar en el pasillo', type: 'cringe', trait: 'Frágil 😭', feedback: 'Perdiste diez minutos de clase llorando por un termo.' },
+          { text: 'Limpiar como puedas y exponer con las hojas mojadas', type: 'neutro', feedback: 'Salió regular, pero al menos lo intentaste.' },
+          { text: 'Convertir el desastre en chiste y arrancar la expo riéndote', type: 'copero', feedback: 'Rompiste el hielo y la clase te banco.' },
+          { text: 'Improvisar toda la expo de memoria, mejor que si la hubieras leído', type: 'critico', trait: 'Pico de oro 🎙️', feedback: 'Sacaste la mejor nota del curso sin un solo apunte.' }
+      ]},
+
+      // ===== FASE 2: LA JODA Y EL ESTUDIO =====
+      { id: "f2_1", phase: 2, category: '🪩 Boliche', text: 'Llegás a la puerta del boliche y el de seguridad te frena por el código de vestimenta.', choices: [
+          { text: 'Ponerte a discutir a los gritos en la puerta', type: 'cringe', trait: 'Bardero 🗯️', feedback: 'Te terminaron marcando en la lista negra del lugar.' },
+          { text: 'Dar la vuelta e irte a tu casa sin más', type: 'neutro', feedback: 'Noche perdida, pero sin escándalo.' },
+          { text: 'Ir corriendo a comprarte una remera a la vuelta', type: 'copero', feedback: 'Volviste como si nada y entraste sin drama.' },
+          { text: 'Charlar con el patovica y hacerte amigo antes de resolverlo', type: 'critico', trait: 'Carismático 🗝️', feedback: 'Entraste gratis y con VIP para siempre.' }
+      ]},
+      { id: "f2_2", phase: 2, category: '📚 Parcial', text: 'Es la noche antes del parcial y te diste cuenta que estudiaste el tema que no era.', choices: [
+          { text: 'Entrar en shock y no estudiar nada igual', type: 'cringe', trait: 'Bocha caída 📉', feedback: 'Te aplazaron feo. A rendir de nuevo.' },
+          { text: 'Estudiar toda la noche lo que puedas de última', type: 'neutro', feedback: 'Zafaste raspando, con cuatro puntos.' },
+          { text: 'Armar un grupo de estudio relámpago con compañeros', type: 'copero', feedback: 'Entre todos armaron un resumen y salvaron el parcial.' },
+          { text: 'Detectar el patrón de preguntas del profe y estudiar estratégico', type: 'critico', trait: 'Cerebrito 🧠', feedback: 'Sacaste la nota más alta del curso.' }
+      ]},
+      { id: "f2_3", phase: 2, category: '🍻 Previa', text: 'Juntaron plata entre todos para la previa y a vos te toca decidir qué comprar.', choices: [
+          { text: 'Gastar todo en algo que solo te gusta a vos', type: 'cringe', trait: 'Egoísta 🙄', feedback: 'El grupo terminó re enojado con vos.' },
+          { text: 'Comprar lo de siempre sin arriesgar', type: 'neutro', feedback: 'Previa correcta, sin sorpresas.' },
+          { text: 'Preguntar a todos y armar un combo justo', type: 'copero', feedback: 'Todos contentos, la mejor previa del mes.' },
+          { text: 'Conseguir un precio de amigo y que sobre plata para después', type: 'critico', trait: 'Negociador 💰', feedback: 'Sos ahora el tesorero oficial del grupo.' }
+      ]},
+      { id: "f2_4", phase: 2, category: '💬 Grupo de la facu', text: 'En el grupo de WhatsApp de la facultad, alguien te etiqueta mal y te acusa de algo que no hiciste.', choices: [
+          { text: 'Explotar y mandar audios de cuarenta minutos', type: 'cringe', trait: 'Explosivo 💥', feedback: 'Terminaste siendo meme del cuatrimestre.' },
+          { text: 'Aclarar el error en dos líneas y listo', type: 'neutro', feedback: 'Se resolvió sin drama, sin gloria.' },
+          { text: 'Responder con un meme que desactiva todo el conflicto', type: 'copero', feedback: 'El grupo pasó de pelea a carcajada en segundos.' },
+          { text: 'Mandar las capturas que prueban la verdad, con calma', type: 'critico', trait: 'Con pruebas 📸', feedback: 'Quedaste como la voz de la razón del grupo.' }
+      ]},
+      { id: "f2_5", phase: 2, category: '💼 Laburo de verano', text: 'Primer día en tu laburo de verano y el jefe te reta en frente de todos por algo que no hiciste vos.', choices: [
+          { text: 'Quedarte callado y bancarte el reto injusto', type: 'cringe', trait: 'Sumiso 😶', feedback: 'Te siguieron cargando con culpas ajenas todo el verano.' },
+          { text: 'Aclarar bajito que no fuiste vos, sin insistir', type: 'neutro', feedback: 'Te escuchó a medias, pero no pasó a mayores.' },
+          { text: 'Resolver el error con humor y de paso arreglarlo vos mismo', type: 'copero', feedback: 'El jefe se calmó y te ganaste un lugar en el equipo.' },
+          { text: 'Explicar los hechos con calma y proponer cómo evitarlo a futuro', type: 'critico', trait: 'Profesional 📋', feedback: 'Te ofrecieron quedarte todo el año.' }
+      ]},
+      { id: "f2_6", phase: 2, category: '💘 Cita', text: 'La persona que te gusta te tira onda justo el día que salís con la ropa hecha percha.', choices: [
+          { text: 'Esconderte detrás de un poste para que no te vea', type: 'cringe', trait: 'Tímido extremo 🙈', feedback: 'Te vio igual, escondiéndote. Un moment incómodo.' },
+          { text: 'Saludar rápido y seguir de largo', type: 'neutro', feedback: 'Quedó ahí, sin pena ni gloria.' },
+          { text: 'Hacer un chiste sobre tu propia facha de ese día', type: 'copero', feedback: 'Se rieron juntos. Buena onda instantánea.' },
+          { text: 'Bancarte la seguridad y proponer un café directamente', type: 'critico', trait: 'Con confianza 💪', feedback: 'Te dijo que sí. Primera cita agendada.' }
+      ]},
+      { id: "f2_7", phase: 2, category: '🧳 Viaje de egresados', text: 'En el viaje de egresados se pierde la valija de un amigo y todos te miran a vos para resolverlo.', choices: [
+          { text: 'Decir que no es tu problema y seguir de joda', type: 'cringe', trait: 'Indiferente 🙅', feedback: 'El grupo lo comentó mal de vos el resto del viaje.' },
+          { text: 'Acompañarlo a la recepción del hotel a reclamar', type: 'neutro', feedback: 'Se solucionó tarde, pero se solucionó.' },
+          { text: 'Prestarle ropa tuya mientras se soluciona el tema', type: 'copero', feedback: 'Le salvaste el viaje. Amistad para toda la vida.' },
+          { text: 'Rastrear la valija vos mismo hablando con la aerolínea', type: 'critico', trait: 'Resolvedor 🛠️', feedback: 'Apareció la valija en dos horas. Sos una leyenda.' }
+      ]},
+      { id: "f2_8", phase: 2, category: '📱 Redes', text: 'Subiste una foto a la que le pusiste mucha onda y no le dio like nadie en la primera hora.', choices: [
+          { text: 'Borrarla desesperado a los cinco minutos', type: 'cringe', trait: 'Ansioso 📵', feedback: 'Justo cuando la borraste, empezaron a llegar los likes.' },
+          { text: 'Dejarla ahí y no mirar más el celular', type: 'neutro', feedback: 'Terminó teniendo likes normales, sin drama.' },
+          { text: 'Postear una historia graciosa admitiendo el fracaso de la foto', type: 'copero', feedback: 'La historia explotó más que la foto original.' },
+          { text: 'Ignorar los likes y postear por vos, no por los demás', type: 'critico', trait: 'Auténtico ✨', feedback: 'Ganaste seguidores por ser real, no por buscar aprobación.' }
+      ]},
+
+      // ===== FASE 3: MUNDO ADULTO Y FAMA =====
       { id: "f3_1", phase: 3, category: '💼 Entrevista', text: 'Entrevista para tu laburo soñado. Te preguntan: "¿Cuál es tu mayor defecto?"', choices: [
-          { text: 'Decir "Soy demasiado perfeccionista"', type: 'cringe', trait: 'NPC 🤖', feedback: 'El de RR.HH. rodó los ojos. Respuesta de manual.' },
+          { text: 'Decir "Soy demasiado perfeccionista"', type: 'cringe', trait: 'NPC 🤖', feedback: 'El de RR.HH. puso los ojos en blanco. Respuesta de manual.' },
           { text: 'Ser honesto y decir que te cuesta madrugar', type: 'neutro', feedback: 'Apreciaron la honestidad, pero no sumaste.' },
-          { text: 'Decir "Mi único defecto es no estar trabajando acá ya"', type: 'copero', feedback: 'Se riorion. Metiste carisma corporativo.' },
-          { text: 'Dar un defecto real y explicar con métricas cómo lo solucionaste', type: 'critico', trait: 'Jefe 👑', feedback: 'Te contrataron en el acto. Sos el CEO ahora.' }
+          { text: 'Decir "Mi único defecto es no estar trabajando acá ya"', type: 'copero', feedback: 'Se rieron. Metiste carisma corporativo.' },
+          { text: 'Dar un defecto real y explicar con datos cómo lo solucionaste', type: 'critico', trait: 'Jefe 👑', feedback: 'Te contrataron en el acto. Sos el CEO ahora.' }
       ]},
-      { id: "f3_2", phase: 3, category: '🐦 Twitter', text: 'Un periodista mala leche te cita un tweet intentando cancelarte públicamente.', choices: [
+      { id: "f3_2", phase: 3, category: '🐦 Redes', text: 'Un periodista mala leche te cita un tweet viejo intentando cancelarte públicamente.', choices: [
           { text: 'Borrar el tweet y pedir perdón asustado', type: 'cringe', feedback: 'Mostraste debilidad. Los trolls te comieron vivo.' },
           { text: 'Ignorar el bardo y poner el celu en modo avión', type: 'neutro', feedback: 'Mañana nadie se va a acordar de esto.' },
-          { text: 'Citarlo con un meme de Francella que encaja perfecto', type: 'copero', feedback: 'Ganaste la batalla mediática a base de humor.' },
-          { text: 'Hacerle un hilo con pruebas desmintiendo todo y domarlo', type: 'critico', trait: 'Domador 🦁', feedback: 'Lo dejaste en ridículo. El periodista cerró su cuenta.' }
+          { text: 'Citarlo con un meme que encaja perfecto', type: 'copero', feedback: 'Ganaste la batalla mediática a base de humor.' },
+          { text: 'Hacer un hilo con pruebas desmintiendo todo, con calma', type: 'critico', trait: 'Domador 🦁', feedback: 'Lo dejaste en ridículo. El periodista cerró su cuenta.' }
       ]},
       { id: "f3_3", phase: 3, category: '💵 Finanzas', text: 'Un viejo compañero del secundario te manda WhatsApp ofreciéndote "ser tu propio jefe".', choices: [
           { text: 'Meter los ahorros de tu vida en su esquema piramidal', type: 'cringe', trait: 'Caído 📉', feedback: 'Perdiste todo. Ahora vendés viandas.' },
           { text: 'Clavarle un visto gigante', type: 'neutro', feedback: 'Esquivaste la bala de la estafa.' },
           { text: 'Decirle amablemente que estás metiendo todo en plazo fijo', type: 'copero', feedback: 'Se rindió rápido y no te molestó más.' },
-          { text: 'Venderle VOS a él un curso de finanzas reales', type: 'critico', trait: 'Lobo 🐺', feedback: 'Reverse card magistral. Te pagó a vos.' }
+          { text: 'Venderle vos a él un curso de finanzas reales', type: 'critico', trait: 'Lobo 🐺', feedback: 'Reverse card magistral. Te pagó a vos.' }
+      ]},
+      { id: "f3_4", phase: 3, category: '🏢 Oficina', text: 'A último momento te cargan con un proyecto imposible que era de otro equipo.', choices: [
+          { text: 'Aceptar todo sin decir nada y quedarte hasta la madrugada', type: 'cringe', trait: 'Quemado 🔥', feedback: 'Lo entregaste, pero te fundiste vos solo.' },
+          { text: 'Hacer lo que se puede en el tiempo que hay', type: 'neutro', feedback: 'Entregaste algo aceptable, sin brillar.' },
+          { text: 'Armar un equipo relámpago y repartir tareas', type: 'copero', feedback: 'Lo lograron entre todos y hasta se rieron en el proceso.' },
+          { text: 'Explicar con datos por qué el plazo es imposible y renegociarlo', type: 'critico', trait: 'Con límites 🧭', feedback: 'Te dieron más tiempo y encima te felicitaron.' }
+      ]},
+      { id: "f3_5", phase: 3, category: '💍 Casamiento', text: 'En el casamiento de un amigo, el maestro de ceremonias te pide un discurso improvisado.', choices: [
+          { text: 'Quedarte mudo con el micrófono en la mano', type: 'cringe', trait: 'Bloqueado 🥶', feedback: 'Fueron los quince segundos más largos de tu vida.' },
+          { text: 'Decir un par de frases genéricas y sentarte', type: 'neutro', feedback: 'Cumplió, nadie lo va a recordar.' },
+          { text: 'Contar una anécdota graciosa de los novios', type: 'copero', feedback: 'La mesa entera se cagó de risa. Un clásico del casamiento.' },
+          { text: 'Armar un discurso emotivo con historia y chiste al final', type: 'critico', trait: 'Orador 🎙️', feedback: 'Hiciste llorar y reír al salón. Discurso del año.' }
+      ]},
+      { id: "f3_6", phase: 3, category: '🏠 Vecinos', text: 'Un vecino hace una fiesta hasta las cinco de la mañana un martes y tenés que laburar temprano.', choices: [
+          { text: 'Golpear la puerta furioso a las tres de la mañana', type: 'cringe', trait: 'Explosivo 💥', feedback: 'Terminó siendo una discusión que escuchó todo el edificio.' },
+          { text: 'Ponerte tapones y aguantar como puedas', type: 'neutro', feedback: 'Dormiste mal, pero sin conflicto.' },
+          { text: 'Bajar con buena onda y pedirle que baje el volumen', type: 'copero', feedback: 'Lo bajó al toque y hasta te invitó una birra.' },
+          { text: 'Hablar al otro día con calma y proponer un horario límite entre vecinos', type: 'critico', trait: 'Diplomático 🤝', feedback: 'Armaron un acuerdo de convivencia. Paz eterna.' }
+      ]},
+      { id: "f3_7", phase: 3, category: '👨‍👩‍👧 Familia política', text: 'Primera cena formal con la familia de tu pareja y se te cae la copa de vino sobre el mantel blanco.', choices: [
+          { text: 'Pedir disculpas quince veces sin parar', type: 'cringe', trait: 'Nervioso 😅', feedback: 'La cena quedó rara, todos pendientes de vos.' },
+          { text: 'Limpiar como podés y seguir la cena', type: 'neutro', feedback: 'Se resolvió sin mucho drama.' },
+          { text: 'Reírte de vos mismo y brindar de nuevo', type: 'copero', feedback: 'Rompiste el hielo de la mejor manera posible.' },
+          { text: 'Ayudar a limpiar con calma y cambiar de tema con gracia', type: 'critico', trait: 'Con clase 🎩', feedback: 'La familia quedó encantada con vos.' }
+      ]},
+      { id: "f3_8", phase: 3, category: '🚗 Ruta', text: 'Se te pincha una goma en medio de la ruta, de noche, sin señal en el celular.', choices: [
+          { text: 'Entrar en pánico y esperar sentado sin hacer nada', type: 'cringe', trait: 'Paralizado 😰', feedback: 'Pasaron dos horas hasta que alguien paró a ayudarte.' },
+          { text: 'Poner las balizas y esperar a que pase alguien', type: 'neutro', feedback: 'Alguien te ayudó a los veinte minutos. Salió bien.' },
+          { text: 'Cambiar la goma vos mismo con la de auxilio', type: 'copero', feedback: 'En quince minutos estabas de vuelta en marcha.' },
+          { text: 'Cambiar la goma y de paso ayudar a otro auto varado', type: 'critico', trait: 'Buen samaritano 🌟', feedback: 'Hiciste un amigo para toda la vida en medio de la nada.' }
       ]}
     ];
 
-    const PHASE_LIMIT = 5; 
+    // Eventos especiales: aparecen al azar en cualquier fase, no se repiten en la misma partida
+    const randomEvents = [
+      { id: "e1", phase: 'any', special: true, category: '⭐ Evento random', text: 'El colectivero te mira por el espejo y te suelta una frase filosófica de la nada antes de que bajes.', choices: [
+          { text: 'Bajarte sin decir nada, incómodo', type: 'cringe', feedback: 'Te quedaste pensando en eso todo el día, pero no en el buen sentido.' },
+          { text: 'Asentir con la cabeza y bajarte', type: 'neutro', feedback: 'Un momento raro y ya está.' },
+          { text: 'Responderle con otra frase todavía más random', type: 'copero', feedback: 'El colectivero largó una carcajada. Buena energía para el viaje.' },
+          { text: 'Preguntarle de dónde sacó esa frase y quedarte charlando', type: 'critico', trait: 'Filósofo de esquina 💭', feedback: 'Terminaste con una historia buenísima para contar.' }
+      ]},
+      { id: "e2", phase: 'any', special: true, category: '⭐ Evento random', text: 'En el asado familiar se te quema la carne justo cuando todos tenían hambre.', choices: [
+          { text: 'Culpar a otro por el fuego', type: 'cringe', trait: 'Buscaexcusas 🙈', feedback: 'Todos sabían que el asador eras vos. Papelón familiar.' },
+          { text: 'Pedir disculpas y servir lo que se pudo salvar', type: 'neutro', feedback: 'Se comió igual, medio quemado.' },
+          { text: 'Convertirlo en chiste y pedir pizza de emergencia', type: 'copero', feedback: 'Terminó siendo el asado más recordado del año.' },
+          { text: 'Rescatar el asado con una salsa improvisada de otro planeta', type: 'critico', trait: 'Asador de laguna 🔥', feedback: 'Nadie notó que casi era un desastre. Sos el nuevo asador oficial.' }
+      ]},
+      { id: "e3", phase: 'any', special: true, category: '⭐ Evento random', text: 'En la mesa de truco te acusan de haber hecho una seña sin querer.', choices: [
+          { text: 'Negar todo entrando en pánico', type: 'cringe', trait: 'Sospechoso 🫣', feedback: 'Cuánto más negabas, más sospechoso te veías.' },
+          { text: 'Reírte y seguir jugando como si nada', type: 'neutro', feedback: 'Se olvidaron del tema al rato.' },
+          { text: 'Inventar una seña nueva absurda a propósito para hacerlos dudar', type: 'copero', feedback: 'La mesa entera terminó de joda con vos.' },
+          { text: 'Mostrar las cartas y demostrar que jugás limpio', type: 'critico', trait: 'Confiable 🤝', feedback: 'Te ganaste el respeto de la mesa de truco para siempre.' }
+      ]},
+      { id: "e4", phase: 'any', special: true, category: '⭐ Evento random', text: 'Se corta la luz en todo el barrio un sábado a la noche y los vecinos se juntan en la vereda.', choices: [
+          { text: 'Encerrarte en tu casa a esperar que vuelva', type: 'cringe', trait: 'Ermitaño 🏚️', feedback: 'Te perdiste la mejor previa improvisada del año.' },
+          { text: 'Salir un rato a ver qué onda y volver adentro', type: 'neutro', feedback: 'Charlaste un poco y ya está.' },
+          { text: 'Sacar el equipo de mate y quedarte charlando con todos', type: 'copero', feedback: 'Terminaste conociendo mejor a todo el barrio.' },
+          { text: 'Organizar una junta con música de batería portátil', type: 'critico', trait: 'Animador barrial 🎉', feedback: 'El apagón se convirtió en la mejor fiesta del verano.' }
+      ]},
+      { id: "e5", phase: 'any', special: true, category: '⭐ Evento random', text: 'Te cruzás con tu ex en el súper, justo cuando llevás el carrito lleno de fideos y nada más.', choices: [
+          { text: 'Esconderte detrás de la góndola de fideos', type: 'cringe', trait: 'Evasivo 🙈', feedback: 'Te vio agachado igual. Un moment incómodo eterno.' },
+          { text: 'Saludar rápido y seguir con las compras', type: 'neutro', feedback: 'Un cruce corto, sin drama ni gloria.' },
+          { text: 'Saludar con onda y hacer un chiste sobre los fideos', type: 'copero', feedback: 'Se rieron los dos. Buena vibra post ruptura.' },
+          { text: 'Charlar tranquilo, en paz con la historia', type: 'critico', trait: 'En paz ☮️', feedback: 'Te fuiste del súper sintiéndote mejor que nunca.' }
+      ]},
+      { id: "e6", phase: 'any', special: true, category: '⭐ Evento random', text: 'Un perro callejero te empieza a seguir por la cuadra como si fueras su dueño de toda la vida.', choices: [
+          { text: 'Correr para que no te siga más', type: 'cringe', trait: 'Sin corazón 💔', feedback: 'El perro te siguió corriendo igual. Malísima onda.' },
+          { text: 'Ignorarlo y seguir caminando', type: 'neutro', feedback: 'En algún momento se cansó de seguirte.' },
+          { text: 'Compartirle un pedazo de tu sándwich', type: 'copero', feedback: 'Ahora tenés un nuevo mejor amigo en el barrio.' },
+          { text: 'Llevarlo a upa hasta encontrarle un hogar', type: 'critico', trait: 'Corazón noble 🐾', feedback: 'Le encontraste familia. Sos la leyenda del barrio.' }
+      ]}
+    ];
+
+    const PHASE_LIMIT = 6;
+    const RANDOM_EVENT_CHANCE = 0.28;
     let currentPhaseSituations = [];
 
-    const STORAGE_KEY = 'aura-farmear-v3';
+    const STORAGE_KEY = 'aura-farmear-v4';
     let player = {
       name: 'Invitado', avatar: '😎', aura: 0, streak: 0, bestStreak: 0, multiplier: 1.0,
-      phase: 1, traits: [], answeredInPhase: 0, currentSituationId: null, isProcessing: false
+      phase: 1, traits: [], answeredInPhase: 0, currentSituationId: null, isProcessing: false,
+      shownEvents: []
     };
 
     function loadGame() {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        player = JSON.parse(saved);
+        player = Object.assign(player, JSON.parse(saved));
         document.getElementById('charCreation').style.display = 'none';
         document.getElementById('gameHeader').style.display = 'block';
         document.getElementById('gameNav').style.display = 'flex';
@@ -284,7 +483,7 @@
     }
 
     function resetGame() {
-      if(confirm('¿Seguro que querés reiniciar toda tu trayectoria?')) {
+      if (confirm('¿Seguro que querés reiniciar toda tu trayectoria?')) {
         localStorage.removeItem(STORAGE_KEY);
         location.reload();
       }
@@ -298,40 +497,53 @@
 
     function startGame() {
       const name = document.getElementById('playerNameInput').value.trim();
-      player.name = name || 'El Pibe';
-      player.phase = 1;
-      player.aura = 0;
-      player.answeredInPhase = 0;
-      player.traits = [];
+      player = {
+        name: name || 'El Pibe', avatar: player.avatar, aura: 0, streak: 0, bestStreak: 0, multiplier: 1.0,
+        phase: 1, traits: [], answeredInPhase: 0, currentSituationId: null, isProcessing: false,
+        shownEvents: []
+      };
 
       document.getElementById('charCreation').style.display = 'none';
       document.getElementById('gameHeader').style.display = 'block';
       document.getElementById('gameNav').style.display = 'flex';
       document.getElementById('gameMain').style.display = 'block';
-      
+
       updateHUD();
       updateCharacterCard();
       showPhaseIntro();
     }
 
     const phaseIntros = {
-      1: { title: "CAPÍTULO 1: EL BARRIO", text: "Acá naciste, acá te criaste. En las calles de tu barrio empezás siendo un don nadie." },
-      2: { title: "CAPÍTULO 2: LA JODA Y EL ESTUDIO", text: "Creciste. Parciales, boliches y el rebusque constante." },
-      3: { title: "CAPÍTULO 3: MUNDO ADULTO Y FAMA", text: "Llegaste a las grandes ligas. Entrevistas de trabajo, redes sociales y haters." }
+      1: { eyebrow: 'Capítulo 1', title: "EL BARRIO", text: "Acá naciste, acá te criaste. En las calles de tu barrio empezás siendo un don nadie. Todo lo que hagas de acá en más te va a definir." },
+      2: { eyebrow: 'Capítulo 2', title: "LA JODA Y EL ESTUDIO", text: "Creciste. Parciales, boliches, previas y el rebusque constante. Tu aura del barrio ya no alcanza, ahora hay que bancarla en serio." },
+      3: { eyebrow: 'Capítulo 3', title: "MUNDO ADULTO Y FAMA", text: "Llegaste a las grandes ligas. Entrevistas de trabajo, redes sociales, casamientos y haters. Acá se define si sos leyenda o anécdota." }
     };
+
+    function getEnding() {
+      if (player.aura >= 3500) return { title: 'Sos una leyenda del barrio', text: 'Tu aura trasciende generaciones. Te van a nombrar en asados que todavía no pasaron.' };
+      if (player.aura >= 1800) return { title: 'Tenés aura de sobra', text: 'Ganaste más partidas de las que perdiste. Un ídolo con los pies en la tierra.' };
+      if (player.aura >= 700) return { title: 'Vas zafando con estilo', text: 'Ni figura ni papelón. Una trayectoria prolija, de esas que se respetan.' };
+      return { title: 'Se te cayó todo el aura', text: 'Fue un camino difícil, pero toda leyenda empieza con unos cuantos papelones.' };
+    }
 
     function showPhaseIntro() {
       const intro = phaseIntros[player.phase];
-      if(!intro) {
-        document.getElementById('introTitle').textContent = "¡LEYENDA ABSOLUTA!";
-        document.getElementById('introText').textContent = `Completaste tu viaje, ${player.name}. Tu Aura final es de ${player.aura}.`;
-        document.getElementById('introBtn').textContent = "REINICIAR";
+      if (!intro) {
+        const ending = getEnding();
+        document.getElementById('introEyebrow').textContent = 'Fin de la trayectoria';
+        document.getElementById('introTitle').textContent = ending.title;
+        const traitsLine = player.traits.length ? ` Tu personalidad quedó marcada por: ${player.traits.join(', ')}.` : '';
+        document.getElementById('introText').textContent = `${ending.text} ${player.name}, terminaste con ${player.aura} de aura y una racha máxima de ${player.bestStreak}.${traitsLine}`;
+        document.getElementById('introBtn').textContent = "Jugar de nuevo";
         document.getElementById('introBtn').onclick = resetGame;
         document.getElementById('storyIntro').style.display = 'flex';
         return;
       }
+      document.getElementById('introEyebrow').textContent = intro.eyebrow;
       document.getElementById('introTitle').textContent = intro.title;
       document.getElementById('introText').textContent = intro.text;
+      document.getElementById('introBtn').textContent = 'Vamos';
+      document.getElementById('introBtn').onclick = closeIntro;
       document.getElementById('storyIntro').style.display = 'flex';
     }
 
@@ -340,17 +552,19 @@
       setupPhase();
     }
 
-    function setupPhase() {
+    function refillPhaseQueue() {
       currentPhaseSituations = situations.filter(s => s.phase === player.phase);
-      if(currentPhaseSituations.length === 0) currentPhaseSituations = [...situations];
       currentPhaseSituations.sort(() => Math.random() - 0.5);
-      
+    }
+
+    function setupPhase() {
+      refillPhaseQueue();
+
       const dynamicArea = document.getElementById('dynamic-area');
       dynamicArea.innerHTML = `
         <div class="progress-container">
-          <div class="progress-text">Progreso de Fase (${player.answeredInPhase}/${PHASE_LIMIT})</div>
+          <div class="progress-text">Progreso de fase (${player.answeredInPhase}/${PHASE_LIMIT})</div>
           <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
-          <div class="save-status" id="saveIndicator">Partida guardada ✓</div>
         </div>
       `;
       updateProgress();
@@ -359,111 +573,138 @@
 
     function loadSituation() {
       if (player.answeredInPhase >= PHASE_LIMIT) {
-          player.phase++;
-          player.answeredInPhase = 0;
-          player.aura += 500;
-          saveGame();
-          showPhaseIntro();
-          return;
+        player.phase++;
+        player.answeredInPhase = 0;
+        player.aura += 500;
+        saveGame();
+        showPhaseIntro();
+        return;
       }
 
-      const sit = currentPhaseSituations.pop() || situations[0];
+      const availableEvents = randomEvents.filter(e => !player.shownEvents.includes(e.id));
+      const triggerSpecial = availableEvents.length > 0 && Math.random() < RANDOM_EVENT_CHANCE;
+
+      let sit;
+      if (triggerSpecial) {
+        sit = availableEvents[Math.floor(Math.random() * availableEvents.length)];
+      } else {
+        if (currentPhaseSituations.length === 0) refillPhaseQueue();
+        sit = currentPhaseSituations.pop();
+      }
+
       player.currentSituationId = sit.id;
       player.isProcessing = false;
-      
-      document.getElementById('sitCategory').textContent = sit.category;
+
+      const panel = document.getElementById('scenarioPanel');
+      const catEl = document.getElementById('sitCategory');
+      panel.classList.toggle('special', !!sit.special);
+      catEl.classList.toggle('special-tag', !!sit.special);
+      catEl.textContent = sit.category;
       document.getElementById('sitText').textContent = sit.text;
-      
+
       const container = document.getElementById('choicesContainer');
       container.innerHTML = '';
-      
+
       const choices = [...sit.choices].sort(() => Math.random() - 0.5);
       choices.forEach((c, index) => {
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
         btn.innerHTML = `<div class="choice-number">${index + 1}</div><div>${c.text}</div>`;
-        btn.onclick = (e) => selectChoice(e, btn, c);
+        btn.onclick = () => selectChoice(btn, c, sit.special);
         container.appendChild(btn);
       });
       saveGame();
     }
 
-    function selectChoice(e, btnElement, choice) {
+    function selectChoice(btnElement, choice, wasSpecial) {
       if (player.isProcessing) return;
       player.isProcessing = true;
 
       document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
-      btnElement.classList.add('answered');
 
-      let auraGain = 0;
-      switch(choice.type) {
-        case 'critico': auraGain = 100; player.streak++; break;
-        case 'copero': auraGain = 50; player.streak++; break;
-        case 'neutro': auraGain = 10; player.streak = 0; break;
-        case 'cringe': auraGain = -30; player.streak = 0; break;
+      let baseGain = 0;
+      switch (choice.type) {
+        case 'critico': baseGain = wasSpecial ? 150 : 100; player.streak++; break;
+        case 'copero': baseGain = wasSpecial ? 75 : 50; player.streak++; break;
+        case 'neutro': baseGain = 10; player.streak = 0; break;
+        case 'cringe': baseGain = wasSpecial ? -45 : -30; player.streak = 0; break;
       }
 
-      if(player.streak > player.bestStreak) player.bestStreak = player.streak;
+      if (player.streak > player.bestStreak) player.bestStreak = player.streak;
+      player.multiplier = Math.min(3, 1 + Math.floor(player.streak / 3) * 0.5);
+
+      const auraGain = baseGain > 0 ? Math.round(baseGain * player.multiplier) : baseGain;
       player.aura = Math.max(0, player.aura + auraGain);
 
-      if (choice.trait && !player.traits.includes(choice.trait) && player.traits.length < 4) {
+      if (choice.trait && !player.traits.includes(choice.trait) && player.traits.length < 5) {
         player.traits.push(choice.trait);
       }
 
+      if (wasSpecial && !player.shownEvents.includes(player.currentSituationId)) {
+        player.shownEvents.push(player.currentSituationId);
+      }
+
       let feedback = document.getElementById('dynamic-feedback');
-      if(!feedback) {
-          feedback = document.createElement('div');
-          feedback.id = 'dynamic-feedback';
-          document.getElementById('dynamic-area').insertBefore(feedback, document.getElementById('dynamic-area').firstChild);
+      if (!feedback) {
+        feedback = document.createElement('div');
+        feedback.id = 'dynamic-feedback';
+        document.getElementById('dynamic-area').insertBefore(feedback, document.getElementById('dynamic-area').firstChild);
       }
       feedback.className = `feedback-panel ${choice.type}`;
-      feedback.innerHTML = `<strong>${auraGain > 0 ? '+ Aura' : '- Aura'}:</strong> ${choice.feedback}`;
+      feedback.innerHTML = `<strong>${auraGain >= 0 ? '+ Aura' : '- Aura'} (${auraGain}):</strong> ${choice.feedback}`;
 
       player.answeredInPhase++;
-      updateHUD();
+      updateHUD(auraGain > 0);
       updateCharacterCard();
       updateProgress();
       saveGame();
 
       setTimeout(() => {
-          if(feedback) feedback.remove();
-          loadSituation();
+        if (feedback) feedback.remove();
+        loadSituation();
       }, 2500);
     }
 
     function updateProgress() {
       const fill = document.getElementById('progress-fill');
-      if(fill) {
-          const pct = (player.answeredInPhase / PHASE_LIMIT) * 100;
-          fill.style.width = pct + '%';
-          document.querySelector('.progress-text').textContent = `Progreso de Fase (${player.answeredInPhase}/${PHASE_LIMIT})`;
+      if (fill) {
+        const pct = (player.answeredInPhase / PHASE_LIMIT) * 100;
+        fill.style.width = pct + '%';
+        document.querySelector('.progress-text').textContent = `Progreso de fase (${player.answeredInPhase}/${PHASE_LIMIT})`;
       }
     }
 
-    function updateHUD() {
+    function updateHUD(pulse) {
       document.getElementById('hudAura').textContent = player.aura;
       document.getElementById('hudStreak').textContent = player.streak;
-      document.getElementById('hudMult').textContent = 'x' + player.multiplier;
+      document.getElementById('hudMult').textContent = 'x' + player.multiplier.toFixed(1);
       document.getElementById('hudPhase').textContent = `Fase ${player.phase}`;
+      if (pulse) {
+        const box = document.getElementById('hudAuraBox');
+        box.classList.remove('pulse');
+        void box.offsetWidth;
+        box.classList.add('pulse');
+      }
     }
 
     function updateCharacterCard() {
       document.getElementById('dispAvatar').textContent = player.avatar;
       document.getElementById('dispName').textContent = player.name;
-      
+
       let rank = "Nadie te juna";
-      if(player.aura > 300) rank = "Conocido del barrio";
-      if(player.aura > 1000) rank = "Basado respetable";
-      if(player.aura > 3000) rank = "Jefe Absoluto";
+      if (player.aura > 300) rank = "Conocido del barrio";
+      if (player.aura > 1000) rank = "Basado respetable";
+      if (player.aura > 2200) rank = "Ídolo local";
+      if (player.aura > 3500) rank = "Jefe absoluto";
       document.getElementById('dispRank').textContent = rank;
 
       const traitsContainer = document.getElementById('dispTraits');
       traitsContainer.innerHTML = '';
       player.traits.forEach(t => {
-          const badge = document.createElement('span');
-          badge.className = 'trait-badge';
-          badge.textContent = t;
-          traitsContainer.appendChild(badge);
+        const badge = document.createElement('span');
+        badge.className = 'trait-badge';
+        badge.textContent = t;
+        traitsContainer.appendChild(badge);
       });
     }
 
