@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aura Farmear - La Leyenda Continúa</title>
+  <title>Aura Farmear - Aura de tu vida</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -174,6 +174,13 @@
     .cafecito-banner h2 { color: var(--cafecito); margin-bottom: 10px; font-size: 1.4rem; }
     .cafecito-banner p { font-size: 1rem; color: var(--text-muted); line-height: 1.6; }
 
+    .share-note { color: var(--text-muted); font-size: .8rem; margin-top: -6px; margin-bottom: 16px; }
+
+    .site-footer { max-width: 620px; margin: 50px auto 0; padding: 26px 22px; border-top: 2px dashed var(--border); color: var(--text-muted); font-size: .85rem; line-height: 1.65; }
+    .site-footer a { color: var(--gold); font-weight: 700; text-decoration: none; }
+    .site-footer a:hover { text-decoration: underline; }
+    .footer-cafecito-btn { display: inline-block; margin-top: 16px; background: var(--cafecito); color: #fff; padding: 11px 20px; border-radius: 10px; font-weight: 800; text-decoration: none; font-family: 'Bungee'; font-size: .82rem; box-shadow: var(--shadow-hard-sm); }
+
     @media (max-width: 480px) {
       .brand-title { font-size: 1.5rem; }
       .story-card { padding: 20px 16px; }
@@ -205,13 +212,14 @@
       <div class="modal-eyebrow" id="introEyebrow">Nuevo capítulo</div>
       <h2 id="introTitle" style="color: var(--violet);">CAPÍTULO 1</h2>
       <p id="introText">...</p>
+      <button class="modal-btn" id="shareBtn" style="display:none; background: var(--teal); color:#141311; margin-bottom: 12px;" onclick="shareResult()">📲 Compartir mi resultado</button>
       <button class="modal-btn" id="introBtn" style="background: var(--violet); color:#fff;" onclick="closeIntro()">Vamos</button>
     </div>
   </div>
 
   <header style="display:none;" id="gameHeader">
     <div class="brand-title">Aura Farmear</div>
-    <div class="brand-tagline">Sumá aura, evitá el papelón</div>
+    <div class="brand-tagline">Descubrí cuánto aura tenés</div>
     <div class="player-hud">
       <div class="phase-badge" id="hudPhase">Fase 1</div>
       <div class="hud-stat" id="hudAuraBox" style="color: var(--gold);">⚡ Aura: <span id="hudAura">0</span></div>
@@ -258,6 +266,13 @@
       </div>
     </section>
   </main>
+
+  <footer class="site-footer">
+    <p>💛 Aura Farmear lo armé yo solo, con muchísimas horas de laburo (y varios mates) invertidas en cada situación, cada trait y cada chiste. Es un proyecto hecho con cariño para el barrio.</p>
+    <p>📩 Contacto: <a href="mailto:contacto.aurafarmear@gmail.com">contacto.aurafarmear@gmail.com</a> &nbsp;|&nbsp; 🎵 TikTok: <a href="https://www.tiktok.com/@aurafarmear" target="_blank" rel="noopener">@aurafarmear</a></p>
+    <p>Si te copó la trayectoria y te sacó una sonrisa, invitame un cafecito ☕. Ayuda un montón a seguir cumpliendo proyectos y sueños.</p>
+    <a class="footer-cafecito-btn" href="https://cafecito.app/aurafarmear" target="_blank" rel="noopener">☕ Invitame un Cafecito</a>
+  </footer>
 
   <script>
     // ---------- CONTENIDO ----------
@@ -320,7 +335,7 @@
           { text: 'Charlar con el patovica y hacerte amigo antes de resolverlo', type: 'critico', trait: 'Carismático 🗝️', feedback: 'Entraste gratis y con VIP para siempre.' }
       ]},
       { id: "f2_2", phase: 2, category: '📚 Parcial', text: 'Es la noche antes del parcial y te diste cuenta que estudiaste el tema que no era.', choices: [
-          { text: 'Entrar en shock y no estudiar nada igual', type: 'cringe', trait: 'Bocha caída 📉', feedback: 'Te aplazaron feo. A rendir de nuevo.' },
+          { text: 'Entrar en shock y no estudiar nada igual', type: 'cringe', trait: 'Bochado 📉', feedback: 'Te aplazaron feo. A rendir de nuevo.' },
           { text: 'Estudiar toda la noche lo que puedas de última', type: 'neutro', feedback: 'Zafaste raspando, con cuatro puntos.' },
           { text: 'Armar un grupo de estudio relámpago con compañeros', type: 'copero', feedback: 'Entre todos armaron un resumen y salvaron el parcial.' },
           { text: 'Detectar el patrón de preguntas del profe y estudiar estratégico', type: 'critico', trait: 'Cerebrito 🧠', feedback: 'Sacaste la nota más alta del curso.' }
@@ -422,10 +437,10 @@
           { text: 'Preguntarle de dónde sacó esa frase y quedarte charlando', type: 'critico', trait: 'Filósofo de esquina 💭', feedback: 'Terminaste con una historia buenísima para contar.' }
       ]},
       { id: "e2", phase: 'any', special: true, category: '⭐ Evento random', text: 'En el asado familiar se te quema la carne justo cuando todos tenían hambre.', choices: [
-          { text: 'Culpar a otro por el fuego', type: 'cringe', trait: 'Buscaexcusas 🙈', feedback: 'Todos sabían que el asador eras vos. Papelón familiar.' },
+          { text: 'Culpar a otro por el fuego', type: 'cringe', trait: 'Excusero 🙈', feedback: 'Todos sabían que el asador eras vos. Papelón familiar.' },
           { text: 'Pedir disculpas y servir lo que se pudo salvar', type: 'neutro', feedback: 'Se comió igual, medio quemado.' },
           { text: 'Convertirlo en chiste y pedir pizza de emergencia', type: 'copero', feedback: 'Terminó siendo el asado más recordado del año.' },
-          { text: 'Rescatar el asado con una salsa improvisada de otro planeta', type: 'critico', trait: 'Asador de laguna 🔥', feedback: 'Nadie notó que casi era un desastre. Sos el nuevo asador oficial.' }
+          { text: 'Rescatar el asado con una salsa improvisada de otro planeta', type: 'critico', trait: 'Asador nato 🔥', feedback: 'Nadie notó que casi era un desastre. Sos el nuevo asador oficial.' }
       ]},
       { id: "e3", phase: 'any', special: true, category: '⭐ Evento random', text: 'En la mesa de truco te acusan de haber hecho una seña sin querer.', choices: [
           { text: 'Negar todo entrando en pánico', type: 'cringe', trait: 'Sospechoso 🫣', feedback: 'Cuánto más negabas, más sospechoso te veías.' },
@@ -536,6 +551,7 @@
         document.getElementById('introText').textContent = `${ending.text} ${player.name}, terminaste con ${player.aura} de aura y una racha máxima de ${player.bestStreak}.${traitsLine}`;
         document.getElementById('introBtn').textContent = "Jugar de nuevo";
         document.getElementById('introBtn').onclick = resetGame;
+        document.getElementById('shareBtn').style.display = 'block';
         document.getElementById('storyIntro').style.display = 'flex';
         return;
       }
@@ -544,6 +560,7 @@
       document.getElementById('introText').textContent = intro.text;
       document.getElementById('introBtn').textContent = 'Vamos';
       document.getElementById('introBtn').onclick = closeIntro;
+      document.getElementById('shareBtn').style.display = 'none';
       document.getElementById('storyIntro').style.display = 'flex';
     }
 
@@ -713,6 +730,20 @@
       document.getElementById('tab-' + tabId).classList.add('active');
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       btnElement.classList.add('active');
+    }
+
+    // ---------- COMPARTIR RESULTADO ----------
+    function shareResult() {
+      const ending = getEnding();
+      const text = `Terminé mi trayectoria en Aura Farmear con ${player.aura} de Aura y quedé como "${ending.title}" 🔥 ¿Vos cuánto aura tenés? Jugá acá:`;
+      const url = location.href;
+
+      if (navigator.share) {
+        navigator.share({ title: 'Aura Farmear', text: text, url: url }).catch(() => {});
+      } else {
+        const waText = encodeURIComponent(`${text} ${url}`);
+        window.open(`https://wa.me/?text=${waText}`, '_blank');
+      }
     }
 
     window.onload = loadGame;
